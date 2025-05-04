@@ -3,6 +3,7 @@ const express = require("express");
 const connectDB = require("./src/configs/db");
 const userRoutes = require("./src/routes/user.routes");
 const authRoutes = require("./src/routes/auth.routes");
+const serviceRoutes = require("./src/routes/service.routes");
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use(express.json());
 // Rutas
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/services", serviceRoutes);
 
 // Puerto
 const PORT = process.env.PORT || 5000;
