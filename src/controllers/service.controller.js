@@ -127,7 +127,6 @@ const getServiceByCoachId = async (req, res) => {
     // Versión con más detalles para depuración
     const services = await Service.find({ coachId: coachId });
 
-
     // Devolver todos los servicios encontrados
     res.status(200).json(services);
   } catch (error) {

@@ -23,7 +23,6 @@ exports.getUserById = async (req, res) => {
   }
 };
 
-
 // Actualizar un usuario
 exports.updateUser = async (req, res) => {
   try {
@@ -45,5 +44,3 @@ exports.updateUser = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
-
