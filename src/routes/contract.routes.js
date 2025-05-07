@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const contractController = require("../controllers/contract.controller");
 const auth = require("../middlewares/auth");
+const upload = require("../middlewares/upload");
 
 // todos usan el decorador de auth, debido a la privacidad de los contratos
 
@@ -15,7 +16,9 @@ router.patch("/:id", auth, contractController.updateContractStatusById); //actua
 
 router.get("/:id/files", auth, contractController.getContractFilesById); //ver todos los archivos de un contrato particular
 
-router.post("/:id/files", auth, contractController.uploadContractFiles); //subir archivos a un contrato particular
+router.post("/:id/files", auth, upload.array("files"), contractController.uploadContractFiles); //subir archivos a un contrato particular
+
+router.get("/:id/files/:fileId", auth, contractController.downloadContractFile); //descargar un archivo de un contrato particular
 
 router.get(
   "/:id/scheduledSessions",

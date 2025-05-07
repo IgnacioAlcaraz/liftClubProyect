@@ -65,7 +65,7 @@ const getContractFilesById = async (req, res) => {
     if (!contract) {
       return res.status(404).json({ message: "Contrato no encontrado." });
     }
-    res.status(200).json(contract.fileIds);
+    res.status(200).json(contract.files);
   } catch (error) {
     res
       .status(500)
@@ -73,7 +73,6 @@ const getContractFilesById = async (req, res) => {
   }
 };
 
-//Definir model de file para prueba concreta
 const uploadContractFiles = async (req, res) => {
   try {
     const { id } = req.params;
@@ -81,14 +80,48 @@ const uploadContractFiles = async (req, res) => {
     if (!contract) {
       return res.status(404).json({ message: "Contrato no encontrado." });
     }
+
     if (!req.files || req.files.length === 0) {
       return res.status(400).json({ message: "No se han subido archivos." });
     }
-    /* ... */
+    
+
+    const files = req.files.map((file) => ({
+      name: file.originalname,
+      path: file.path,
+      mimeType: file.mimetype,
+      size: file.size,
+      uploadDate: new Date(),
+    }));
+
+    contract.files.push(...files);
+    await contract.save();
+
+    res.status(200).json({ message: "Archivos subidos correctamente", files });
+    
   } catch (error) {
     res.status(500).json({ message: "Error al subir archivos", error });
   }
 };
+
+const downloadContractFile = async (req, res) => {
+  try {
+    const { id, fileId } = req.params;
+    const contract = await Contract.findById(id);
+    if (!contract) {
+      return res.status(404).json({message: "Contrato no encontrado."})
+    }
+
+    const file = contract.files.id(fileId);
+    if (!file) {
+      return res.status(404).json({message: "Archivo no encontrado."})
+    }
+
+    res.download(file.path, file.name);
+  } catch (error) {
+    res.status(500).json({message: "Error al descargar el archivo", error})
+  }
+}
 
 const getScheduledSessionsByContractId = async (req, res) => {
   try {
@@ -163,6 +196,7 @@ module.exports = {
   updateContractStatusById,
   getContractFilesById,
   uploadContractFiles,
+  downloadContractFile,
   getScheduledSessionsByContractId,
   updateScheduledSessionStatusById,
   createScheduledSession,
