@@ -6,7 +6,7 @@ const userSchema = new Schema(
   {
     role: {
       type: String,
-      required: true,
+      required: false,
       enum: ["client", "coach"],
     },
     email: {
@@ -18,16 +18,16 @@ const userSchema = new Schema(
     },
     password: {
       type: String,
-      required: true,
+      required: false,
     },
     firstName: {
       type: String,
-      required: true,
+      required: false,
       trim: true,
     },
     lastName: {
       type: String,
-      required: true,
+      required: false,
       trim: true,
     },
     birthDate: {
