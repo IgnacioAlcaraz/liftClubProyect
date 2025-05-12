@@ -9,8 +9,6 @@ router.post("/register", authController.register);
 
 router.post("/login", authController.login);
 
-
-
 // Ruta para iniciar el proceso de autenticación con Google
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
@@ -20,15 +18,22 @@ router.get(
   passport.authenticate('google', { failureRedirect: '/login' }),
   (req, res) => {
     if (!req.user.role) {
-      // Si no tiene rol asignado, redirigir al frontend para elegirlo
-      return res.redirect(`http://localhost:5000/api/users/select-role?userId=${req.user._id}`);
+      //  Generar un token temporal para el selector de roles
+      const tempToken = jwt.sign(
+        { id: req.user._id },
+        process.env.SECRET_KEY,
+        { expiresIn: '15m' } // Solo 15 minutos de validez
+      );
+
+      //  Redirigir al frontend con el token en la URL, ASUMIENDO QUE EL FRONT CORRE EN PUERETO 3000
+      return res.redirect(`http://localhost:3000/select-role?token=${tempToken}`);
     }
 
-    // Generar el JWT y devolverlo al cliente
+    //  Si ya tiene rol asignado, se genera el token definitivo
     const token = jwt.sign(
-      { id: req.user._id, email: req.user.email, role: req.user.role },
+      { id: req.user._id, role: req.user.role },
       process.env.SECRET_KEY,
-      { expiresIn: '1h' }
+      { expiresIn: '1d' }
     );
 
     res.json({
