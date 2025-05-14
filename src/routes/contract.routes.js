@@ -32,7 +32,7 @@ router.post(
   contractController.createScheduledSession
 ); //crear una sesión programada para un contrato particular
 
-router.put(
+router.patch(
   "/:id/scheduledSessions/:sessionId",
   auth,
   contractController.updateScheduledSessionStatusById

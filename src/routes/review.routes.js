@@ -6,10 +6,10 @@ const auth = require("../middlewares/auth");
 
 router.post("/", auth, reviewController.createReview);
 
-router.get("/service/:serviceId", auth, reviewController.getReviewsByServiceId);
+router.get("/:serviceId", auth, reviewController.getReviewsByServiceId);
 
 router.get("/trainer/:trainerId", auth, reviewController.getReviewsByTrainerId);
 
-router.patch("/:id/respond", auth, reviewController.respondToReview);
+router.patch("/:id", auth, reviewController.respondToReview);
 
 module.exports = router;

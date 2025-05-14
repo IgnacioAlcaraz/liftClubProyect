@@ -1,41 +1,43 @@
-const Contract = require("../models/Contract");
+const contractService = require("../services/contract.service");
 
 const getContracts = async (req, res) => {
   try {
-    const contracts = await Contract.find();
+    const { userId, role } = req.user;
+    const contracts = await contractService.getContracts(userId, role);
     res.status(200).json(contracts);
   } catch (error) {
-    res.status(500).json({ message: "Error al obtener los contratos", error });
+    res.status(500).json({ message: "Error al obtener los contratos", error: error.message });
   }
 };
 
 const createContract = async (req, res) => {
   try {
-    const contractData = {
-      ...req.body,
-    };
-
-    const newContract = new Contract(contractData);
-    const savedContract = await newContract.save();
-
+    const { userId } = req.user;
+    const savedContract = await contractService.createContract(req.body, userId);
     res.status(201).json(savedContract);
   } catch (error) {
-    res.status(500).json({ message: "Error creando el contrato", error });
+    if (error.message === "Servicio no encontrado" || 
+        error.message === "Solo los clientes pueden crear contratos") {
+      return res.status(400).json({ message: error.message });
+    }
+    res.status(500).json({ message: "Error creando el contrato", error: error.message });
   }
 };
 
 const getContractById = async (req, res) => {
   try {
     const { id } = req.params;
-    const contract = await Contract.findById(id);
-
-    if (!contract) {
-      return res.status(404).json({ message: "Contrato no encontrado." });
-    }
-
+    const { userId, role } = req.user;
+    const contract = await contractService.getContractById(id, userId, role);
     res.status(200).json(contract);
   } catch (error) {
-    res.status(500).json({ message: "Error al obtener el contrato", error });
+    if (error.message === "Contrato no encontrado") {
+      return res.status(404).json({ message: error.message });
+    }
+    if (error.message.includes("No tienes permiso")) {
+      return res.status(403).json({ message: error.message });
+    }
+    res.status(500).json({ message: "Error al obtener el contrato", error: error.message });
   }
 };
 
@@ -43,98 +45,92 @@ const updateContractStatusById = async (req, res) => {
   try {
     const { id } = req.params;
     const { status } = req.body;
-    const contract = await Contract.findById(id);
-
-    if (!contract) {
-      return res.status(404).json({ message: "Contrato no encontrado." });
-    }
-
-    contract.status = status;
-    await contract.save();
-
+    const { userId, role } = req.user;
+    
+    const contract = await contractService.updateContractStatusById(id, status, userId, role);
     res.status(200).json(contract);
   } catch (error) {
-    res.status(500).json({ message: "Error al actualizar el contrato", error });
+    if (error.message === "Contrato no encontrado") {
+      return res.status(404).json({ message: error.message });
+    }
+    if (error.message.includes("No tienes permiso")) {
+      return res.status(403).json({ message: error.message });
+    }
+    res.status(500).json({ message: "Error al actualizar el contrato", error: error.message });
   }
 };
 
 const getContractFilesById = async (req, res) => {
   try {
     const { id } = req.params;
-    const contract = await Contract.findById(id);
-    if (!contract) {
-      return res.status(404).json({ message: "Contrato no encontrado." });
-    }
-    res.status(200).json(contract.files);
+    const { userId, role } = req.user;
+    const files = await contractService.getContractFilesById(id, userId, role);
+    res.status(200).json(files);
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Error al obtener los archivos del contrato", error });
+    if (error.message === "Contrato no encontrado") {
+      return res.status(404).json({ message: error.message });
+    }
+    res.status(500).json({ message: "Error al obtener los archivos del contrato", error: error.message });
   }
 };
 
 const uploadContractFiles = async (req, res) => {
   try {
     const { id } = req.params;
-    const contract = await Contract.findById(id);
-    if (!contract) {
-      return res.status(404).json({ message: "Contrato no encontrado." });
-    }
-
-    if (!req.files || req.files.length === 0) {
-      return res.status(400).json({ message: "No se han subido archivos." });
-    }
+    const { userId, role } = req.user;
     
-
-    const files = req.files.map((file) => ({
-      name: file.originalname,
-      path: file.path,
-      mimeType: file.mimetype,
-      size: file.size,
-      uploadDate: new Date(),
-    }));
-
-    contract.files.push(...files);
-    await contract.save();
-
+    const files = await contractService.uploadContractFiles(id, req.files, userId, role);
     res.status(200).json({ message: "Archivos subidos correctamente", files });
-    
   } catch (error) {
-    res.status(500).json({ message: "Error al subir archivos", error });
+    if (error.message === "Contrato no encontrado" || 
+        error.message === "Archivo no encontrado") {
+      return res.status(404).json({ message: error.message });
+    }
+    if (error.message.includes("No tienes permiso") || 
+        error.message.includes("Solo el coach")) {
+      return res.status(403).json({ message: error.message });
+    }
+    if (error.message === "No se han subido archivos") {
+      return res.status(400).json({ message: error.message });
+    }
+    res.status(500).json({ message: "Error al subir archivos", error: error.message });
   }
 };
 
 const downloadContractFile = async (req, res) => {
   try {
     const { id, fileId } = req.params;
-    const contract = await Contract.findById(id);
-    if (!contract) {
-      return res.status(404).json({message: "Contrato no encontrado."})
-    }
-
-    const file = contract.files.id(fileId);
-    if (!file) {
-      return res.status(404).json({message: "Archivo no encontrado."})
-    }
-
+    const { userId, role } = req.user;
+    
+    const file = await contractService.downloadContractFile(id, fileId, userId, role);
     res.download(file.path, file.name);
   } catch (error) {
-    res.status(500).json({message: "Error al descargar el archivo", error})
+    if (error.message === "Contrato no encontrado" || 
+        error.message === "Archivo no encontrado") {
+      return res.status(404).json({ message: error.message });
+    }
+    if (error.message.includes("No tienes permiso")) {
+      return res.status(403).json({ message: error.message });
+    }
+    res.status(500).json({ message: "Error al descargar el archivo", error: error.message });
   }
-}
+};
 
 const getScheduledSessionsByContractId = async (req, res) => {
   try {
     const { id } = req.params;
-    const contract = await Contract.findById(id);
-    if (!contract) {
-      return res.status(404).json({ message: "Contrato no encontrado." });
-    }
-    res.status(200).json(contract.scheduledSessions);
+    const { userId, role } = req.user;
+    
+    const sessions = await contractService.getScheduledSessionsByContractId(id, userId, role);
+    res.status(200).json(sessions);
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Error al obtener las sesiones programadas", error });
+    if (error.message === "Contrato no encontrado") {
+      return res.status(404).json({ message: error.message });
+    }
+    if (error.message.includes("No tienes permiso")) {
+      return res.status(403).json({ message: error.message });
+    }
+    res.status(500).json({ message: "Error al obtener las sesiones programadas", error: error.message });
   }
 };
 
@@ -142,50 +138,43 @@ const updateScheduledSessionStatusById = async (req, res) => {
   try {
     const { id, sessionId } = req.params;
     const { status } = req.body;
-
-    const contract = await Contract.findById(id);
-    if (!contract) {
-      return res.status(404).json({ message: "Contracto no encontrado." });
-    }
-    const session = contract.scheduledSessions.id(sessionId);
-
-    if (!session) {
-      return res.status(404).json({ message: "Sesion no encontrada." });
-    }
-
-    session.status = status;
-    await contract.save();
+    const { userId, role } = req.user;
+    
+    const session = await contractService.updateScheduledSessionStatusById(
+      id, sessionId, status, userId, role
+    );
+    res.status(200).json(session);
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Error al actualizar la sesión programada.", error });
+    if (error.message === "Contrato no encontrado" || 
+        error.message === "Sesión no encontrada") {
+      return res.status(404).json({ message: error.message });
+    }
+    if (error.message.includes("No tienes permiso")) {
+      return res.status(403).json({ message: error.message });
+    }
+    res.status(500).json({ message: "Error al actualizar la sesión programada", error: error.message });
   }
 };
 
 const createScheduledSession = async (req, res) => {
-  const { id } = req.params;
-  const { date, startTime, endTime } = req.body;
   try {
-    const contract = await Contract.findById(id);
-    if (!contract) {
-      return res.status(404).json({ message: "Contrato no encontrado." });
-    }
-
-    const newSession = {
-      date,
-      startTime,
-      endTime,
-      status: "Pendiente",
-    };
-
-    contract.scheduledSessions.push(newSession);
-    await contract.save();
-
-    res.status(201).json(newSession);
+    const { id } = req.params;
+    const { userId, role } = req.user;
+    
+    const session = await contractService.createScheduledSession(id, req.body, userId, role);
+    res.status(201).json(session);
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Error al crear la sesión programada.", error });
+    if (error.message === "Contrato no encontrado") {
+      return res.status(404).json({ message: error.message });
+    }
+    if (error.message.includes("No tienes permiso")) {
+      return res.status(403).json({ message: error.message });
+    }
+    if (error.message.includes("Solo se pueden programar") || 
+        error.message.includes("Faltan datos")) {
+      return res.status(400).json({ message: error.message });
+    }
+    res.status(500).json({ message: "Error al crear la sesión programada", error: error.message });
   }
 };
 
