@@ -1,13 +1,16 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const fileSchema = new Schema({
-  name: { type: String, required: true },
-  path: { type: String, required: true },
-  mimeType: { type: String, required: true },
-  size: { type: Number, required: true },
-  uploadDate: { type: Date, default: Date.now },
-}, { timestamps: true });
+const fileSchema = new Schema(
+  {
+    name: { type: String, required: true },
+    path: { type: String, required: true },
+    mimeType: { type: String, required: true },
+    size: { type: Number, required: true },
+    uploadDate: { type: Date, default: Date.now },
+  },
+  { timestamps: true }
+);
 
 const contractSchema = new Schema(
   {

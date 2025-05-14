@@ -9,7 +9,9 @@ const createReview = async (reviewData, userId) => {
   }
 
   if (contract.clientId.toString() !== userId.toString()) {
-    throw new Error("No puedes crear una reseña para un contrato que no te pertenece");
+    throw new Error(
+      "No puedes crear una reseña para un contrato que no te pertenece"
+    );
   }
 
   if (contract.reviewSubmitted) {
@@ -24,7 +26,7 @@ const createReview = async (reviewData, userId) => {
     ...reviewData,
     clientId: userId,
     trainerId: contract.coachId,
-    serviceId: contract.serviceId
+    serviceId: contract.serviceId,
   });
 
   const savedReview = await newReview.save();
@@ -45,7 +47,7 @@ const getReviewsByTrainerId = async (trainerId) => {
 
 const respondToReview = async (reviewId, response, userId) => {
   const review = await Review.findById(reviewId);
-  
+
   if (!review) {
     throw new Error("Reseña no encontrada");
   }
@@ -63,8 +65,8 @@ const respondToReview = async (reviewId, response, userId) => {
 };
 
 module.exports = {
-    createReview,
-    getReviewsByServiceId,
-    getReviewsByTrainerId,
-    respondToReview
-  };
+  createReview,
+  getReviewsByServiceId,
+  getReviewsByTrainerId,
+  respondToReview,
+};
