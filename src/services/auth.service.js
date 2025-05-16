@@ -70,6 +70,7 @@ const login = async (credentials) => {
 };
 
 const handleGoogleCallback = async (user) => {
+  // Si el usuario no tiene rol, se le redirige a la página de selección de rol
   if (!user.role) {
     const tempToken = jwt.sign({ id: user._id }, process.env.SECRET_KEY, {
       expiresIn: "15m",
@@ -80,6 +81,7 @@ const handleGoogleCallback = async (user) => {
     };
   }
 
+  // Si el usuario tiene rol, se le genera un token y se redirige a la página de inicio
   const token = jwt.sign(
     { id: user._id, role: user.role },
     process.env.SECRET_KEY,
@@ -96,6 +98,7 @@ const handleGoogleCallback = async (user) => {
   };
 };
 
+// Seleccionar rol despues de autenticacion con google
 const selectRole = async (userId, role) => {
   if (!role) {
     throw new Error("El rol es requerido");
@@ -109,6 +112,7 @@ const selectRole = async (userId, role) => {
   user.role = role;
   await user.save();
 
+  // Generar un token final para el usuario
   const finalToken = jwt.sign(
     {
       id: user._id,
