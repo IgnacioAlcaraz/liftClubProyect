@@ -3,15 +3,15 @@ const router = express.Router();
 const serviceController = require("../controllers/service.controller");
 const auth = require("../middlewares/auth");
 
-router.get("/", serviceController.getServices); //este no necesita token, ya que pueden verlo todos sin iniicar sesion
+router.get("/", serviceController.getServices);
 
-router.post("/", auth, serviceController.createService); // crear un servicio para un coach
+router.post("/", auth, serviceController.createService);
 
-router.get("/:id", auth, serviceController.getServiceById); //ver todos los detalles de un servicio
+router.get("/:id", auth, serviceController.getServiceById);
 
-router.put("/:id", auth, serviceController.updateServiceById); //actualizar un servicio
+router.put("/:id", auth, serviceController.updateServiceById);
 
-router.delete("/:id", auth, serviceController.deleteServiceById); //eliminar un servicio
+router.delete("/:id", auth, serviceController.deleteServiceById);
 
 router.get("/coach/:coachId", auth, serviceController.getServiceByCoachId);
 

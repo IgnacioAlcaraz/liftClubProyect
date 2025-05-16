@@ -18,7 +18,7 @@ const userSchema = new Schema(
       type: String,
       required: true,
       unique: true,
-      trim: true, //elimina los espacios
+      trim: true,
       lowercase: true,
     },
     password: {
@@ -40,12 +40,10 @@ const userSchema = new Schema(
     },
   },
   {
-    // Agrega automáticamente los campos createdAt y updatedAt
     timestamps: true,
   }
 );
 
-// Creamos el modelo User a partir del schema
 const User = mongoose.model("User", userSchema);
 
 module.exports = User;

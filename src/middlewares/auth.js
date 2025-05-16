@@ -4,7 +4,6 @@ require("dotenv").config();
 
 module.exports = (req, res, next) => {
   try {
-    // Obtener token del header
     const token = req.header("Authorization").replace("Bearer ", "");
     if (!token) {
       return res
@@ -12,7 +11,6 @@ module.exports = (req, res, next) => {
         .json({ message: "No hay token, autorización denegada" });
     }
 
-    // Verificar token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = decoded;
     next();

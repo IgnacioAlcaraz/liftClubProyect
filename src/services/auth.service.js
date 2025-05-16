@@ -69,7 +69,64 @@ const login = async (credentials) => {
   };
 };
 
+const handleGoogleCallback = async (user) => {
+  if (!user.role) {
+    const tempToken = jwt.sign({ id: user._id }, process.env.SECRET_KEY, {
+      expiresIn: "15m",
+    });
+    return {
+      redirect: true,
+      url: `http://localhost:3000/select-role?token=${tempToken}`,
+    };
+  }
+
+  const token = jwt.sign(
+    { id: user._id, role: user.role },
+    process.env.SECRET_KEY,
+    { expiresIn: "1d" }
+  );
+
+  return {
+    redirect: false,
+    data: {
+      token,
+      role: user.role,
+      message: `Bienvenido ${user.name}, tu rol es ${user.role}`,
+    },
+  };
+};
+
+const selectRole = async (userId, role) => {
+  if (!role) {
+    throw new Error("El rol es requerido");
+  }
+
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new Error("Usuario no encontrado");
+  }
+
+  user.role = role;
+  await user.save();
+
+  const finalToken = jwt.sign(
+    {
+      id: user._id,
+      role: user.role,
+    },
+    process.env.SECRET_KEY,
+    { expiresIn: "1h" }
+  );
+
+  return {
+    message: "Usuario actualizado correctamente",
+    token: finalToken,
+  };
+};
+
 module.exports = {
   register,
   login,
+  handleGoogleCallback,
+  selectRole,
 };
