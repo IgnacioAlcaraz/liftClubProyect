@@ -5,7 +5,7 @@ const getServices = async (req, res) => {
     const services = await serviceService.getServices();
     res.status(200).json(services);
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: "Error al obtener los servicios",
       error: error.message,
     });
@@ -27,7 +27,7 @@ const createService = async (req, res) => {
     );
     res.status(201).json(savedService);
   } catch (error) {
-    res
+    return res
       .status(500)
       .json({ message: "Error al crear el servicio", error: error.message });
   }
@@ -42,7 +42,7 @@ const getServiceById = async (req, res) => {
     if (error.message === "Servicio no encontrado") {
       return res.status(404).json({ message: error.message });
     }
-    res
+    return res
       .status(500)
       .json({ message: "Error al obtener el servicio", error: error.message });
   }
@@ -66,7 +66,7 @@ const updateServiceById = async (req, res) => {
     if (error.message === "No tienes permiso para editar este servicio") {
       return res.status(403).json({ message: error.message });
     }
-    res.status(500).json({
+    return res.status(500).json({
       message: "Error al actualizar el servicio",
       error: error.message,
     });
@@ -90,7 +90,7 @@ const deleteServiceById = async (req, res) => {
     ) {
       return res.status(403).json({ message: error.message });
     }
-    res
+    return res
       .status(500)
       .json({ message: "Error al eliminar el servicio", error: error.message });
   }
@@ -105,7 +105,7 @@ const getServiceByCoachId = async (req, res) => {
     if (error.message === "ID de coach no proporcionado") {
       return res.status(400).json({ message: error.message });
     }
-    res.status(500).json({
+    return res.status(500).json({
       message: "Error al obtener los servicios del coach",
       error: error.message,
     });

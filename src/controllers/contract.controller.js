@@ -4,9 +4,9 @@ const getContracts = async (req, res) => {
   try {
     const { userId, role } = req.user;
     const contracts = await contractService.getContracts(userId, role);
-    res.status(200).json(contracts);
+    return res.status(200).json(contracts);
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: "Error al obtener los contratos",
       error: error.message,
     });
@@ -20,7 +20,7 @@ const createContract = async (req, res) => {
       req.body,
       userId
     );
-    res.status(201).json(savedContract);
+    return res.status(201).json(savedContract);
   } catch (error) {
     if (
       error.message === "Servicio no encontrado" ||
@@ -28,7 +28,7 @@ const createContract = async (req, res) => {
     ) {
       return res.status(400).json({ message: error.message });
     }
-    res
+    return res
       .status(500)
       .json({ message: "Error creando el contrato", error: error.message });
   }
@@ -39,7 +39,7 @@ const getContractById = async (req, res) => {
     const { id } = req.params;
     const { userId, role } = req.user;
     const contract = await contractService.getContractById(id, userId, role);
-    res.status(200).json(contract);
+    return res.status(200).json(contract);
   } catch (error) {
     if (error.message === "Contrato no encontrado") {
       return res.status(404).json({ message: error.message });
@@ -47,7 +47,7 @@ const getContractById = async (req, res) => {
     if (error.message.includes("No tienes permiso")) {
       return res.status(403).json({ message: error.message });
     }
-    res
+    return res
       .status(500)
       .json({ message: "Error al obtener el contrato", error: error.message });
   }
@@ -65,7 +65,7 @@ const updateContractStatusById = async (req, res) => {
       userId,
       role
     );
-    res.status(200).json(contract);
+    return res.status(200).json(contract);
   } catch (error) {
     if (error.message === "Contrato no encontrado") {
       return res.status(404).json({ message: error.message });
@@ -73,7 +73,7 @@ const updateContractStatusById = async (req, res) => {
     if (error.message.includes("No tienes permiso")) {
       return res.status(403).json({ message: error.message });
     }
-    res.status(500).json({
+    return res.status(500).json({
       message: "Error al actualizar el contrato",
       error: error.message,
     });
@@ -85,12 +85,12 @@ const getContractFilesById = async (req, res) => {
     const { id } = req.params;
     const { userId, role } = req.user;
     const files = await contractService.getContractFilesById(id, userId, role);
-    res.status(200).json(files);
+    return res.status(200).json(files);
   } catch (error) {
     if (error.message === "Contrato no encontrado") {
       return res.status(404).json({ message: error.message });
     }
-    res.status(500).json({
+    return res.status(500).json({
       message: "Error al obtener los archivos del contrato",
       error: error.message,
     });
@@ -108,7 +108,9 @@ const uploadContractFiles = async (req, res) => {
       userId,
       role
     );
-    res.status(200).json({ message: "Archivos subidos correctamente", files });
+    return res
+      .status(200)
+      .json({ message: "Archivos subidos correctamente", files });
   } catch (error) {
     if (
       error.message === "Contrato no encontrado" ||
@@ -125,7 +127,7 @@ const uploadContractFiles = async (req, res) => {
     if (error.message === "No se han subido archivos") {
       return res.status(400).json({ message: error.message });
     }
-    res
+    return res
       .status(500)
       .json({ message: "Error al subir archivos", error: error.message });
   }
@@ -142,7 +144,7 @@ const downloadContractFile = async (req, res) => {
       userId,
       role
     );
-    res.download(file.path, file.name);
+    return res.download(file.path, file.name);
   } catch (error) {
     if (
       error.message === "Contrato no encontrado" ||
@@ -153,7 +155,7 @@ const downloadContractFile = async (req, res) => {
     if (error.message.includes("No tienes permiso")) {
       return res.status(403).json({ message: error.message });
     }
-    res
+    return res
       .status(500)
       .json({ message: "Error al descargar el archivo", error: error.message });
   }
@@ -169,7 +171,7 @@ const getScheduledSessionsByContractId = async (req, res) => {
       userId,
       role
     );
-    res.status(200).json(sessions);
+    return res.status(200).json(sessions);
   } catch (error) {
     if (error.message === "Contrato no encontrado") {
       return res.status(404).json({ message: error.message });
@@ -177,7 +179,7 @@ const getScheduledSessionsByContractId = async (req, res) => {
     if (error.message.includes("No tienes permiso")) {
       return res.status(403).json({ message: error.message });
     }
-    res.status(500).json({
+    return res.status(500).json({
       message: "Error al obtener las sesiones programadas",
       error: error.message,
     });
@@ -197,7 +199,7 @@ const updateScheduledSessionStatusById = async (req, res) => {
       userId,
       role
     );
-    res.status(200).json(session);
+    return res.status(200).json(session);
   } catch (error) {
     if (
       error.message === "Contrato no encontrado" ||
@@ -208,7 +210,7 @@ const updateScheduledSessionStatusById = async (req, res) => {
     if (error.message.includes("No tienes permiso")) {
       return res.status(403).json({ message: error.message });
     }
-    res.status(500).json({
+    return res.status(500).json({
       message: "Error al actualizar la sesión programada",
       error: error.message,
     });
@@ -226,7 +228,7 @@ const createScheduledSession = async (req, res) => {
       userId,
       role
     );
-    res.status(201).json(session);
+    return res.status(201).json(session);
   } catch (error) {
     if (error.message === "Contrato no encontrado") {
       return res.status(404).json({ message: error.message });
@@ -240,7 +242,7 @@ const createScheduledSession = async (req, res) => {
     ) {
       return res.status(400).json({ message: error.message });
     }
-    res.status(500).json({
+    return res.status(500).json({
       message: "Error al crear la sesión programada",
       error: error.message,
     });

@@ -11,7 +11,7 @@ const createReview = async (req, res) => {
     }
 
     const savedReview = await reviewService.createReview(req.body, userId);
-    res.status(201).json(savedReview);
+    return res.status(201).json(savedReview);
   } catch (error) {
     if (error.message === "Contrato no encontrado") {
       return res.status(404).json({ message: error.message });
@@ -25,7 +25,7 @@ const createReview = async (req, res) => {
     if (error.message.includes("No puedes crear una reseña")) {
       return res.status(403).json({ message: error.message });
     }
-    res
+    return res
       .status(500)
       .json({ message: "Error al crear la reseña", error: error.message });
   }
@@ -35,9 +35,9 @@ const getReviewsByServiceId = async (req, res) => {
   try {
     const { serviceId } = req.params;
     const reviews = await reviewService.getReviewsByServiceId(serviceId);
-    res.status(200).json(reviews);
+    return res.status(200).json(reviews);
   } catch (error) {
-    res
+    return res
       .status(500)
       .json({ message: "Error al obtener las reseñas", error: error.message });
   }
@@ -47,9 +47,9 @@ const getReviewsByTrainerId = async (req, res) => {
   try {
     const { trainerId } = req.params;
     const reviews = await reviewService.getReviewsByTrainerId(trainerId);
-    res.status(200).json(reviews);
+    return res.status(200).json(reviews);
   } catch (error) {
-    res
+    return res
       .status(500)
       .json({ message: "Error al obtener las reseñas", error: error.message });
   }
@@ -69,7 +69,7 @@ const respondToReview = async (req, res) => {
     const { response } = req.body;
 
     const review = await reviewService.respondToReview(id, response, userId);
-    res
+    return res
       .status(200)
       .json({ message: "Respuesta enviada correctamente", review });
   } catch (error) {
@@ -82,7 +82,7 @@ const respondToReview = async (req, res) => {
     if (error.message === "Ya has respondido a esta reseña") {
       return res.status(400).json({ message: error.message });
     }
-    res
+    return res
       .status(500)
       .json({ message: "Error al enviar la respuesta", error: error.message });
   }
