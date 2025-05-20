@@ -69,11 +69,31 @@ const login = async (credentials) => {
   };
 };
 
-const handleGoogleCallback = async (user) => {
-  if (!user.role) {
-    const tempToken = jwt.sign({ id: user._id }, process.env.SECRET_KEY, {
-      expiresIn: "15m",
-    });
+const handleGoogleCallback = async (googleUser) => {
+  // Paso 1: Buscar si el usuario ya existe en la base de datos
+  const existingUser = await User.findOne({ email: googleUser.email });
+
+  if (!existingUser) {
+    // Paso 2: Si no existe, lo rechazamos o lo redirigimos a registrarse
+    throw new Error(
+      "El usuario no está registrado. Por favor, registrese primero."
+    );
+    // O redirigir a una pantalla para completar el registro:
+    // return {
+    //   redirect: true,
+    //   url: `http://localhost:5173/register-google?email=${googleUser.email}`
+    // };
+  }
+
+  // Paso 3: Si existe pero no tiene rol, redirigir a selector de rol
+  if (!existingUser.role) {
+    const tempToken = jwt.sign(
+      { id: existingUser._id },
+      process.env.SECRET_KEY,
+      {
+        expiresIn: "15m",
+      }
+    );
 
     return {
       redirect: true,
@@ -81,8 +101,9 @@ const handleGoogleCallback = async (user) => {
     };
   }
 
+  // Paso 4: Si tiene todo correcto, generar el token final
   const token = jwt.sign(
-    { id: user._id, role: user.role },
+    { id: existingUser._id, role: existingUser.role },
     process.env.SECRET_KEY,
     { expiresIn: "1d" }
   );
@@ -92,9 +113,9 @@ const handleGoogleCallback = async (user) => {
     data: {
       token,
       user: {
-        id: user._id,
-        email: user.email,
-        role: user.role,
+        id: existingUser._id,
+        email: existingUser.email,
+        role: existingUser.role,
       },
     },
   };
@@ -127,6 +148,7 @@ const selectRole = async (userId, role) => {
   return {
     message: "Usuario actualizado correctamente",
     token: finalToken,
+    role: user.role,
   };
 };
 
