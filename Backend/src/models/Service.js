@@ -41,6 +41,10 @@ const serviceSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    image: {
+      type: String, // URL de la imagen
+      default: "https://via.placeholder.com/400x300", // Imagen por defecto si no se proporciona una
+    },
   },
   { timestamps: true }
 );
