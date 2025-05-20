@@ -42,7 +42,7 @@ passport.use(
           }
         }
 
-        // 5️⃣ Finaliza el proceso, pasando el usuario a la sesión
+        // Finaliza el proceso, pasando el usuario a la sesión
         return done(null, user);
       } catch (error) {
         console.error("Error en la autenticación con Google:", error.message);

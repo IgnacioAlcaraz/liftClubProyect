@@ -23,7 +23,7 @@ const createService = async (req, res) => {
 
     const savedService = await serviceService.createService(
       req.body,
-      user.userId
+      user.userId, req.files
     );
     res.status(201).json(savedService);
   } catch (error) {
@@ -56,7 +56,8 @@ const updateServiceById = async (req, res) => {
     const updatedService = await serviceService.updateServiceById(
       id,
       req.body,
-      user.userId
+      user.userId,
+      req.files
     );
     res.status(200).json(updatedService);
   } catch (error) {

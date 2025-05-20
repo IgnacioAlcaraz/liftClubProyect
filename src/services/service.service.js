@@ -1,13 +1,27 @@
 const Service = require("../models/Service");
+const fs = require("fs");
+const path = require("path");
 
 const getServices = async () => {
   return await Service.find();
 };
 
-const createService = async (serviceData, userId) => {
+const createService = async (serviceData, userId, files) => {
+  let images = [];
+
+  if(files && files.length > 0) {
+    images = files.map((file) => ({
+      name: file.originalname,
+      url: `/uploads/${file.filename}`,
+      mimeType: file.mimetype,
+      size: file.size
+    }));
+  }
+
   const newService = new Service({
     ...serviceData,
     coachId: userId,
+    images: images,
   });
 
   return await newService.save();
@@ -23,7 +37,7 @@ const getServiceById = async (id) => {
   return service;
 };
 
-const updateServiceById = async (id, serviceData, userId) => {
+const updateServiceById = async (id, serviceData, userId, files) => {
   const service = await Service.findById(id);
 
   if (!service) {
@@ -34,7 +48,20 @@ const updateServiceById = async (id, serviceData, userId) => {
     throw new Error("No tienes permiso para editar este servicio");
   }
 
-  return await Service.findByIdAndUpdate(id, serviceData, { new: true });
+  let updatedData = { ...serviceData };
+  
+  if (files && files.length > 0) {
+    const newImages = files.map((file) => ({
+      name: file.originalname,
+      url: `/uploads/${file.filename}`,
+      mimeType: file.mimetype,
+      size: file.size
+    }));
+    
+    updatedData.images = newImages;
+  }
+
+  return await Service.findByIdAndUpdate(id, updatedData, { new: true });
 };
 
 const deleteServiceById = async (id, userId) => {
@@ -52,6 +79,19 @@ const deleteServiceById = async (id, userId) => {
 
   if (service.coachId.toString() !== userId) {
     throw new Error("No tienes permiso para eliminar este servicio");
+  }
+
+  if(service.images && service.images.length > 0) {
+    service.images.forEach((image) => {
+      try {
+        const filePath = path.join(__dirname, '..', image.url);
+        if(fs.existsSync(filePath)) {
+          fs.unlinkSync(filePath);
+        }
+      } catch (error) {
+        console.error("Error al eliminar la imagen:", error);
+      }
+    });
   }
 
   await Service.findByIdAndDelete(id);

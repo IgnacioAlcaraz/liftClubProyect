@@ -1,6 +1,13 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+const imageSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  url: { type: String, required: true },
+  mimeType: { type: String, required: true },
+  size: { type: Number, required: true },
+}, { timestamps: true });
+
 const serviceSchema = new mongoose.Schema(
   {
     coachId: {
@@ -22,6 +29,7 @@ const serviceSchema = new mongoose.Schema(
       type: String,
       enum: ["public", "private"],
     },
+    images: [imageSchema],
     availability: [
       {
         dayOfWeek: {

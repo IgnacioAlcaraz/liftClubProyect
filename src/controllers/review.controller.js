@@ -34,7 +34,9 @@ const createReview = async (req, res) => {
 const getReviewsByServiceId = async (req, res) => {
   try {
     const { serviceId } = req.params;
-    const reviews = await reviewService.getReviewsByServiceId(serviceId);
+    const { page = 1, limit = 10 } = req.query;
+
+    const reviews = await reviewService.getReviewsByServiceId(serviceId, page, limit);
     return res.status(200).json(reviews);
   } catch (error) {
     return res
@@ -46,7 +48,9 @@ const getReviewsByServiceId = async (req, res) => {
 const getReviewsByTrainerId = async (req, res) => {
   try {
     const { trainerId } = req.params;
-    const reviews = await reviewService.getReviewsByTrainerId(trainerId);
+    const { page = 1, limit = 10 } = req.query;
+
+    const reviews = await reviewService.getReviewsByTrainerId(trainerId, page, limit);
     return res.status(200).json(reviews);
   } catch (error) {
     return res

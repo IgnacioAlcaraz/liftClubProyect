@@ -37,12 +37,18 @@ const createReview = async (reviewData, userId) => {
   return savedReview;
 };
 
-const getReviewsByServiceId = async (serviceId) => {
-  return await Review.find({ serviceId });
+const getReviewsByServiceId = async (serviceId, page, limit) => {
+  const skip = (page - 1) * limit;
+  const reviews = await Review.find({ serviceId }).skip(skip).limit(limit).sort({ createdAt: -1 });
+  const total = await Review.countDocuments({ serviceId });
+  return { reviews, total, currentPage: parseInt(page), totalPages: Math.ceil(total / limit) };
 };
 
-const getReviewsByTrainerId = async (trainerId) => {
-  return await Review.find({ trainerId });
+const getReviewsByTrainerId = async (trainerId, page, limit) => {
+  const skip = (page - 1) * limit;
+  const reviews = await Review.find({ trainerId }).skip(skip).limit(limit).sort({ createdAt: -1 });
+  const total = await Review.countDocuments({ trainerId });
+  return { reviews, total, currentPage: parseInt(page), totalPages: Math.ceil(total / limit) };
 };
 
 const respondToReview = async (reviewId, response, userId) => {

@@ -2,14 +2,15 @@ const express = require("express");
 const router = express.Router();
 const serviceController = require("../controllers/service.controller");
 const auth = require("../middlewares/auth");
+const upload = require("../middlewares/upload");
 
 router.get("/", serviceController.getServices);
 
-router.post("/", auth, serviceController.createService);
+router.post("/", auth, upload.array("images"), serviceController.createService);
 
 router.get("/:id", auth, serviceController.getServiceById);
 
-router.put("/:id", auth, serviceController.updateServiceById);
+router.put("/:id", auth, upload.array("images"), serviceController.updateServiceById);
 
 router.delete("/:id", auth, serviceController.deleteServiceById);
 
