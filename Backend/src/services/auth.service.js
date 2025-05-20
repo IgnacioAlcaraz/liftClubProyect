@@ -70,18 +70,17 @@ const login = async (credentials) => {
 };
 
 const handleGoogleCallback = async (user) => {
-  // Si el usuario no tiene rol, se le redirige a la página de selección de rol
   if (!user.role) {
     const tempToken = jwt.sign({ id: user._id }, process.env.SECRET_KEY, {
       expiresIn: "15m",
     });
+
     return {
       redirect: true,
-      url: `http://localhost:3000/select-role?token=${tempToken}`,
+      url: `http://localhost:5173/select-role?token=${tempToken}`,
     };
   }
 
-  // Si el usuario tiene rol, se le genera un token y se redirige a la página de inicio
   const token = jwt.sign(
     { id: user._id, role: user.role },
     process.env.SECRET_KEY,
@@ -92,8 +91,11 @@ const handleGoogleCallback = async (user) => {
     redirect: false,
     data: {
       token,
-      role: user.role,
-      message: `Bienvenido ${user.name}, tu rol es ${user.role}`,
+      user: {
+        id: user._id,
+        email: user.email,
+        role: user.role,
+      },
     },
   };
 };

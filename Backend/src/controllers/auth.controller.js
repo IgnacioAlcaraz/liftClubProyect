@@ -29,18 +29,26 @@ const login = async (req, res) => {
   }
 };
 
-// Callback de Google
 const googleCallback = async (req, res) => {
   try {
     const result = await authService.handleGoogleCallback(req.user);
 
-    // Si el usuario no tiene rol, se le redirige a la página de selección de rol
     if (result.redirect) {
-      return res.redirect(result.url);
+      return res.redirect(result.url); // redirige si no tiene rol
     }
 
-    // Si el usuario tiene rol, se le genera un token y se redirige a la página de inicio
-    return res.json(result.data);
+    const html = `
+  <html>
+    <body>
+      <script>
+        window.opener.postMessage(${JSON.stringify(result.data)}, "*");
+        window.close();
+      </script>
+    </body>
+  </html>
+`;
+
+    res.send(html);
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
