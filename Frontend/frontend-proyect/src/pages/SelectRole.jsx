@@ -12,31 +12,19 @@ const SelectRole = () => {
   const [redirect, setRedirect] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // Si no hay token en la URL, redirige al login
-  if (!token) {
-    return <Navigate to="/" />;
-  }
-
-  // Guardar el token temporal en Redux y localStorage al cargar el componente
-  useEffect(() => {
-    dispatch(googleLoginSuccess({ token, user: { role: null } }));
-    localStorage.setItem("token", token);
-  }, [token, dispatch]);
+  if (!token) return <Navigate to="/" />;
 
   const handleSelectRole = async () => {
     setLoading(true);
     try {
-      const response = await fetch(
-        "http://localhost:5000/api/auth/select-role",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ role }),
-        }
-      );
+      const response = await fetch("http://localhost:5000/api/auth/select-role", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ role }),
+      });
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -47,10 +35,9 @@ const SelectRole = () => {
       const finalToken = data.token;
 
       // Guardar token final en localStorage y Redux
-      dispatch(googleLoginSuccess({ token: finalToken, user: { role: data.role } }));
       localStorage.setItem("token", finalToken);
+      dispatch(googleLoginSuccess({ token: finalToken, user: { role: data.role } }));
 
-      // Redirigir según el rol seleccionado
       if (data.role === "client") {
         setRedirect("/client-home");
       } else if (data.role === "coach") {
@@ -66,9 +53,7 @@ const SelectRole = () => {
     }
   };
 
-  if (redirect) {
-    return <Navigate to={redirect} />;
-  }
+  if (redirect) return <Navigate to={redirect} />;
 
   return (
     <div style={{ padding: "2rem", maxWidth: "400px", margin: "0 auto" }}>

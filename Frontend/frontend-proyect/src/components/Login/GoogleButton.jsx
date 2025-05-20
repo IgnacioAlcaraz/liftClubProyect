@@ -35,17 +35,13 @@ const GoogleButton = () => {
   }, [dispatch]);
 
   const handleGoogleLogin = () => {
-    window.open(
-      "http://localhost:5000/api/auth/google",
-      "_blank",
-      "width=500,height=600"
-    );
+    window.location.href = "http://localhost:5000/api/auth/google";
   };
 
   return (
     <button type="button" className="google-btn" onClick={handleGoogleLogin}>
       <img
-        src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png"
+        src="https://developers.google.com/identity/images/g-logo.png"
         alt="Google"
         className="google-icon"
       />

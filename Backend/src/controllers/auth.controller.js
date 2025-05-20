@@ -28,28 +28,21 @@ const login = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
-
 const googleCallback = async (req, res) => {
   try {
     const result = await authService.handleGoogleCallback(req.user);
 
     if (result.redirect) {
-      return res.redirect(result.url); // redirige si no tiene rol
+      // Redirigir sin popup
+      return res.redirect(result.url);
     }
 
-    const html = `
-  <html>
-    <body>
-      <script>
-        window.opener.postMessage(${JSON.stringify(result.data)}, "*");
-        window.close();
-      </script>
-    </body>
-  </html>
-`;
-
-    res.send(html);
+    // Redirigir con token y rol al frontend
+    return res.redirect(
+      `http://localhost:5173/google-success?token=${result.data.token}&role=${result.data.user.role}`
+    );
   } catch (error) {
+    console.error("Error en googleCallback:", error.message);
     return res.status(500).json({ message: error.message });
   }
 };

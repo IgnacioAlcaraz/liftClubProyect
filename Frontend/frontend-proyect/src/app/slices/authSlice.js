@@ -42,7 +42,6 @@ const authSlice = createSlice({
       state.error = null;
     },
 
-    // 🔽 Login exitoso con Google
     googleLoginSuccess: (state, action) => {
       state.loading = false;
       state.isAuthenticated = true;

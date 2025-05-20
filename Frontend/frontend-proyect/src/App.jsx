@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LoginPage from "./pages/Login";
 import SelectRole from "./pages/SelectRole";
 import RegisterPage from "./pages/Register";
+import GoogleSuccess from "./pages/GoogleSuccess";
 
 const App = () => {
   return (
@@ -11,6 +12,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/google-success" element={<GoogleSuccess />} />
 
         {/* <Route path="/client-home" element={<ClientHome />} /> */}
         {/* <Route path="/coach-home" element={<CoachHome />} /> */}
