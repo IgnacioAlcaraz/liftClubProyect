@@ -1,44 +1,44 @@
 import React from "react";
-import "./ServiceCard.css";
+import { Star } from "lucide-react";
+import Card from "react-bootstrap/Card";
+import "./serviceCard.css";
 
 const ServiceCard = ({
   image,
   title,
   coachName,
   description,
-  price,
   rating,
+  price,
 }) => {
   return (
-    <div
-      className="card shadow-sm m-2"
-      style={{ width: "18rem", borderRadius: "1rem" }}
-    >
-      <img
+    <Card style={{ width: "18rem" }} className="shadow-sm">
+      <Card.Img
+        variant="top"
         src={image}
-        className="card-img-top"
         alt={title}
-        style={{
-          borderTopLeftRadius: "1rem",
-          borderTopRightRadius: "1rem",
-          height: "180px",
-          objectFit: "cover",
-        }}
+        style={{ height: "180px", objectFit: "cover" }}
       />
-      <div className="card-body">
-        <h5 className="card-title fw-bold">{title}</h5>
-        <h6 className="card-subtitle mb-2 text-muted">{coachName}</h6>
-        <p className="card-text text-secondary" style={{ fontSize: "0.95rem" }}>
-          {description}
-        </p>
+      <Card.Body>
+        <Card.Title className="fw-bold">{title}</Card.Title>
+        <Card.Subtitle className="mb-1 text-muted">{coachName}</Card.Subtitle>
+        <Card.Text style={{ fontSize: "0.9rem" }}>{description}</Card.Text>
+
         <div className="mb-2">
-          {Array.from({ length: rating }).map((_, i) => (
-            <i className="bi bi-star-fill text-warning" key={i}></i>
+          {Array.from({ length: Math.round(rating) }).map((_, idx) => (
+            <Star
+              key={idx}
+              size={16}
+              fill="#ffc107"
+              stroke="#ffc107"
+              className="me-1"
+            />
           ))}
         </div>
-        <p className="fw-semibold fs-5">{price} USD</p>
-      </div>
-    </div>
+
+        <Card.Text className="fw-bold">{price} USD</Card.Text>
+      </Card.Body>
+    </Card>
   );
 };
 
