@@ -1,0 +1,37 @@
+/* Contenedor principal */
+.search-bar-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 700px;
+}
+
+/* InputGroup con sombra y bordes redondeados */
+.search-input-group .form-control {
+  border-radius: 12px 0 0 12px;
+  padding: 10px 16px;
+  font-size: 0.95rem;
+  height: 44px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  border: 1px solid #ddd;
+}
+
+.search-input-group .btn {
+  border-radius: 0 12px 12px 0;
+  height: 44px;
+  background-color: white;
+  border: 1px solid #ddd;
+}
+
+/* Botón de filtro */
+.filter-button {
+  height: 44px;
+  border-radius: 12px;
+  background-color: white;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

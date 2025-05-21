@@ -1,0 +1,24 @@
+.steps-bar {
+  display: flex;
+  gap: 32px;
+  align-items: center;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 0.85rem;
+}
+
+.circle {
+  width: 20px;
+  height: 20px;
+  border: 2px solid green;
+  border-radius: 50%;
+  margin-bottom: 4px;
+}
+
+.circle.active {
+  background-color: green;
+}

@@ -1,0 +1,46 @@
+.custom-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  background-color: #f9f9f9;
+  border-bottom: 1px solid #eaeaea;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo {
+  height: 150px;
+}
+
+.brand {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.center {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  justify-content: center;
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.logout-button {
+  margin-top: 0 !important;
+  align-self: center;
+}
