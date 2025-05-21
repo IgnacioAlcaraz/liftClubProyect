@@ -10,7 +10,7 @@ const ServiceCard = ({
 }) => {
   return (
     <div
-      className="card shadow-sm"
+      className="card shadow-sm m-2"
       style={{ width: "18rem", borderRadius: "1rem" }}
     >
       <img
