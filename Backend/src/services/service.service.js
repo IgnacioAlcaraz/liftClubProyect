@@ -1,7 +1,11 @@
 const Service = require("../models/Service");
 
 const getServices = async () => {
-  return await Service.find();
+  const services = await Service.find().populate(
+    "coachId",
+    "firstName lastName"
+  );
+  return services;
 };
 
 const createService = async (serviceData, userId) => {
