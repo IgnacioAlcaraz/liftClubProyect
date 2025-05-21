@@ -1,4 +1,5 @@
 import React from "react";
+import "./ServiceCard.css";
 
 const ServiceCard = ({
   image,

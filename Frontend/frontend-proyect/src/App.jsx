@@ -6,6 +6,7 @@ import SelectRole from "./pages/SelectRole";
 import RegisterPage from "./pages/Register";
 import GoogleSuccess from "./pages/GoogleSuccess";
 import ClientHome from "./pages/ClientHome";
+import CoachHome from "./pages/CoachHome";
 
 const App = () => {
   return (
@@ -15,7 +16,7 @@ const App = () => {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/google-success" element={<GoogleSuccess />} />
         <Route path="/client-home" element={<ClientHome />} />
-        {/* <Route path="/coach-home" element={<CoachHome />} /> */}
+        <Route path="/coach-home" element={<CoachHome />} />
         {/* <Route path="/google-success" element={<GoogleSuccess />} /> */}
         <Route path="/select-role" element={<SelectRole />} />
       </Routes>

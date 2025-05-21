@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import ServiceCard from "./ServiceCard";
+import ServiceCard from "../serviceCard/ServiceCard";
+import "./ServiceList.css";
 
 const ListaDeServicios = () => {
   const token = useSelector((state) => state.auth.token);

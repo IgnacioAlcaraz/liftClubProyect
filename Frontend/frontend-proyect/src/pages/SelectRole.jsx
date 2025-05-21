@@ -1,5 +1,5 @@
 import { useSearchParams, Navigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { googleLoginSuccess } from "../app/slices/authSlice";
 

@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../app/slices/authSlice";
-import InputField from "./InputField";
-import SubmitButton from "./SubmitButton";
-import GoogleButton from "./GoogleButton";
+import InputField from "../input/InputField";
+import SubmitButton from "../submitButton/SubmitButton";
+import GoogleButton from "../googleButton/GoogleButton";
 import { Eye, EyeOff } from "lucide-react";
+import "./LoginForm.css";
 
 const LoginForm = () => {
   const [credentials, setCredentials] = useState({ email: "", password: "" });

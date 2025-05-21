@@ -1,6 +1,6 @@
 import React from "react";
-import ListaDeServicios from "../components/Login/ListaDeServicios";
-import PrimaryButton from "../components/Login/PrimaryButton";
+import ListaDeServicios from "../components/client/serviceList/serviceList";
+import PrimaryButton from "../components/primaryButton/PrimaryButton";
 import { Paperclip } from "lucide-react";
 
 const ClientHome = () => {

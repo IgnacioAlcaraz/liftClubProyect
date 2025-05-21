@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "../app/slices/authSlice";
-import InputField from "../components/Login/InputField";
-import SubmitButton from "../components/Login/SubmitButton";
-import GoogleButton from "../components/Login/GoogleButton";
+import InputField from "../components/input/InputField";
+import SubmitButton from "../components/submitButton/SubmitButton";
+import GoogleButton from "../components/googleButton/GoogleButton";
 
 const Register = () => {
   const navigate = useNavigate();

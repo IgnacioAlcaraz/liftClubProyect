@@ -1,0 +1,9 @@
+.submit-btn {
+    color: white !important;
+    background-color: #7B46E3 !important;
+    text-align: left !important;
+}
+
+.submit-btn:hover {
+    background-color: #6338b8 !important;
+}
