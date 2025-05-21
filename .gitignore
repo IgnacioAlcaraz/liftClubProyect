@@ -1,4 +1,38 @@
-node_modules/
-.env
-src/api.http
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# node_modules (en cualquier parte)
+**/node_modules/
+
+# Builds
+**/dist/
+**/dist-ssr/
+**/build/
+
+# Config local y entornos
+*.local
+*.env
+
+# IDEs y editores
+.vscode/
+.idea/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Archivos de sistema
+Thumbs.db
+ehthumbs.db
+
+# Otros específicos
+**/.next/
 uploads/
+Backend/src/api.http

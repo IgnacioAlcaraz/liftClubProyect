@@ -1,6 +1,8 @@
 require("dotenv").config();
 const express = require("express");
 const connectDB = require("./src/configs/db");
+const cors = require("cors");
+
 const userRoutes = require("./src/routes/user.routes");
 const authRoutes = require("./src/routes/auth.routes");
 const serviceRoutes = require("./src/routes/service.routes");
@@ -16,6 +18,8 @@ const app = express();
 connectDB();
 
 //middlewares
+app.use(cors());
+
 app.use(express.json());
 app.use(
   session({ secret: "mysecret", resave: false, saveUninitialized: true })

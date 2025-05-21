@@ -69,21 +69,41 @@ const login = async (credentials) => {
   };
 };
 
-const handleGoogleCallback = async (user) => {
-  // Si el usuario no tiene rol, se le redirige a la página de selección de rol
-  if (!user.role) {
-    const tempToken = jwt.sign({ id: user._id }, process.env.SECRET_KEY, {
-      expiresIn: "15m",
-    });
+const handleGoogleCallback = async (googleUser) => {
+  // Paso 1: Buscar si el usuario ya existe en la base de datos
+  const existingUser = await User.findOne({ email: googleUser.email });
+
+  if (!existingUser) {
+    // Paso 2: Si no existe, lo rechazamos o lo redirigimos a registrarse
+    throw new Error(
+      "El usuario no está registrado. Por favor, registrese primero."
+    );
+    // O redirigir a una pantalla para completar el registro:
+    // return {
+    //   redirect: true,
+    //   url: `http://localhost:5173/register-google?email=${googleUser.email}`
+    // };
+  }
+
+  // Paso 3: Si existe pero no tiene rol, redirigir a selector de rol
+  if (!existingUser.role) {
+    const tempToken = jwt.sign(
+      { id: existingUser._id },
+      process.env.SECRET_KEY,
+      {
+        expiresIn: "15m",
+      }
+    );
+
     return {
       redirect: true,
-      url: `http://localhost:3000/select-role?token=${tempToken}`,
+      url: `http://localhost:5173/select-role?token=${tempToken}`,
     };
   }
 
-  // Si el usuario tiene rol, se le genera un token y se redirige a la página de inicio
+  // Paso 4: Si tiene todo correcto, generar el token final
   const token = jwt.sign(
-    { id: user._id, role: user.role },
+    { id: existingUser._id, role: existingUser.role },
     process.env.SECRET_KEY,
     { expiresIn: "1d" }
   );
@@ -92,8 +112,11 @@ const handleGoogleCallback = async (user) => {
     redirect: false,
     data: {
       token,
-      role: user.role,
-      message: `Bienvenido ${user.name}, tu rol es ${user.role}`,
+      user: {
+        id: existingUser._id,
+        email: existingUser.email,
+        role: existingUser.role,
+      },
     },
   };
 };
@@ -125,6 +148,7 @@ const selectRole = async (userId, role) => {
   return {
     message: "Usuario actualizado correctamente",
     token: finalToken,
+    role: user.role,
   };
 };
 
