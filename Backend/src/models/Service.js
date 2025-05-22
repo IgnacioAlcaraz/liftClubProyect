@@ -1,12 +1,15 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const imageSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  url: { type: String, required: true },
-  mimeType: { type: String, required: true },
-  size: { type: Number, required: true },
-}, { timestamps: true });
+const imageSchema = new mongoose.Schema(
+  {
+    name: { type: String, required: true },
+    url: { type: String, required: true },
+    mimeType: { type: String, required: true },
+    size: { type: Number, required: true },
+  },
+  { timestamps: true }
+);
 
 const serviceSchema = new mongoose.Schema(
   {
@@ -50,9 +53,15 @@ const serviceSchema = new mongoose.Schema(
       default: 0,
     },
     image: {
-      type: String, // URL de la imagen
-      default: "https://via.placeholder.com/400x300", // Imagen por defecto si no se proporciona una
+      type: String,
+      default: "https://via.placeholder.com/400x300",
     },
+    reviews: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Review",
+      },
+    ],
   },
   { timestamps: true }
 );

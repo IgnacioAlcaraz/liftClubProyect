@@ -32,9 +32,17 @@ const createReview = async (reviewData, userId) => {
 
   const savedReview = await newReview.save();
 
-  // Actualiza el promedio en el servicio
-  await updateAverageRating(newReview.serviceId);
+  //  Agrega el ID de la review al array del servicio
+  await Service.findByIdAndUpdate(
+    contract.serviceId,
+    { $addToSet: { reviews: savedReview._id } }, // evita duplicados
+    { new: true }
+  );
 
+  // Actualiza el promedio de calificaciones
+  await updateAverageRating(savedReview.serviceId);
+
+  // Marca el contrato como con review
   contract.reviewSubmitted = true;
   await contract.save();
 
@@ -46,7 +54,9 @@ const getReviewsByServiceId = async (serviceId, page, limit) => {
   const reviews = await Review.find({ serviceId })
     .skip(skip)
     .limit(limit)
-    .sort({ createdAt: -1 });
+    .sort({ createdAt: -1 })
+    .populate("clientId", "firstName lastName"); // Opcional, para frontend
+
   const total = await Review.countDocuments({ serviceId });
   return {
     reviews,
@@ -61,7 +71,9 @@ const getReviewsByTrainerId = async (trainerId, page, limit) => {
   const reviews = await Review.find({ trainerId })
     .skip(skip)
     .limit(limit)
-    .sort({ createdAt: -1 });
+    .sort({ createdAt: -1 })
+    .populate("clientId", "firstName lastName");
+
   const total = await Review.countDocuments({ trainerId });
   return {
     reviews,
@@ -91,15 +103,15 @@ const respondToReview = async (reviewId, response, userId) => {
 };
 
 const updateAverageRating = async (serviceId) => {
-  const reviews = await Review.find({ serviceId }); // 1. Busca todas las reseñas del servicio por su ID
+  const reviews = await Review.find({ serviceId });
 
-  if (!reviews.length) return; // 2. Si no hay reseñas, no hace nada
+  if (!reviews.length) return;
 
-  const sum = reviews.reduce((acc, review) => acc + review.rating, 0); // 3. Suma todos los ratings de las reseñas
-  const average = sum / reviews.length; // 4. Divide la suma entre la cantidad total de reseñas para obtener el promedio
+  const sum = reviews.reduce((acc, review) => acc + review.rating, 0);
+  const average = sum / reviews.length;
 
   await Service.findByIdAndUpdate(serviceId, {
-    averageRating: average.toFixed(1), // 5. Actualiza el servicio con el promedio, redondeado a un decimal
+    averageRating: average.toFixed(1),
   });
 };
 

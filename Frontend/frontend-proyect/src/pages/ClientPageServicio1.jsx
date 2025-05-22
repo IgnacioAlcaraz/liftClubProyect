@@ -24,6 +24,8 @@ export default function ClientPageServicio1() {
             },
           }
         );
+
+        console.log("Servicio con reviews:", response.data);
         setService(response.data);
       } catch (err) {
         console.error("Error al obtener el servicio:", err);

@@ -4,11 +4,21 @@ import ServicioInfo from "./ServicioInfo";
 import ComentariosList from "./ComentariosList";
 
 const ServicioDetalleCard = ({ servicio }) => {
+  console.log("REVIEWS en servicio:", servicio.reviews);
+
+  const comentarios = (servicio.reviews || []).map((r) => ({
+    author: `${r.clientId?.firstName || "Usuario"} ${
+      r.clientId?.lastName || ""
+    }`,
+    text: r.comment,
+    reply: r.trainerResponse,
+  }));
+
   return (
     <div className="card shadow p-3 mb-4 bg-white rounded">
       <ServicioImagenCarousel imagenes={servicio.images} />
       <ServicioInfo servicio={servicio} />
-      <ComentariosList comentarios={servicio.reviews} />
+      <ComentariosList comentarios={comentarios} />
     </div>
   );
 };
