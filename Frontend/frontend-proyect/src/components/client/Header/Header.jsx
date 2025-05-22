@@ -1,0 +1,51 @@
+import React from "react";
+import { Paperclip } from "lucide-react";
+import PrimaryButton from "../../primaryButton/PrimaryButton";
+import LogoutButton from "../../LogoutButton";
+import SearchBar from "../SearchBar/SearchBar";
+import StepsBar from "../StepsBar/StepsBar";
+import logo from "../../../assets/logo.png";
+import "./Header.css";
+
+const Header = ({
+  showSearch = false,
+  searchQuery = "",
+  setSearchQuery = () => {},
+  showSteps = false,
+  currentStep = 0,
+  showButtons = true,
+  setFilters = () => {},
+}) => {
+  return (
+    <div className="custom-header">
+      <div className="left">
+        <img src={logo} alt="LiftClub" className="logo" />
+      </div>
+
+      <div className="center">
+        {showSearch && (
+          <SearchBar
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            setFilters={setFilters}
+          />
+        )}
+        {showSteps && <StepsBar step={currentStep} />}
+      </div>
+
+      {showButtons && (
+        <div className="right">
+          <PrimaryButton
+            icon={Paperclip}
+            text="Mis Servicios"
+            to="/mis-servicios"
+            variant="primary"
+          />
+          <LogoutButton />
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default Header;

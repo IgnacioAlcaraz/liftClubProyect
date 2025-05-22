@@ -32,7 +32,14 @@ const createService = async (serviceData, userId, files) => {
 };
 
 const getServiceById = async (id) => {
-  const service = await Service.findById(id);
+  const service = await Service.findById(id)
+    .populate({
+      path: "reviews",
+      populate: {
+        path: "clientId",
+        select: "firstName lastName",
+      },
+    });
 
   if (!service) {
     throw new Error("Servicio no encontrado");

@@ -7,6 +7,7 @@ import RegisterPage from "./pages/Register";
 import GoogleSuccess from "./pages/GoogleSuccess";
 import ClientHome from "./pages/ClientHome";
 import CoachHome from "./pages/CoachHome";
+import ClientPageServicio1 from "./pages/ClientPageServicio1";
 import "./App.css";
 
 const App = () => {
@@ -17,6 +18,11 @@ const App = () => {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/google-success" element={<GoogleSuccess />} />
         <Route path="/client-home" element={<ClientHome />} />
+        <Route
+          path="/client-page-servicio1/:id"
+          element={<ClientPageServicio1 />}
+        />
+
         <Route path="/coach-home" element={<CoachHome />} />
         {/* <Route path="/google-success" element={<GoogleSuccess />} /> */}
         <Route path="/select-role" element={<SelectRole />} />

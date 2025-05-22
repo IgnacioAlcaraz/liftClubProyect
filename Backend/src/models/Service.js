@@ -53,9 +53,15 @@ const serviceSchema = new mongoose.Schema(
       default: 0,
     },
     image: {
-      type: String, // URL de la imagen
+      type: String,
       default: "https://via.placeholder.com/400x300",
     },
+    reviews: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Review",
+      },
+    ],
   },
   { timestamps: true }
 );

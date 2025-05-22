@@ -1,23 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
 import ListaDeServicios from "../components/client/serviceList/serviceList";
-import PrimaryButton from "../components/primaryButton/PrimaryButton";
-import { Paperclip } from "lucide-react";
+import Header from "../components/client/Header/Header";
 
 const ClientHome = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filters, setFilters] = useState({});
+
   return (
     <>
+      <Header
+        showSearch={true}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        showButtons={true}
+        setFilters={setFilters}
+      />
+
       <div className="container py-4">
-        <PrimaryButton
-          icon={Paperclip}
-          text="Mis Servicios"
-          to="/mis-servicios"
-          variant="primary"
-        />
         <h2 className="fw-bold mb-2">Encontra los mejores entrenadores...</h2>
         <p className="text-secondary mb-4">
           Descubre profesionales que te ayudarán a alcanzar objetivos
         </p>
-        <ListaDeServicios />
+        <ListaDeServicios searchQuery={searchQuery} filters={filters} />
       </div>
     </>
   );
