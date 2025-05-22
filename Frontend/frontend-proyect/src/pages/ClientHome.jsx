@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import ListaDeServicios from "../components/client/serviceList/serviceList";
-import PrimaryButton from "../components/primaryButton/PrimaryButton";
 import Header from "../components/client/Header/Header";
-import { Paperclip } from "lucide-react";
 
 const ClientHome = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [filters, setFilters] = useState({});
 
   return (
     <>
@@ -13,8 +12,8 @@ const ClientHome = () => {
         showSearch={true}
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
-        onFilterClick={() => console.log("Filtro no implementado")}
         showButtons={true}
+        setFilters={setFilters}
       />
 
       <div className="container py-4">
@@ -22,7 +21,7 @@ const ClientHome = () => {
         <p className="text-secondary mb-4">
           Descubre profesionales que te ayudarán a alcanzar objetivos
         </p>
-        <ListaDeServicios searchQuery={searchQuery} />
+        <ListaDeServicios searchQuery={searchQuery} filters={filters} />
       </div>
     </>
   );

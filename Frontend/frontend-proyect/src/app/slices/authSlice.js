@@ -64,7 +64,6 @@ export const {
 // Exportación del reducer
 export default authSlice.reducer;
 
-// 🔁 Thunk para login tradicional (fetch POST)
 export const loginUser = (credentials) => async (dispatch) => {
   dispatch(loginStart());
   try {

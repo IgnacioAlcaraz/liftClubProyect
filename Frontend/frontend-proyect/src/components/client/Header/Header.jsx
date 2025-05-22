@@ -1,27 +1,26 @@
 import React from "react";
-import { Button } from "react-bootstrap";
+import { Paperclip } from "lucide-react";
 import PrimaryButton from "../../primaryButton/PrimaryButton";
-import { LogOut, Paperclip } from "lucide-react";
+import LogoutButton from "../../LogoutButton";
 import SearchBar from "../SearchBar/SearchBar";
 import StepsBar from "../StepsBar/StepsBar";
-import LogoutButton from "../../LogoutButton";
 import logo from "../../../assets/logo.png";
-
 import "./Header.css";
 
 const Header = ({
   showSearch = false,
   searchQuery = "",
   setSearchQuery = () => {},
-  onFilterClick = () => {},
   showSteps = false,
   currentStep = 0,
   showButtons = true,
+  setFilters = () => {},
+  
 }) => {
   return (
     <div className="custom-header">
       <div className="left">
-        {<img src={logo} alt="LiftClub" className="logo" />}
+        <img src={logo} alt="LiftClub" className="logo" />
       </div>
 
       <div className="center">
@@ -29,7 +28,7 @@ const Header = ({
           <SearchBar
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
-            onFilterClick={onFilterClick}
+            setFilters={setFilters}
           />
         )}
         {showSteps && <StepsBar currentStep={currentStep} />}
@@ -43,7 +42,6 @@ const Header = ({
             to="/mis-servicios"
             variant="primary"
           />
-
           <LogoutButton />
         </div>
       )}

@@ -3,9 +3,10 @@ import { useSelector } from "react-redux";
 import ServiceCard from "../serviceCard/ServiceCard";
 import axios from "axios";
 
-const ListaDeServicios = ({ searchQuery }) => {
+const ListaDeServicios = ({ searchQuery, filters = {} }) => {
   const reduxToken = useSelector((state) => state.auth.token);
   const token = reduxToken || localStorage.getItem("token");
+
   const [services, setServices] = useState([]);
 
   useEffect(() => {
@@ -18,16 +19,48 @@ const ListaDeServicios = ({ searchQuery }) => {
         });
         setServices(response.data);
       } catch (error) {
-        console.error("❌ Error al cargar los servicios:", error);
+        console.error("Error al cargar los servicios:", error);
       }
     };
 
     if (token) fetchServices();
   }, [token]);
 
-  const filteredServices = services.filter((s) =>
-    s.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredServices = services.filter((s) => {
+    const nameMatch = s.name.toLowerCase().includes(searchQuery.toLowerCase());
+
+    const categoryMatch =
+      !filters.categoria || s.category === filters.categoria;
+    const priceMinMatch =
+      !filters.precioMin || s.price >= Number(filters.precioMin);
+    const priceMaxMatch =
+      !filters.precioMax || s.price <= Number(filters.precioMax);
+    const durationMatch =
+      !filters.duracion || s.duration === Number(filters.duracion);
+    const locationMatch =
+      !filters.zona ||
+      s.zone?.toLowerCase().includes(filters.zona.toLowerCase());
+    const languageMatch =
+      !filters.idioma ||
+      s.idiom?.toLowerCase().includes(filters.idioma.toLowerCase());
+    const modeMatch =
+      !filters.modalidad ||
+      s.modality?.toLowerCase() === filters.modalidad.toLowerCase();
+    const ratingMatch =
+      !filters.rating || s.averageRating >= Number(filters.rating);
+
+    return (
+      nameMatch &&
+      categoryMatch &&
+      priceMinMatch &&
+      priceMaxMatch &&
+      durationMatch &&
+      locationMatch &&
+      languageMatch &&
+      modeMatch &&
+      ratingMatch
+    );
+  });
 
   return (
     <div className="d-flex flex-wrap justify-content-center gap-4">
