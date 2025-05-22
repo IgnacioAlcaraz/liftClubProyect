@@ -1,9 +1,11 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { Star } from "lucide-react";
 import Card from "react-bootstrap/Card";
 import "./serviceCard.css";
 
 const ServiceCard = ({
+  id,
   image,
   title,
   coachName,
@@ -11,8 +13,18 @@ const ServiceCard = ({
   rating,
   price,
 }) => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate(`/client-page-servicio1/${id}`);
+  };
+
   return (
-    <Card style={{ width: "18rem" }} className="shadow-sm">
+    <Card
+      onClick={handleClick}
+      style={{ width: "18rem", cursor: "pointer" }}
+      className="shadow-sm"
+    >
       <Card.Img
         variant="top"
         src={image}

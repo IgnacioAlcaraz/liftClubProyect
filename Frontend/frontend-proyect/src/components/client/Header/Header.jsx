@@ -15,7 +15,6 @@ const Header = ({
   currentStep = 0,
   showButtons = true,
   setFilters = () => {},
-  
 }) => {
   return (
     <div className="custom-header">
@@ -31,7 +30,7 @@ const Header = ({
             setFilters={setFilters}
           />
         )}
-        {showSteps && <StepsBar currentStep={currentStep} />}
+        {showSteps && <StepsBar step={currentStep} />}
       </div>
 
       {showButtons && (

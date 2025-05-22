@@ -67,6 +67,7 @@ const ListaDeServicios = ({ searchQuery, filters = {} }) => {
       {filteredServices.map((s) => (
         <ServiceCard
           key={s._id}
+          id={s._id}
           image={s.image}
           title={s.name}
           coachName={`${s.coachId?.firstName || ""} ${
