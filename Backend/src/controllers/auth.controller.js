@@ -67,9 +67,23 @@ const selectRole = async (req, res) => {
   }
 };
 
+const getMe = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const result = await authService.getMe(userId);
+    return res.status(200).json(result);
+  } catch (error) {
+    if (error.message === "Usuario no encontrado") {
+      return res.status(404).json({ message: error.message });
+    }
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   register,
   login,
   googleCallback,
   selectRole,
+  getMe,
 };

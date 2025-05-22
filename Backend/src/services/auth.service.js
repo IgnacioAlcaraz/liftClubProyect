@@ -70,19 +70,12 @@ const login = async (credentials) => {
 };
 
 const handleGoogleCallback = async (googleUser) => {
-  // Paso 1: Buscar si el usuario ya existe en la base de datos
   const existingUser = await User.findOne({ email: googleUser.email });
 
   if (!existingUser) {
-    // Paso 2: Si no existe, lo rechazamos o lo redirigimos a registrarse
     throw new Error(
       "El usuario no está registrado. Por favor, registrese primero."
     );
-    // O redirigir a una pantalla para completar el registro:
-    // return {
-    //   redirect: true,
-    //   url: `http://localhost:5173/register-google?email=${googleUser.email}`
-    // };
   }
 
   // Paso 3: Si existe pero no tiene rol, redirigir a selector de rol
@@ -152,9 +145,18 @@ const selectRole = async (userId, role) => {
   };
 };
 
+const getMe = async (userId) => {
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new Error("Usuario no encontrado");
+  }
+  return user;
+};
+
 module.exports = {
   register,
   login,
   handleGoogleCallback,
   selectRole,
+  getMe,
 };

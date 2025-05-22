@@ -21,9 +21,12 @@ const createService = async (req, res) => {
         .json({ message: "Solo los coaches pueden crear servicios" });
     }
 
+    console.log("Files received:", req.files);
+
     const savedService = await serviceService.createService(
       req.body,
-      user.userId, req.files
+      user.userId,
+      req.files
     );
     res.status(201).json(savedService);
   } catch (error) {

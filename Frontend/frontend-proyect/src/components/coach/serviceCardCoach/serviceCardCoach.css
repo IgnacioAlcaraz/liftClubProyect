@@ -1,0 +1,43 @@
+.card {
+  width: 300px !important;
+  height: 400px !important;
+  border-radius: 1rem;
+  overflow: hidden;
+  border: none !important;
+}
+
+.card-img-top {
+  width: 100% !important;
+  height: 180px !important;
+  object-fit: cover !important;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+}
+
+.card-text {
+  font-size: 0.95rem;
+}
+
+.btn-edit-service {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 120px;
+  background-color: #7749f8;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+}
+
+.btn-delete-service {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 120px;
+  color: red;
+  background-color: white;
+  border: 1px solid red;
+  padding: 8px 16px;
+  border-radius: 6px;
+}

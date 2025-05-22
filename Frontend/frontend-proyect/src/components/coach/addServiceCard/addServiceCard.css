@@ -1,0 +1,33 @@
+.card-add-service {
+  width: 300px;
+  height: 400px;
+  border-radius: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 30px 20px;
+}
+
+.rounded-circle {
+  width: 120px;
+  height: 120px;
+  background-color: #fff;
+  border: 4px solid #7749f8;
+}
+
+.card-add-service-title {
+  padding-top: 32px;
+  padding-bottom: 16px;
+}
+
+.card-add-service-text {
+  padding-bottom: 20px;
+}
+
+.btn-add-service {
+  background-color: #7749f8;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+}

@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const router = express.Router();
 const authController = require("../controllers/auth.controller");
 const verifyTempToken = require("../middlewares/verifyTempToken");
+const auth = require("../middlewares/auth");
 
 router.post("/register", authController.register);
 
@@ -21,5 +22,7 @@ router.get(
 );
 
 router.post("/select-role", verifyTempToken, authController.selectRole);
+
+router.get("/me", auth, authController.getMe);
 
 module.exports = router;

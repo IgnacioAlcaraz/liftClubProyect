@@ -7,6 +7,7 @@ import RegisterPage from "./pages/Register";
 import GoogleSuccess from "./pages/GoogleSuccess";
 import ClientHome from "./pages/ClientHome";
 import CoachHome from "./pages/CoachHome";
+import "./App.css";
 
 const App = () => {
   return (

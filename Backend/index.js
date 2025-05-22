@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const connectDB = require("./src/configs/db");
 const cors = require("cors");
+const path = require("path");
 
 const userRoutes = require("./src/routes/user.routes");
 const authRoutes = require("./src/routes/auth.routes");
@@ -19,6 +20,8 @@ connectDB();
 
 //middlewares
 app.use(cors());
+
+app.use('/uploads', express.static(path.join(__dirname, 'src/uploads')));
 
 app.use(express.json());
 app.use(
