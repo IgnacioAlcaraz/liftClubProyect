@@ -8,7 +8,7 @@ const ServiceCardCoach = ({ service, onEdit, onDelete }) => {
       const imageUrl = `http://localhost:5000${service.images[0].url}`;
       return imageUrl;
     }
-    return "/default-image.jpg";
+    return;
   };
 
   return (
@@ -20,7 +20,13 @@ const ServiceCardCoach = ({ service, onEdit, onDelete }) => {
         <div className="mb-2">
           {Array.from({ length: service.averageRating || 5 }).map(
             (_, index) => (
-              <Star key={index} className="text-warning" size={18} />
+              <Star
+                key={index}
+                fill="#ffc107"
+                stroke="#ffc107"
+                className="me-1"
+                size={18}
+              />
             )
           )}
         </div>

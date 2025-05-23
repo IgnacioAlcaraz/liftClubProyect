@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { InputGroup, FormControl, Modal, Button, Form } from "react-bootstrap";
-import { FilterButton } from "../FilterButton/FilterButton";
+import { FilterButton } from "../filterButton/FilterButton";
 import { Star } from "lucide-react";
-import RatingDropdown from "../RatingDropDown/RatingDropDown";
-
+import RatingDropdown from "../ratingDropDown/RatingDropDown";
 import "./SearchBar.css";
 
 const SearchBar = ({ searchQuery, setSearchQuery, setFilters }) => {

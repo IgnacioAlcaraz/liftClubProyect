@@ -1,9 +1,9 @@
 import React from "react";
 import { Paperclip } from "lucide-react";
 import PrimaryButton from "../../primaryButton/PrimaryButton";
-import LogoutButton from "../../LogoutButton";
+import LogoutButton from "../../logoutButton/LogoutButton";
 import SearchBar from "../SearchBar/SearchBar";
-import StepsBar from "../StepsBar/StepsBar";
+import StepsBar from "../stepsBar/StepsBar";
 import logo from "../../../assets/logo.png";
 import "./Header.css";
 
@@ -19,7 +19,9 @@ const Header = ({
   return (
     <div className="custom-header">
       <div className="left">
-        <img src={logo} alt="LiftClub" className="logo" />
+        <div className="logo-container">
+          <img src={logo} alt="LiftClub" className="logo" />
+        </div>
       </div>
 
       <div className="center">

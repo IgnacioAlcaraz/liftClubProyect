@@ -11,8 +11,12 @@ const PrimaryButton = ({ icon: Icon, text, to, variant = "primary" }) => {
       variant={variant}
       onClick={() => navigate(to)}
     >
-      {typeof Icon === "function" && <Icon className="me-2" size={18} />}
-      {text}
+      {Icon && (
+        <span className="button-icon">
+          <Icon size={18} />
+        </span>
+      )}
+      <span className="button-text">{text}</span>
     </button>
   );
 };

@@ -3,7 +3,7 @@ import { Button } from "react-bootstrap";
 import { LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { logout } from "../app/slices/authSlice"; // ajustá ruta si cambia
+import { logout } from "../../app/slices/authSlice";
 
 const LogoutButton = ({ variant = "outline-secondary" }) => {
   const navigate = useNavigate();

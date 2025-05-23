@@ -23,7 +23,7 @@ const ServiceCard = ({
     <Card
       onClick={handleClick}
       style={{ width: "18rem", cursor: "pointer" }}
-      className="shadow-sm"
+      className="shadow"
     >
       <Card.Img
         variant="top"

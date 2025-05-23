@@ -1,11 +1,11 @@
 import React from "react";
-import { Button } from "react-bootstrap";
 import { Filter } from "lucide-react";
+import "./FilterButton.css";
+
 export const FilterButton = ({ onClick }) => {
   return (
-    <Button className="filter-button" onClick={onClick}>
-      <Filter size={18}></Filter>
-    </Button>
+    <button className="filter-button" onClick={onClick}>
+      <Filter className="filter-icon" size={18}></Filter>
+    </button>
   );
 };
-
