@@ -14,6 +14,9 @@ router.patch("/:id", auth, contractController.updateContractStatusById);
 
 router.get("/:id/files", auth, contractController.getContractFilesById);
 
+router.get("/cliente/mis-contratos", auth, contractController.getClientContracts);
+
+
 router.post(
   "/:id/files",
   auth,

@@ -13,6 +13,26 @@ const getContracts = async (req, res) => {
   }
 };
 
+const Contract = require("../models/Contract");
+
+const getClientContracts = async (req, res) => {
+  try {
+    const clientId = req.user.userId;
+
+    const contracts = await Contract.find({ clientId })
+      .populate("serviceId")
+      .populate("coachId", "firstName lastName");
+
+    const filtered = contracts.filter((c) => c.serviceId !== null);
+
+    console.log(" Contratos encontrados:", filtered);
+    res.status(200).json(filtered);
+  } catch (error) {
+    console.error("Error al obtener contratos del cliente:", error);
+    res.status(500).json({ error: "Error interno del servidor" });
+  }
+};
+
 const createContract = async (req, res) => {
   try {
     const { userId } = req.user;
@@ -260,4 +280,5 @@ module.exports = {
   getScheduledSessionsByContractId,
   updateScheduledSessionStatusById,
   createScheduledSession,
+  getClientContracts,
 };

@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
+
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import "../App.css";
-// Componentes
 import Header from "../components/client/Header/Header";
-import ServicioDetalleCard from "../components/client/ServicioDetalle/ServicioDetalleCard";
-import ReservaServicioCard from "../components/client/ServicioDetalle/ReservaServicioCard";
+import PaymentForm from "../components/client/paymentForm/PaymentForm";
 
-export default function ClientPageServicio1() {
+export default function ClientPagePago() {
   const { id } = useParams();
   const [service, setService] = useState(null);
   const [error, setError] = useState(null);
@@ -25,7 +23,7 @@ export default function ClientPageServicio1() {
           }
         );
 
-        console.log("Servicio con reviews:", response.data);
+        console.log("Servicio:", response.data);
         setService(response.data);
       } catch (err) {
         console.error("Error al obtener el servicio:", err);
@@ -36,30 +34,15 @@ export default function ClientPageServicio1() {
     if (token) fetchServiceById();
     else setError("No hay token disponible.");
   }, [id, token]);
-
-  if (error) return <p className="text-danger">{error}</p>;
-  if (!service) return <p className="text-center mt-5">Cargando servicio...</p>;
-
   return (
     <>
       <Header
         showSteps={true}
-        currentStep={1}
+        currentStep={2}
         showSearch={false}
         showButtons={true}
       />
-
-      <div className="container mt-4">
-        <div className="row align-items-stretch same-height-row">
-          <div className="col-lg-7 col-md-12 mb-4 d-flex">
-            <ServicioDetalleCard servicio={service} />
-          </div>
-
-          <div className="col-lg-5 col-md-12 mb-4 d-flex">
-            <ReservaServicioCard servicio={service} />
-          </div>
-        </div>
-      </div>
+      <PaymentForm></PaymentForm>
     </>
   );
 }

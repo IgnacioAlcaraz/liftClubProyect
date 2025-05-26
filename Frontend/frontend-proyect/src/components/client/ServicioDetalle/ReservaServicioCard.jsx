@@ -1,23 +1,39 @@
 import React from "react";
-import { Calendar, Globe, MapPin, Camera, Tag } from "lucide-react"; // o tus íconos favoritos
+import { Calendar, Globe, MapPin, Camera, Tag } from "lucide-react";
 import "./ReservaServicioCard.css";
+import { useNavigate } from "react-router-dom";
+import SecondaryButton from "../../secondaryButton/SecondaryButton";
+const ReservaServicioCard = ({ servicio }) => {
+  const navigate = useNavigate();
 
-const ReservaServicioCard = ({ servicio, onReservar }) => {
+  const getDayName = (dayIndex) => {
+    const days = [
+      "Domingo",
+      "Lunes",
+      "Martes",
+      "Miércoles",
+      "Jueves",
+      "Viernes",
+      "Sabado",
+    ];
+    return days[dayIndex];
+  };
+
+  const handleReservar = () => {
+    // Navegamos a la pantalla de pago usando el ID del servicio
+    navigate(`/client-page-pago/${servicio._id}`);
+  };
+
   return (
-    <div className="card shadow-sm rounded reserva-card">
-      <div className="p-3 bg-light-purple">
-        <p
-          className="mb-1 text-muted"
-          style={{ fontSize: "13px", letterSpacing: "0.5px" }}
-        >
-          PRECIO FINAL
-        </p>
-        <h4 style={{ fontWeight: 700, fontSize: "20px" }}>
-          {servicio.price} USD
-        </h4>
+    <div className="reserva-card-v2 shadow-sm rounded">
+      <h3 className="titulo">Reserva tu servicio</h3>
+
+      <div className="precio bg-purple-light">
+        <p className="label">Precio final</p>
+        <h4 className="monto">{servicio.price} USD</h4>
       </div>
 
-      <div className="p-3">
+      <div className="info">
         <div className="info-row">
           <Tag className="icon" />
           <span>
@@ -48,26 +64,28 @@ const ReservaServicioCard = ({ servicio, onReservar }) => {
             <strong>Idioma</strong> {servicio.idiom}
           </span>
         </div>
+      </div>
 
-        <hr />
-
-        <h6>Descripción</h6>
+      <div className="contenido-secundario">
+        <h6>Descripcion</h6>
         <p>{servicio.description}</p>
 
         <h6>Disponibilidad Horaria:</h6>
         <ul className="list-unstyled">
-          {servicio.schedule?.map((slot, i) => (
+          {servicio.availability?.map((a, i) => (
             <li key={i}>
-              {slot.day}: de {slot.from} hasta {slot.to}
+              {getDayName(a.dayOfWeek)}: de {a.startTime} hasta {a.endTime}
             </li>
           ))}
         </ul>
       </div>
 
-      <div className="p-3">
-        <button className="btn btn-primary w-100" onClick={onReservar}>
-          Contratar Servicio
-        </button>
+      <div className="boton-container">
+        <SecondaryButton
+          texto="Contratar Servicio"
+          className="mt-2 w-100"
+          onClick={handleReservar}
+        />
       </div>
     </div>
   );

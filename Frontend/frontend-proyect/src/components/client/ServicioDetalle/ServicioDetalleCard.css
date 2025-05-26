@@ -1,0 +1,67 @@
+/* === ServicioInfo === */
+.p-3 h3.fw-bold {
+  font-size: 22px;
+  margin-bottom: 4px;
+}
+
+.p-3 .text-muted {
+  font-size: 14px;
+  color: #666 !important;
+}
+
+.p-3 .mb-3 span {
+  font-size: 20px;
+  color: #facc15;
+}
+
+/* === ComentariosList === */
+.px-3 {
+  padding: 20px !important;
+  background-color: #fff;
+}
+
+.px-3 h5.fw-bold {
+  font-size: 16px;
+}
+
+.px-3 button.btn-sm {
+  background-color: #e6dcfa;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  padding: 4px 8px;
+  transition: background 0.2s;
+}
+
+.px-3 button.btn-sm:hover:not(:disabled) {
+  background-color: #d1c3f5;
+}
+
+/* Estilo del título de la sección de comentarios */
+.px-3 h5.fw-bold {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+/* Autor del comentario */
+.comentario-item .autor {
+  font-size: 15px;
+  font-weight: 600;
+  color: #222;
+}
+
+/* Texto del comentario */
+.comentario-item .texto {
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 6px;
+}
+
+/* Respuesta */
+.comentario-item .respuesta {
+  background-color: #e6dcfa;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 14px;
+}

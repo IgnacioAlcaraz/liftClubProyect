@@ -8,6 +8,8 @@ import GoogleSuccess from "./pages/GoogleSuccess";
 import ClientHome from "./pages/ClientHome";
 import CoachHome from "./pages/CoachHome";
 import ClientPageServicio1 from "./pages/ClientPageServicio1";
+import ClientPagePago from "./pages/ClientPagePago";
+import ClientPageMisServicios from "./pages/ClientPageMisServicios";
 import "./App.css";
 
 const App = () => {
@@ -22,6 +24,9 @@ const App = () => {
           path="/client-page-servicio1/:id"
           element={<ClientPageServicio1 />}
         />
+
+        <Route path="/client-page-pago/:id" element={<ClientPagePago />} />
+        <Route path="/mis-servicios" element={<ClientPageMisServicios />} />
 
         <Route path="/coach-home" element={<CoachHome />} />
         {/* <Route path="/google-success" element={<GoogleSuccess />} /> */}

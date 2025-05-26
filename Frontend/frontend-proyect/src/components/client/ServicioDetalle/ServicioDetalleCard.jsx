@@ -2,6 +2,7 @@ import React from "react";
 import ServicioImagenCarousel from "./ServicioImagenCarousel";
 import ServicioInfo from "./ServicioInfo";
 import ComentariosList from "./ComentariosList";
+import "./ServicioDetalleCard.css";
 
 const ServicioDetalleCard = ({ servicio }) => {
   console.log("REVIEWS en servicio:", servicio.reviews);

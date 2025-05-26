@@ -1,21 +1,37 @@
-.reserva-card {
+.reserva-card-v2 {
   width: 100%;
-  max-width: 360px;
-  border: 1px solid #e0e0e0;
-  border-radius: 12px;
-  overflow: hidden;
+  border-radius: 16px;
   background-color: white;
   font-family: "Inter", sans-serif;
+  padding: 20px;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
 }
 
-.bg-light-purple {
-  background-color: #e6dcfa;
-  padding: 16px;
-  text-transform: uppercase;
+.titulo {
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 16px;
 }
 
-.bg-light-purple h4 {
+.bg-purple-light {
+  background-color: #e8d9fb;
+  padding: 14px;
+  border-radius: 10px;
+  text-transform: none;
+  margin-bottom: 16px;
+}
+
+.label {
   margin: 0;
+  font-size: 13px;
+  color: #555;
+  text-transform: capitalize;
+}
+
+.monto {
+  margin: 0;
+  font-size: 22px;
+  font-weight: bold;
   color: #1a1a1a;
 }
 
@@ -28,39 +44,47 @@
 }
 
 .icon {
-  margin-right: 10px;
-  color: #6246ea;
-  width: 20px;
-  height: 20px;
+  margin-right: 12px;
+  color: #000;
+  width: 22px;
+  height: 22px;
 }
 
-.reserva-card h6 {
+.contenido-secundario {
+  background-color: #f5f5f5;
+  padding: 16px;
+  border-radius: 10px;
   margin-top: 16px;
+  font-size: 14px;
+}
+
+.contenido-secundario h6 {
+  font-weight: 600;
+  margin-top: 0;
+  margin-bottom: 6px;
+}
+
+.contenido-secundario p,
+.contenido-secundario ul {
+  margin: 0 0 8px 0;
+}
+
+.boton-container {
+  margin-top: 20px;
+}
+
+.btn-contratar {
+  background-color: #a678e2;
+  color: white;
   font-weight: 600;
   font-size: 15px;
-}
-
-.reserva-card p {
-  font-size: 14px;
-  color: #555;
-}
-
-.reserva-card ul {
-  font-size: 14px;
-  padding-left: 16px;
-  margin-top: 6px;
-}
-
-.btn-primary {
-  background-color: #6246ea;
-  border-color: #6246ea;
-  font-weight: 500;
-  font-size: 15px;
   padding: 10px 0;
+  border: none;
   border-radius: 8px;
+  width: 100%;
+  transition: background-color 0.3s;
 }
 
-.btn-primary:hover {
-  background-color: #4e38c0;
-  border-color: #4e38c0;
+.btn-contratar:hover {
+  background-color: #915ed4;
 }
