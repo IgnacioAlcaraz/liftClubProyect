@@ -13,12 +13,12 @@ const getServices = async () => {
 const createService = async (serviceData, userId, files) => {
   let images = [];
 
-  if(files && files.length > 0) {
+  if (files && files.length > 0) {
     images = files.map((file) => ({
       name: file.originalname,
       url: `/uploads/${file.filename}`,
       mimeType: file.mimetype,
-      size: file.size
+      size: file.size,
     }));
   }
 
@@ -32,14 +32,13 @@ const createService = async (serviceData, userId, files) => {
 };
 
 const getServiceById = async (id) => {
-  const service = await Service.findById(id)
-    .populate({
-      path: "reviews",
-      populate: {
-        path: "clientId",
-        select: "firstName lastName",
-      },
-    });
+  const service = await Service.findById(id).populate({
+    path: "reviews",
+    populate: {
+      path: "clientId",
+      select: "firstName lastName",
+    },
+  });
 
   if (!service) {
     throw new Error("Servicio no encontrado");
@@ -60,16 +59,33 @@ const updateServiceById = async (id, serviceData, userId, files) => {
   }
 
   let updatedData = { ...serviceData };
-  
+
   if (files && files.length > 0) {
+    if (service.images && service.images.length > 0) {
+      service.images.forEach((image) => {
+        try {
+          const filePath = path.join(__dirname, "..", image.url);
+          if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+          }
+        } catch (error) {
+          console.error("Error al eliminar imagen antigua:", error);
+        }
+      });
+    }
+
     const newImages = files.map((file) => ({
       name: file.originalname,
       url: `/uploads/${file.filename}`,
       mimeType: file.mimetype,
-      size: file.size
+      size: file.size,
     }));
-    
-    updatedData.images = newImages;
+
+    updatedData.images = serviceData.images
+      ? [...serviceData.images, ...newImages]
+      : newImages;
+  } else {
+    updatedData.images = serviceData.images || [];
   }
 
   return await Service.findByIdAndUpdate(id, updatedData, { new: true });
@@ -92,11 +108,11 @@ const deleteServiceById = async (id, userId) => {
     throw new Error("No tienes permiso para eliminar este servicio");
   }
 
-  if(service.images && service.images.length > 0) {
+  if (service.images && service.images.length > 0) {
     service.images.forEach((image) => {
       try {
-        const filePath = path.join(__dirname, '..', image.url);
-        if(fs.existsSync(filePath)) {
+        const filePath = path.join(__dirname, "..", image.url);
+        if (fs.existsSync(filePath)) {
           fs.unlinkSync(filePath);
         }
       } catch (error) {

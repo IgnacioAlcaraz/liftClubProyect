@@ -25,7 +25,6 @@ const getClientContracts = async (req, res) => {
 
     const filtered = contracts.filter((c) => c.serviceId !== null);
 
-    console.log(" Contratos encontrados:", filtered);
     res.status(200).json(filtered);
   } catch (error) {
     console.error("Error al obtener contratos del cliente:", error);
@@ -269,6 +268,22 @@ const createScheduledSession = async (req, res) => {
   }
 };
 
+const getPendingContracts = async (req, res) => {
+  try {
+    const { userId, role } = req.user;
+    const contracts = await contractService.getPendingContracts(userId, role);
+    return res.status(200).json(contracts);
+  } catch (error) {
+    if (error.message.includes("No se encontraron")) {
+      return res.status(404).json({ message: error.message });
+    }
+    return res.status(500).json({
+      message: "Error al obtener los contratos pendientes",
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
   getContracts,
   createContract,
@@ -281,4 +296,5 @@ module.exports = {
   updateScheduledSessionStatusById,
   createScheduledSession,
   getClientContracts,
+  getPendingContracts,
 };

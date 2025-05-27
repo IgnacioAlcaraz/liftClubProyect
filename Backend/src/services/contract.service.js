@@ -162,6 +162,26 @@ const createScheduledSession = async (id, sessionData, userId, role) => {
   return contract.scheduledSessions[contract.scheduledSessions.length - 1];
 };
 
+const getPendingContracts = async (userId, role) => {
+  if (role !== "coach") {
+    throw new Error("Solo los coaches pueden ver los contratos pendientes");
+  }
+
+  const contracts = await Contract.find({
+    status: "Pendiente",
+    coachId: userId,
+  })
+    .populate("clientId", "firstName lastName")
+    .populate("serviceId", "name price")
+    .sort({ createdAt: -1 });
+
+  if (!contracts) {
+    throw new Error("No se encontraron contratos pendientes");
+  }
+
+  return contracts;
+};
+
 module.exports = {
   getContracts,
   createContract,
@@ -173,4 +193,5 @@ module.exports = {
   getScheduledSessionsByContractId,
   updateScheduledSessionStatusById,
   createScheduledSession,
+  getPendingContracts,
 };

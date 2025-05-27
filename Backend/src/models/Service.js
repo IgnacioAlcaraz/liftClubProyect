@@ -26,11 +26,14 @@ const serviceSchema = new mongoose.Schema(
     zone: String,
     duration: Number,
     price: Number,
-    modality: String,
+    modality: {
+      type: String,
+      enum: ["Presencial", "Virtual", "Híbrida"],
+    },
     idiom: String,
     visibility: {
       type: String,
-      enum: ["public", "private"],
+      enum: ["Pública", "Privada"],
     },
     images: [imageSchema],
     availability: [

@@ -9,42 +9,32 @@ import "./serviceListCoach.css";
 const ServiceListCoach = () => {
   const reduxToken = useSelector((state) => state.auth.token);
   const token = reduxToken || localStorage.getItem("token");
-  const reduxUser = useSelector((state) => state.auth.user);
   const [services, setServices] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [editingService, setEditingService] = useState(null);
 
+  const decodedToken = JSON.parse(atob(token.split(".")[1]));
+  const userId = decodedToken.userId;
+
   useEffect(() => {
-    const fetchUserAndServices = async () => {
+    const fetchServices = async () => {
       if (!token) return;
 
       try {
-        const userResponse = await axios.get(
-          "http://localhost:5000/api/auth/me",
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-
-        const currentUser = userResponse.data;
-        const userId = currentUser._id;
-        if (!userId) return;
-
         const servicesResponse = await axios.get(
           `http://localhost:5000/api/services/coach/${userId}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-
         setServices(servicesResponse.data);
       } catch (error) {
-        console.error("Error al cargar datos:", error.message);
+        console.error("Error al cargar servicios:", error.message);
       }
     };
 
-    fetchUserAndServices();
-  }, [token]);
+    fetchServices();
+  }, [token, userId]);
 
   const handleAddService = () => {
     setEditingService(null);
@@ -101,7 +91,7 @@ const ServiceListCoach = () => {
       }
       setShowModal(false);
     } catch (error) {
-      console.error("Error completo:", error);
+      console.error("Error:", error);
       alert("Error al guardar el servicio");
     }
   };

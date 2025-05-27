@@ -1,0 +1,44 @@
+.pending-contracts-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background-color: #faf5ff;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #e0d5ff;
+}
+
+.contract-info {
+  flex-grow: 1;
+}
+
+.contract-info h3 {
+  margin: 0;
+  font-size: 1rem;
+  color: #333;
+}
+
+.contract-name {
+  margin: 5px 0 0;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.contract-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.contract-actions button {
+  padding: 8px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  background-color: #faf5ff;
+  gap: 10px;
+}

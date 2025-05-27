@@ -31,9 +31,12 @@ const ServiceFormModal = ({ show, onClose, onSubmit, initialData = null }) => {
         price: initialData.price || "",
         modality: initialData.modality || "",
         idiom: initialData.idiom || "",
-        visibility: initialData.visibility || "public",
+        visibility: initialData.visibility || "",
       });
-      setExistingImages(initialData.images || []);
+      const validImages = (initialData.images || []).filter(
+        (img) => img && img.url
+      );
+      setExistingImages(validImages);
     } else {
       setFormData({
         name: "",
@@ -44,11 +47,12 @@ const ServiceFormModal = ({ show, onClose, onSubmit, initialData = null }) => {
         price: "",
         modality: "",
         idiom: "",
-        visibility: "public",
+        visibility: "",
         images: [],
       });
       setExistingImages([]);
     }
+    setSelectedImages([]);
   }, [initialData, show]);
 
   const handleRemoveExistingImage = (indexToRemove) => {
@@ -64,7 +68,21 @@ const ServiceFormModal = ({ show, onClose, onSubmit, initialData = null }) => {
 
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
-    setSelectedImages(files);
+    if (files.length > 0) {
+      const validFiles = files.filter((file) => {
+        const isImage = file.type.startsWith("image/");
+        const isValidSize = file.size <= 5 * 1024 * 1024;
+        return isImage && isValidSize;
+      });
+
+      if (validFiles.length !== files.length) {
+        alert(
+          "Algunos archivos no son válidos. Asegúrate de que sean imágenes y no excedan 5MB."
+        );
+      }
+
+      setSelectedImages((prevImages) => [...prevImages, ...validFiles]);
+    }
   };
 
   const handleInputChange = (e) => {
@@ -89,14 +107,56 @@ const ServiceFormModal = ({ show, onClose, onSubmit, initialData = null }) => {
     }));
   };
 
+  const handleVisibilityChange = (visibility) => {
+    setFormData((prev) => ({
+      ...prev,
+      visibility: visibility,
+    }));
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (existingImages.length === 0 && selectedImages.length === 0) {
+      alert("Por favor, agrega al menos una imagen para el servicio.");
+      return;
+    }
+
     onSubmit(
       {
         ...formData,
         images: existingImages,
       },
       selectedImages
+    );
+  };
+
+  const renderExistingImage = (image, index) => {
+    if (!image || !image.url) return null;
+
+    return (
+      <div key={index} className="existing-image-container">
+        <img
+          src={`http://localhost:5000${image.url}`}
+          alt={image.name}
+          className="thumbnail"
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = "/assets/images/logo.png";
+          }}
+        />
+        <div className="image-info">
+          <span>{image.name}</span>
+          <span>{(image.size / 1024).toFixed(2)} KB</span>
+        </div>
+        <button
+          type="button"
+          className="remove-image-btn"
+          onClick={() => handleRemoveExistingImage(index)}
+        >
+          Eliminar
+        </button>
+      </div>
     );
   };
 
@@ -113,26 +173,9 @@ const ServiceFormModal = ({ show, onClose, onSubmit, initialData = null }) => {
               <>
                 <h3>Imágenes actuales</h3>
                 <div className="existing-images">
-                  {existingImages.map((image, index) => (
-                    <div key={index} className="existing-image-container">
-                      <img
-                        src={`http://localhost:5000${image.url}`}
-                        alt={image.name}
-                        className="thumbnail"
-                      />
-                      <div className="image-info">
-                        <span>{image.name}</span>
-                        <span>{(image.size / 1024).toFixed(2)} KB</span>
-                      </div>
-                      <button
-                        type="button"
-                        className="remove-image-btn"
-                        onClick={() => handleRemoveExistingImage(index)}
-                      >
-                        Eliminar
-                      </button>
-                    </div>
-                  ))}
+                  {existingImages.map((image, index) =>
+                    renderExistingImage(image, index)
+                  )}
                 </div>
               </>
             )}
@@ -147,6 +190,9 @@ const ServiceFormModal = ({ show, onClose, onSubmit, initialData = null }) => {
                         alt={`Nueva imagen ${index + 1}`}
                         className="thumbnail"
                       />
+                      <div className="image-info">
+                        <span>{file.name}</span>
+                      </div>
                       <button
                         type="button"
                         className="remove-image-btn"
@@ -173,6 +219,9 @@ const ServiceFormModal = ({ show, onClose, onSubmit, initialData = null }) => {
                 onChange={handleImageChange}
                 className="upload-button"
               />
+              <small className="upload-info">
+                Formatos aceptados: JPG, PNG, GIF. Tamaño máximo: 5MB por imagen
+              </small>
             </div>
           </div>
 
@@ -194,6 +243,7 @@ const ServiceFormModal = ({ show, onClose, onSubmit, initialData = null }) => {
                 value={formData.category}
                 onChange={handleInputChange}
                 className="form-control"
+                required
               >
                 <option value="">Seleccione una categoría</option>
                 <option value="Running">Running</option>
@@ -222,6 +272,7 @@ const ServiceFormModal = ({ show, onClose, onSubmit, initialData = null }) => {
               onChange={handleInputChange}
               placeholder="Duración en sesiones"
               required
+              min={1}
             />
           </div>
 
@@ -233,6 +284,7 @@ const ServiceFormModal = ({ show, onClose, onSubmit, initialData = null }) => {
               onChange={handleInputChange}
               placeholder="Descripción del servicio"
               className="form-control"
+              required
             />
           </div>
 
@@ -275,30 +327,21 @@ const ServiceFormModal = ({ show, onClose, onSubmit, initialData = null }) => {
           <div className="form-section">
             <h3>Visibilidad</h3>
             <div className="button-group">
-              <button
-                type="button"
-                className={`option-button ${
-                  formData.visibility === "public" ? "active" : ""
-                }`}
-                onClick={() =>
-                  setFormData((prev) => ({ ...prev, visibility: "public" }))
-                }
-              >
-                Pública
-              </button>
-              <button
-                type="button"
-                className={`option-button ${
-                  formData.visibility === "private" ? "active" : ""
-                }`}
-                onClick={() =>
-                  setFormData((prev) => ({ ...prev, visibility: "private" }))
-                }
-              >
-                Privada
-              </button>
+              {["Pública", "Privada"].map((visibility) => (
+                <button
+                  key={visibility}
+                  type="button"
+                  className={`option-button ${
+                    formData.visibility === visibility ? "active" : ""
+                  }`}
+                  onClick={() => handleVisibilityChange(visibility)}
+                >
+                  {visibility}
+                </button>
+              ))}
             </div>
           </div>
+
           <div className="modal-actions">
             <button type="submit" className="btn-confirm">
               {initialData ? "Guardar Cambios" : "Agregar Servicio"}
