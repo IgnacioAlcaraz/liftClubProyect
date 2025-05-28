@@ -241,26 +241,20 @@ const createScheduledSession = async (req, res) => {
     const { id } = req.params;
     const { userId, role } = req.user;
 
+    console.log(" Body recibido:", req.body);
+    console.log(" Usuario:", userId, "| Rol:", role);
+    console.log("ID contrato:", id);
+
     const session = await contractService.createScheduledSession(
       id,
       req.body,
       userId,
       role
     );
+
     return res.status(201).json(session);
   } catch (error) {
-    if (error.message === "Contrato no encontrado") {
-      return res.status(404).json({ message: error.message });
-    }
-    if (error.message.includes("No tienes permiso")) {
-      return res.status(403).json({ message: error.message });
-    }
-    if (
-      error.message.includes("Solo se pueden programar") ||
-      error.message.includes("Faltan datos")
-    ) {
-      return res.status(400).json({ message: error.message });
-    }
+    console.error("❌ Error en backend:", error.message);
     return res.status(500).json({
       message: "Error al crear la sesión programada",
       error: error.message,

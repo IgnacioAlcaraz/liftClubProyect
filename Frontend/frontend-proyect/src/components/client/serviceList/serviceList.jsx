@@ -17,6 +17,8 @@ const ListaDeServicios = ({ searchQuery, filters = {} }) => {
             Authorization: `Bearer ${token}`,
           },
         });
+        console.log("Servicios recibidos:", response.data);
+
         setServices(response.data);
       } catch (error) {
         console.error("Error al cargar los servicios:", error);
@@ -49,6 +51,13 @@ const ListaDeServicios = ({ searchQuery, filters = {} }) => {
     const ratingMatch =
       !filters.rating || s.averageRating >= Number(filters.rating);
 
+    const getImageUrl = (service) => {
+      if (service.images && service.images.length > 0) {
+        return `http://localhost:5000${service.images[0].url}`;
+      }
+      return service.image || "https://via.placeholder.com/400x300";
+    };
+
     return (
       nameMatch &&
       categoryMatch &&
@@ -68,7 +77,7 @@ const ListaDeServicios = ({ searchQuery, filters = {} }) => {
         <ServiceCard
           key={s._id}
           id={s._id}
-          image={s.image}
+          image={s.images?.[0]?.url || s.image}
           title={s.name}
           coachName={`${s.coachId?.firstName || ""} ${
             s.coachId?.lastName || ""

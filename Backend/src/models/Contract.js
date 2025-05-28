@@ -56,9 +56,10 @@ const contractSchema = new Schema(
           ref: "Contract",
         },
         date: {
-          type: Date,
+          type: String,
           required: true,
         },
+
         startTime: {
           type: String,
           required: true,

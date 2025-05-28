@@ -38,15 +38,15 @@ const serviceSchema = new mongoose.Schema(
     images: [imageSchema],
     availability: [
       {
-        dayOfWeek: {
-          type: Number,
-          min: 0,
-          max: 6,
+        date: {
+          type: String, 
+          required: true,
         },
         startTime: String,
         endTime: String,
       },
     ],
+
     views: {
       type: Number,
       default: 0,
