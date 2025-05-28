@@ -10,6 +10,7 @@ const InputField = ({
   placeholder,
   required,
   icon,
+  min,
 }) => {
   return (
     <div className="form-group position-relative">
@@ -23,6 +24,7 @@ const InputField = ({
         onChange={onChange}
         required={required}
         style={icon ? { paddingRight: "40px" } : {}}
+        min={min}
       />
       {icon && <span className="eye-icon">{icon}</span>}
     </div>

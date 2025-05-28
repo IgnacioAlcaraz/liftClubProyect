@@ -34,6 +34,6 @@ ehthumbs.db
 
 # Otros específicos
 **/.next/
-uploads/
+
 Backend/src/api.http
 .vite

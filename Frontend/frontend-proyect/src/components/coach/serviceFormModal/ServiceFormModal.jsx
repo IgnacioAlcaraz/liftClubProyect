@@ -33,11 +33,14 @@ const ServiceFormModal = ({ show, onClose, onSubmit, initialData = null }) => {
         idiom: initialData.idiom || "",
         visibility: initialData.visibility || "",
       });
+
+      // Asegurarse de que las imágenes existentes se mantengan
       const validImages = (initialData.images || []).filter(
         (img) => img && img.url
       );
       setExistingImages(validImages);
     } else {
+      // Resetear el estado cuando se está creando un nuevo servicio
       setFormData({
         name: "",
         category: "",
@@ -52,7 +55,10 @@ const ServiceFormModal = ({ show, onClose, onSubmit, initialData = null }) => {
       });
       setExistingImages([]);
     }
-    setSelectedImages([]);
+    // Solo resetear las imágenes seleccionadas cuando se abre/cierra el modal
+    if (!show) {
+      setSelectedImages([]);
+    }
   }, [initialData, show]);
 
   const handleRemoveExistingImage = (indexToRemove) => {
@@ -81,6 +87,7 @@ const ServiceFormModal = ({ show, onClose, onSubmit, initialData = null }) => {
         );
       }
 
+      // Agregar las nuevas imágenes al array existente
       setSelectedImages((prevImages) => [...prevImages, ...validFiles]);
     }
   };
@@ -116,12 +123,10 @@ const ServiceFormModal = ({ show, onClose, onSubmit, initialData = null }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     if (existingImages.length === 0 && selectedImages.length === 0) {
       alert("Por favor, agrega al menos una imagen para el servicio.");
       return;
     }
-
     onSubmit(
       {
         ...formData,
@@ -262,6 +267,7 @@ const ServiceFormModal = ({ show, onClose, onSubmit, initialData = null }) => {
               onChange={handleInputChange}
               placeholder="Precio"
               required
+              min="0"
             />
 
             <InputField
@@ -272,7 +278,7 @@ const ServiceFormModal = ({ show, onClose, onSubmit, initialData = null }) => {
               onChange={handleInputChange}
               placeholder="Duración en sesiones"
               required
-              min={1}
+              min="1"
             />
           </div>
 

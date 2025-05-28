@@ -59,21 +59,18 @@ const updateServiceById = async (id, serviceData, userId, files) => {
   }
 
   let updatedData = { ...serviceData };
+  let finalImages = [];
+
+  if (serviceData.existingImages) {
+    try {
+      const existingImages = JSON.parse(serviceData.existingImages);
+      finalImages = [...existingImages];
+    } catch (error) {
+      console.error("Error al parsear imágenes existentes:", error);
+    }
+  }
 
   if (files && files.length > 0) {
-    if (service.images && service.images.length > 0) {
-      service.images.forEach((image) => {
-        try {
-          const filePath = path.join(__dirname, "..", image.url);
-          if (fs.existsSync(filePath)) {
-            fs.unlinkSync(filePath);
-          }
-        } catch (error) {
-          console.error("Error al eliminar imagen antigua:", error);
-        }
-      });
-    }
-
     const newImages = files.map((file) => ({
       name: file.originalname,
       url: `/uploads/${file.filename}`,
@@ -81,12 +78,16 @@ const updateServiceById = async (id, serviceData, userId, files) => {
       size: file.size,
     }));
 
-    updatedData.images = serviceData.images
-      ? [...serviceData.images, ...newImages]
-      : newImages;
-  } else {
-    updatedData.images = serviceData.images || [];
+    finalImages = [...finalImages, ...newImages];
   }
+
+  if (finalImages.length === 0) {
+    finalImages = service.images;
+  }
+
+  updatedData.images = finalImages;
+
+  delete updatedData.existingImages;
 
   return await Service.findByIdAndUpdate(id, updatedData, { new: true });
 };

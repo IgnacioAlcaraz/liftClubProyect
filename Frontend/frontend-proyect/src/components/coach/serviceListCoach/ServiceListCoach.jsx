@@ -46,16 +46,25 @@ const ServiceListCoach = () => {
     setShowModal(true);
   };
 
-  const handleSubmitService = async (formData, images) => {
+  const handleSubmitService = async (formData, newImages) => {
     try {
       const form = new FormData();
 
+      // Agregar campos básicos del formulario
       Object.keys(formData).forEach((key) => {
-        form.append(key, formData[key]);
+        if (key !== "images") {
+          form.append(key, formData[key]);
+        }
       });
 
-      if (images && images.length > 0) {
-        images.forEach((image) => {
+      // Agregar las imágenes existentes que queremos mantener
+      if (formData.images && formData.images.length > 0) {
+        form.append("existingImages", JSON.stringify(formData.images));
+      }
+
+      // Agregar las nuevas imágenes
+      if (newImages && newImages.length > 0) {
+        newImages.forEach((image) => {
           form.append("images", image);
         });
       }
