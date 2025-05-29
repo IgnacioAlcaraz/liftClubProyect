@@ -12,10 +12,11 @@ const Header = ({
   searchQuery = "",
   setSearchQuery = () => {},
   showSteps = false,
-  currentStep = 0,
+  currentStep = 1,
   showButtons = true,
   setFilters = () => {},
 }) => {
+
   return (
     <div className="custom-header">
       <div className="left">

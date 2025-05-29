@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import SecondaryButton from "../../secondaryButton/SecondaryButton";
 
-const PaymentForm = ({ onSubmit }) => {
+const PaymentForm = ({ onSubmit, service }) => {
   const [formData, setFormData] = useState({
     cardNumber: "",
     fullName: "",
@@ -21,7 +21,7 @@ const PaymentForm = ({ onSubmit }) => {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    onSubmit(formData); // Pasás los datos al padre (ClientPagePago)
+    onSubmit(formData); // Pasa los datos al padre (ClientPagePago)
   };
 
   return (

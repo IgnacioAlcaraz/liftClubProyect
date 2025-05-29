@@ -32,9 +32,10 @@ const contractSchema = new Schema(
     },
     status: {
       type: String,
-      enum: ["Pendiente", "Aceptado", "Rechazado", "Completado"],
+      enum: ["Pendiente", "Aceptado", "Rechazado", "Completado", "Cancelado"],
       default: "Pendiente",
     },
+
     reviewSubmitted: {
       type: Boolean,
       default: false,
@@ -70,7 +71,13 @@ const contractSchema = new Schema(
         },
         status: {
           type: String,
-          enum: ["Pendiente", "Completado", "Cancelado"],
+          enum: [
+            "Pendiente",
+            "Aceptado",
+            "Rechazado",
+            "Completado",
+            "Cancelado",
+          ],
           default: "Pendiente",
         },
       },

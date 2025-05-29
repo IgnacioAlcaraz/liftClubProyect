@@ -72,6 +72,29 @@ export default function ClientPageMisServicios() {
       alert(error.response?.data?.message || "Error inesperado en el servidor");
     }
   };
+  const handleCancelarContrato = async (contratoId) => {
+    try {
+      await axios.patch(
+        `http://localhost:5000/api/contracts/${contratoId}`,
+        { status: "Cancelado" },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setMisContratos((prev) =>
+        prev.map((c) =>
+          c._id === contratoId ? { ...c, status: "Cancelado" } : c
+        )
+      );
+    } catch (error) {
+      console.error("Error al cancelar contrato:", error);
+      console.error("Detalle:", error.response?.data || error.message);
+      alert(error.response?.data?.message || "Error al cancelar el contrato");
+    }
+  };
 
   const renderEstadoBadge = (estado) => {
     const estados = {
@@ -114,10 +137,12 @@ export default function ClientPageMisServicios() {
                 c.status === "Pendiente" ||
                 c.status === "Cancelado" ||
                 c.status === "Rechazado";
-              const deshabilitadoAgendar = c.status !== "Acpetado";
+              const deshabilitadoAgendar = c.status !== "Aceptado";
               const deshabilitadoCancelar =
-                c.status === "Completado" || c.status === "Rechazado";
-              //"Pendiente", "Aceptado", "Rechazado", "Completado"
+                c.status === "Completado" ||
+                c.status === "Rechazado" ||
+                c.status === "Cancelado";
+
               return (
                 <tr key={c._id}>
                   <td>
@@ -152,7 +177,9 @@ export default function ClientPageMisServicios() {
                   {/* Archivos */}
                   <td
                     className={
-                      deshabilitadoArchivo ? "text-muted" : "text-dark"
+                      deshabilitadoArchivo
+                        ? "text-muted"
+                        : "text-secondary fw-semibold"
                     }
                     style={{
                       cursor: deshabilitadoArchivo ? "not-allowed" : "pointer",
@@ -170,7 +197,9 @@ export default function ClientPageMisServicios() {
                   {/* Agendar */}
                   <td
                     className={
-                      deshabilitadoAgendar ? "text-muted" : "text-dark"
+                      deshabilitadoAgendar
+                        ? "text-muted"
+                        : "text-secondary fw-semibold"
                     }
                     style={{
                       cursor: deshabilitadoAgendar ? "not-allowed" : "pointer",
@@ -188,11 +217,21 @@ export default function ClientPageMisServicios() {
                   {/* Cancelar */}
                   <td
                     className={
-                      c.status === "Aceptado" ? "text-danger" : "text-muted"
+                      deshabilitadoCancelar ? "text-muted" : "text-danger"
                     }
                     style={{
-                      cursor:
-                        c.status === "Aceptado" ? "pointer" : "not-allowed",
+                      cursor: deshabilitadoCancelar ? "not-allowed" : "pointer",
+                    }}
+                    onClick={() => {
+                      if (!deshabilitadoCancelar) {
+                        if (
+                          window.confirm(
+                            "¿Estás seguro de que querés cancelar este contrato?"
+                          )
+                        ) {
+                          handleCancelarContrato(c._id);
+                        }
+                      }
                     }}
                   >
                     <X size={16} className="me-1" /> Cancelar
