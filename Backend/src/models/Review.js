@@ -13,7 +13,7 @@ const reviewSchema = new Schema(
       ref: "Service",
       required: true,
     },
-    trainerId: {
+    coachId: {
       type: Schema.Types.ObjectId,
       ref: "User",
       required: true,

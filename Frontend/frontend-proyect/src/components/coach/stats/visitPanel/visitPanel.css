@@ -1,0 +1,57 @@
+.visit-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.visit-metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.metric-card {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.metric-value {
+  font-size: 2rem;
+  color: #7749f8;
+  font-weight: bold;
+}
+
+.metric-label {
+  color: #666;
+  margin-top: 0.5rem;
+}
+
+.service-conversion {
+  margin-top: 2rem;
+}
+
+.service-bar {
+  background: #f0f0f0;
+  height: 12px;
+  border-radius: 6px;
+  margin: 0.5rem 0;
+  overflow: hidden;
+}
+
+.service-bar-fill {
+  background: #7749f8;
+  height: 100%;
+  border-radius: 6px;
+}
+
+.service-item {
+  margin-bottom: 1rem;
+}
+
+.service-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.25rem;
+}

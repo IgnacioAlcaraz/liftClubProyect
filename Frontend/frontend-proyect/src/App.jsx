@@ -10,6 +10,7 @@ import CoachHome from "./pages/CoachHome";
 import ClientPageServicio1 from "./pages/ClientPageServicio1";
 import ClientPagePago from "./pages/ClientPagePago";
 import ClientPageMisServicios from "./pages/ClientPageMisServicios";
+import StatsPage from "./pages/StatsPage";
 import "./App.css";
 
 const App = () => {
@@ -24,6 +25,7 @@ const App = () => {
           path="/client-page-servicio1/:id"
           element={<ClientPageServicio1 />}
         />
+        <Route path="/stats" element={<StatsPage />} />
 
         <Route path="/client-page-pago/:id" element={<ClientPagePago />} />
         <Route path="/mis-servicios" element={<ClientPageMisServicios />} />

@@ -48,7 +48,7 @@ const Header = () => {
         <div className="right">
           <PrimaryButton
             icon={BarChart}
-            text="Estadisticas"
+            text="Estadísticas"
             to="/stats"
             variant="primary"
           />

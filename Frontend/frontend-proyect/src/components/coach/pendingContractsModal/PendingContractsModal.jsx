@@ -11,7 +11,6 @@ const PendingContractsModal = ({
 }) => {
   if (!isOpen) return null;
 
-  console.log(contracts);
   return (
     <div className="modal-overlay">
       <div className="pending-contracts-modal">

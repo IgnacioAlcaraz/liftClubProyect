@@ -1,0 +1,30 @@
+.review-metrics {
+  margin-top: 2rem;
+}
+
+.metrics-boxes {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.metric-box {
+  flex: 1;
+  padding: 1rem;
+  border: 1px solid #7749f8;
+  border-radius: 8px;
+  text-align: center;
+  background-color: #f9fafb;
+}
+
+.metric-title {
+  font-size: 1.1rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.metric-value {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+}

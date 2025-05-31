@@ -7,7 +7,7 @@ router.post("/", auth, reviewController.createReview);
 
 router.get("/:serviceId", auth, reviewController.getReviewsByServiceId);
 
-router.get("/trainer/:trainerId", auth, reviewController.getReviewsByTrainerId);
+router.get("/coach/:coachId", auth, reviewController.getReviewsByCoachId);
 
 router.patch("/:id", auth, reviewController.respondToReview);
 
