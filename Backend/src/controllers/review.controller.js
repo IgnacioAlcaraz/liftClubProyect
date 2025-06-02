@@ -36,7 +36,11 @@ const getReviewsByServiceId = async (req, res) => {
     const { serviceId } = req.params;
     const { page = 1, limit = 10 } = req.query;
 
-    const reviews = await reviewService.getReviewsByServiceId(serviceId, page, limit);
+    const reviews = await reviewService.getReviewsByServiceId(
+      serviceId,
+      page,
+      limit
+    );
     return res.status(200).json(reviews);
   } catch (error) {
     return res
@@ -45,12 +49,16 @@ const getReviewsByServiceId = async (req, res) => {
   }
 };
 
-const getReviewsByTrainerId = async (req, res) => {
+const getReviewsByCoachId = async (req, res) => {
   try {
-    const { trainerId } = req.params;
+    const { coachId } = req.params;
     const { page = 1, limit = 10 } = req.query;
 
-    const reviews = await reviewService.getReviewsByTrainerId(trainerId, page, limit);
+    const reviews = await reviewService.getReviewsByCoachId(
+      coachId,
+      page,
+      limit
+    );
     return res.status(200).json(reviews);
   } catch (error) {
     return res
@@ -95,6 +103,6 @@ const respondToReview = async (req, res) => {
 module.exports = {
   createReview,
   getReviewsByServiceId,
-  getReviewsByTrainerId,
+  getReviewsByCoachId,
   respondToReview,
 };

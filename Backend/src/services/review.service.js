@@ -26,7 +26,7 @@ const createReview = async (reviewData, userId) => {
   const newReview = new Review({
     ...reviewData,
     clientId: userId,
-    trainerId: contract.coachId,
+    coachId: contract.coachId,
     serviceId: contract.serviceId,
   });
 
@@ -63,15 +63,15 @@ const getReviewsByServiceId = async (serviceId, page, limit) => {
   };
 };
 
-const getReviewsByTrainerId = async (trainerId, page, limit) => {
+const getReviewsByCoachId = async (coachId, page, limit) => {
   const skip = (page - 1) * limit;
-  const reviews = await Review.find({ trainerId })
+  const reviews = await Review.find({ coachId })
     .skip(skip)
     .limit(limit)
     .sort({ createdAt: -1 })
     .populate("clientId", "firstName lastName");
 
-  const total = await Review.countDocuments({ trainerId });
+  const total = await Review.countDocuments({ coachId });
   return {
     reviews,
     total,
@@ -87,7 +87,7 @@ const respondToReview = async (reviewId, response, userId) => {
     throw new Error("Reseña no encontrada");
   }
 
-  if (review.trainerId.toString() !== userId.toString()) {
+  if (review.coachId.toString() !== userId.toString()) {
     throw new Error("No puedes responder a una reseña que no te pertenece");
   }
 
@@ -115,6 +115,6 @@ const updateAverageRating = async (serviceId) => {
 module.exports = {
   createReview,
   getReviewsByServiceId,
-  getReviewsByTrainerId,
+  getReviewsByCoachId,
   respondToReview,
 };

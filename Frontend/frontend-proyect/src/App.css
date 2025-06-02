@@ -5,3 +5,39 @@ body,
   background-color: #f9fafb;
 }
 
+.stats-layout {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  min-height: calc(88vh - 10px);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.stats-panel {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  height: 100%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Media query para dispositivos móviles */
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .stats-layout {
+    padding: 1rem;
+  }
+
+  .stats-panel {
+    padding: 1.5rem;
+  }
+}

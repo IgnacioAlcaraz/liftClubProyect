@@ -18,6 +18,9 @@ lerna-debug.log*
 *.local
 *.env
 
+# Prettier
+Frontend/frontend-proyect/prettier.prettierrcc
+
 # IDEs y editores
 .vscode/
 .idea/

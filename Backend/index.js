@@ -9,11 +9,13 @@ const authRoutes = require("./src/routes/auth.routes");
 const serviceRoutes = require("./src/routes/service.routes");
 const contractRoutes = require("./src/routes/contract.routes");
 const reviewRoutes = require("./src/routes/review.routes");
+const statsRoutes = require("./src/routes/stats.routes");
 const passport = require("passport");
 const session = require("express-session");
 require("./src/configs/passport"); // Configuración de Passport
 
 const app = express();
+app.disable("x-powered-by");
 
 // Conectar a la base de datos
 connectDB();
@@ -21,7 +23,7 @@ connectDB();
 //middlewares
 app.use(cors());
 
-app.use('/uploads', express.static(path.join(__dirname, 'src/uploads')));
+app.use("/uploads", express.static(path.join(__dirname, "src/uploads")));
 
 app.use(express.json());
 app.use(
@@ -36,6 +38,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/services", serviceRoutes);
 app.use("/api/contracts", contractRoutes);
 app.use("/api/reviews", reviewRoutes);
+app.use("/api/stats", statsRoutes);
 
 // Puerto
 const PORT = process.env.PORT || 5000;

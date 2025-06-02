@@ -1,0 +1,33 @@
+.coach-overview {
+  padding: 1.5rem;
+  border-radius: 12px;
+  background-color: white;
+  margin-bottom: 1.5rem;
+}
+
+.coach-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.coach-info h3 {
+  font-size: 1.7rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.coach-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.coach-rating p {
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: #333;
+  margin: 0;
+}
