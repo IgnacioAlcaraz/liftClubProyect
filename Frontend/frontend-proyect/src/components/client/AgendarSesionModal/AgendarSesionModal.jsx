@@ -13,19 +13,21 @@ const AgendarSesionModal = ({ contrato, show, onHide, onAgendar }) => {
   const token = localStorage.getItem("token");
 
   // Función para convertir fecha YYYY-MM-DD en nombre del día ("Lunes", "Martes", etc.)
-  const obtenerNombreDia = (fechaStr) => {
-    const dias = [
-      "Domingo",
-      "Lunes",
-      "Martes",
-      "Miércoles",
-      "Jueves",
-      "Viernes",
-      "Sábado",
-    ];
-    const fecha = new Date(fechaStr);
-    return dias[fecha.getDay()];
-  };
+const obtenerNombreDia = (fechaStr) => {
+  const dias = [
+    "Domingo",
+    "Lunes",
+    "Martes",
+    "Miércoles",
+    "Jueves",
+    "Viernes",
+    "Sábado",
+  ];
+  const [year, month, day] = fechaStr.split("-");
+  const fecha = new Date(Number(year), Number(month) - 1, Number(day)); // zona local
+  return dias[fecha.getDay()];
+};
+
 
   // Al abrir el modal, resetear campos
   useEffect(() => {
@@ -42,6 +44,10 @@ const AgendarSesionModal = ({ contrato, show, onHide, onAgendar }) => {
 
     // Obtener el nombre del día (por ej. "Martes")
     const nombreDelDia = obtenerNombreDia(dia);
+    console.log("Día seleccionado:", dia);
+console.log("Nombre del día:", nombreDelDia);
+console.log("Disponibilidad del servicio:", contrato.serviceId.availability);
+
 
     // Buscar disponibilidad para ese día de la semana
     const disponibilidad = contrato.serviceId.availability.find(
@@ -64,6 +70,7 @@ const AgendarSesionModal = ({ contrato, show, onHide, onAgendar }) => {
     }
   }, [dia, contrato]);
 
+  
   // Confirmar la reserva de la sesión
   const handleConfirmar = async () => {
     if (!dia || !horaSeleccionada) {
@@ -83,7 +90,7 @@ const AgendarSesionModal = ({ contrato, show, onHide, onAgendar }) => {
     try {
       setLoading(true);
 
-      await axios.post(
+      const response=await axios.post(
         `http://localhost:5000/api/contracts/${contrato._id}/scheduledSessions`,
         {
           date: dia, // Guardamos como YYYY-MM-DD
@@ -96,6 +103,7 @@ const AgendarSesionModal = ({ contrato, show, onHide, onAgendar }) => {
           },
         }
       );
+      console.log("Sesión agendada:", response.data);
 
       alert("Sesión agendada con éxito");
       if (onAgendar) onAgendar(); // Callback para actualizar la UI
@@ -107,6 +115,8 @@ const AgendarSesionModal = ({ contrato, show, onHide, onAgendar }) => {
       setLoading(false);
     }
   };
+
+  
 
   return (
     <Modal show={show} onHide={onHide} centered>

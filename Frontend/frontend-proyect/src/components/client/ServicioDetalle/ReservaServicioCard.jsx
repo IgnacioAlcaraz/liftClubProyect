@@ -6,18 +6,6 @@ import SecondaryButton from "../../secondaryButton/SecondaryButton";
 const ReservaServicioCard = ({ servicio }) => {
   const navigate = useNavigate();
 
-  const getDayName = (dayIndex) => {
-    const days = [
-      "Domingo",
-      "Lunes",
-      "Martes",
-      "Miércoles",
-      "Jueves",
-      "Viernes",
-      "Sabado",
-    ];
-    return days[dayIndex];
-  };
 
   const handleReservar = () => {
     // Navegamos a la pantalla de pago usando el ID del servicio
@@ -74,7 +62,8 @@ const ReservaServicioCard = ({ servicio }) => {
         <ul className="list-unstyled">
           {servicio.availability?.map((a, i) => (
             <li key={i}>
-              {getDayName(a.dayOfWeek)}: de {a.startTime} hasta {a.endTime}
+              {console.log(a.date)}
+              {(a.date)}: de {a.startTime} hasta {a.endTime}
             </li>
           ))}
         </ul>
