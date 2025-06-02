@@ -21,15 +21,27 @@ const createService = async (req, res) => {
         .json({ message: "Solo los coaches pueden crear servicios" });
     }
 
-    console.log("Files received:", req.files);
+    let serviceData = { ...req.body };
+    if (req.body.availability) {
+      try {
+        serviceData.availability = JSON.parse(req.body.availability);
+      } catch (error) {
+        console.error("Error al parsear availability:", error);
+        return res.status(400).json({
+          message: "Error en el formato de availability",
+          error: error.message,
+        });
+      }
+    }
 
     const savedService = await serviceService.createService(
-      req.body,
+      serviceData,
       user.userId,
       req.files
     );
     res.status(201).json(savedService);
   } catch (error) {
+    console.error("Error al crear servicio:", error);
     return res
       .status(500)
       .json({ message: "Error al crear el servicio", error: error.message });
@@ -56,9 +68,22 @@ const updateServiceById = async (req, res) => {
     const { id } = req.params;
     const user = req.user;
 
+    let serviceData = { ...req.body };
+    if (req.body.availability) {
+      try {
+        serviceData.availability = JSON.parse(req.body.availability);
+      } catch (error) {
+        console.error("Error al parsear availability en update:", error);
+        return res.status(400).json({
+          message: "Error en el formato de availability",
+          error: error.message,
+        });
+      }
+    }
+
     const updatedService = await serviceService.updateServiceById(
       id,
-      req.body,
+      serviceData,
       user.userId,
       req.files
     );

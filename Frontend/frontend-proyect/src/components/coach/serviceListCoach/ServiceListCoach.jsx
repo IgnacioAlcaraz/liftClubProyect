@@ -50,19 +50,26 @@ const ServiceListCoach = () => {
     try {
       const form = new FormData();
 
-      // Agregar campos básicos del formulario
       Object.keys(formData).forEach((key) => {
-        if (key !== "images") {
-          form.append(key, formData[key]);
+        if (key === "images") {
+          return;
+        }
+
+        if (key === "availability") {
+          const availabilityString = JSON.stringify(formData[key]);
+          form.append("availability", availabilityString);
+        } else {
+          if (formData[key] !== undefined && formData[key] !== null) {
+            form.append(key, formData[key]);
+          }
         }
       });
 
-      // Agregar las imágenes existentes que queremos mantener
       if (formData.images && formData.images.length > 0) {
-        form.append("existingImages", JSON.stringify(formData.images));
+        const existingImagesString = JSON.stringify(formData.images);
+        form.append("existingImages", existingImagesString);
       }
 
-      // Agregar las nuevas imágenes
       if (newImages && newImages.length > 0) {
         newImages.forEach((image) => {
           form.append("images", image);
@@ -100,8 +107,8 @@ const ServiceListCoach = () => {
       }
       setShowModal(false);
     } catch (error) {
-      console.error("Error:", error);
-      alert("Error al guardar el servicio");
+      console.error("Error detallado:", error);
+      alert("Error al guardar el servicio.");
     }
   };
 

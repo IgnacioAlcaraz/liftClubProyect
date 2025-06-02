@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Camera } from "lucide-react";
 import "./ServiceFormModal.css";
 import InputField from "../../input/InputField";
+import AvailabilitySection from "./AvailabilitySection";
 
 const ServiceFormModal = ({ show, onClose, onSubmit, initialData = null }) => {
   const [formData, setFormData] = useState({
@@ -15,6 +16,7 @@ const ServiceFormModal = ({ show, onClose, onSubmit, initialData = null }) => {
     idiom: "",
     visibility: "public",
     images: [],
+    availability: [],
   });
 
   const [existingImages, setExistingImages] = useState([]);
@@ -32,15 +34,14 @@ const ServiceFormModal = ({ show, onClose, onSubmit, initialData = null }) => {
         modality: initialData.modality || "",
         idiom: initialData.idiom || "",
         visibility: initialData.visibility || "",
+        availability: initialData.availability || [],
       });
 
-      // Asegurarse de que las imágenes existentes se mantengan
       const validImages = (initialData.images || []).filter(
         (img) => img && img.url
       );
       setExistingImages(validImages);
     } else {
-      // Resetear el estado cuando se está creando un nuevo servicio
       setFormData({
         name: "",
         category: "",
@@ -52,10 +53,10 @@ const ServiceFormModal = ({ show, onClose, onSubmit, initialData = null }) => {
         idiom: "",
         visibility: "",
         images: [],
+        availability: [],
       });
       setExistingImages([]);
     }
-    // Solo resetear las imágenes seleccionadas cuando se abre/cierra el modal
     if (!show) {
       setSelectedImages([]);
     }
@@ -87,7 +88,6 @@ const ServiceFormModal = ({ show, onClose, onSubmit, initialData = null }) => {
         );
       }
 
-      // Agregar las nuevas imágenes al array existente
       setSelectedImages((prevImages) => [...prevImages, ...validFiles]);
     }
   };
@@ -121,12 +121,21 @@ const ServiceFormModal = ({ show, onClose, onSubmit, initialData = null }) => {
     }));
   };
 
+  const handleAvailabilityChange = (newAvailabilities) => {
+    setFormData((prev) => ({
+      ...prev,
+      availability: newAvailabilities,
+    }));
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (existingImages.length === 0 && selectedImages.length === 0) {
       alert("Por favor, agrega al menos una imagen para el servicio.");
       return;
     }
+    console.log("Datos del formulario a enviar:", formData);
+    console.log("Disponibilidades:", formData.availability);
     onSubmit(
       {
         ...formData,
@@ -293,6 +302,11 @@ const ServiceFormModal = ({ show, onClose, onSubmit, initialData = null }) => {
               required
             />
           </div>
+
+          <AvailabilitySection
+            availabilities={formData.availability}
+            onAvailabilityChange={handleAvailabilityChange}
+          />
 
           <div className="form-section">
             <h3>Modalidad</h3>

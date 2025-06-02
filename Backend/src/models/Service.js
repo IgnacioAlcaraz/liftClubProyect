@@ -39,7 +39,7 @@ const serviceSchema = new mongoose.Schema(
     availability: [
       {
         date: {
-          type: String, 
+          type: String,
           required: true,
         },
         startTime: String,
