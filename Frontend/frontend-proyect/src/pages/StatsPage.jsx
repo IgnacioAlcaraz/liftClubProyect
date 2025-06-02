@@ -39,7 +39,6 @@ const StatsPage = () => {
 
   const getReviews = async () => {
     try {
-      console.log("coachId:", coachId);
       const response = await axios.get(
         `http://localhost:5000/api/reviews/coach/${coachId}`,
         {
