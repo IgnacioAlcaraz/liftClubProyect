@@ -7,7 +7,7 @@ import { logout } from "../../app/slices/authSlice";
 
 const LogoutButton = ({ variant = "outline-secondary" }) => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch(); 
 
   const handleLogout = () => {
     // Limpiar Redux
