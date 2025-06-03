@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import { Star, FileText, Calendar, X } from "lucide-react"; // Íconos de lucide-react
+import { FileText, Calendar, X } from "lucide-react"; // Íconos de lucide-react
 import CalificacionModal from "../components/client/CalificacionModal/CalificacionModal";
 import ArchivosModal from "../components/client/ArchivosModal/ArchivosModal";
 import AgendarSesionModal from "../components/client/AgendarSesionModal/AgendarSesionModal";
 import Header from "../components/client/Header/Header";
+import ContractsTable from "../components/client/ContractsTable/ContractsTable";
+import SessionsTable from "../components/client/SessionsTable/SessionsTable";
+
 export default function ClientPageMisServicios() {
   const reduxToken = useSelector((state) => state.auth.token);
   const token = reduxToken || localStorage.getItem("token");
@@ -160,20 +163,6 @@ export default function ClientPageMisServicios() {
     }
   };
 
-  const renderEstadoBadge = (estado) => {
-    const estados = {
-      Aceptado: "success",
-      Pendiente: "warning",
-      Completado: "primary",
-      Cancelado: "danger",
-    };
-    return (
-      <span className={`badge bg-${estados[estado] || "secondary"}`}>
-        {estado}
-      </span>
-    );
-  };
-
   return (
     <>
       <Header
@@ -186,194 +175,25 @@ export default function ClientPageMisServicios() {
         <h2 className="text-center mb-4">Mis Servicios</h2>
         {error && <p style={{ color: "red" }}>{error}</p>}
 
+        {/* Tabla de contratos */}
+
         <div className="table-responsive">
-          <table className="table table-bordered table-hover align-middle text-center">
-            <thead className="table-light">
-              <tr>
-                <th>Profesor</th>
-                <th>Servicio</th>
-                <th>Estado</th>
-                <th>Duración</th>
-                <th>Calificar</th>
-                <th>Archivos</th>
-                <th>Agendar</th>
-                <th>Cancelar</th>
-              </tr>
-            </thead>
-            <tbody>
-              {misContratos.map((c) => {
-                //deshabilitar los botones segun el estado del contrato
-                const deshabilitadoCalificar = c.status !== "Completado";
-                const deshabilitadoArchivo =
-                  c.status === "Pendiente" ||
-                  c.status === "Cancelado" ||
-                  c.status === "Rechazado";
-                const deshabilitadoAgendar = c.status !== "Aceptado";
-                const deshabilitadoCancelar =
-                  c.status === "Completado" ||
-                  c.status === "Rechazado" ||
-                  c.status === "Cancelado";
-
-                return (
-                  <tr key={c._id}>
-                    <td>
-                      {c.coachId
-                        ? `${c.coachId.firstName} ${c.coachId.lastName}`
-                        : "No disponible"}
-                    </td>
-                    <td>{c.serviceId?.name || "Servicio no disponible"}</td>
-                    <td>{renderEstadoBadge(c.status)}</td>
-                    <td>{c.serviceId?.duration || "N/A"} sesiones</td>
-
-                    {/* Calificar */}
-                    <td
-                      className={
-                        deshabilitadoCalificar ? "text-muted" : "text-primary"
-                      }
-                      style={{
-                        cursor: deshabilitadoCalificar
-                          ? "not-allowed"
-                          : "pointer",
-                      }}
-                      onClick={() => {
-                        if (!deshabilitadoCalificar) {
-                          setContratoActivo(c);
-                          setShowModalCalificar(true);
-                        }
-                      }}
-                    >
-                      <Star size={16} className="me-1" /> Calificar
-                    </td>
-
-                    {/* Archivos */}
-                    <td
-                      className={
-                        deshabilitadoArchivo
-                          ? "text-muted"
-                          : "text-secondary fw-semibold"
-                      }
-                      style={{
-                        cursor: deshabilitadoArchivo
-                          ? "not-allowed"
-                          : "pointer",
-                      }}
-                      onClick={() => {
-                        if (!deshabilitadoArchivo) {
-                          setContratoActivo(c);
-                          setShowModalArchivos(true);
-                        }
-                      }}
-                    >
-                      <FileText size={16} className="me-1" /> Archivos
-                    </td>
-
-                    {/* Agendar */}
-                    <td
-                      className={
-                        deshabilitadoAgendar
-                          ? "text-muted"
-                          : "text-secondary fw-semibold"
-                      }
-                      style={{
-                        cursor: deshabilitadoAgendar
-                          ? "not-allowed"
-                          : "pointer",
-                      }}
-                      onClick={() => {
-                        if (!deshabilitadoAgendar) {
-                          setContratoActivo(c);
-                          setShowModalAgendar(true);
-                        }
-                      }}
-                    >
-                      <Calendar size={16} className="me-1" /> Agendar
-                    </td>
-
-                    {/* Cancelar */}
-                    <td
-                      className={
-                        deshabilitadoCancelar ? "text-muted" : "text-danger"
-                      }
-                      style={{
-                        cursor: deshabilitadoCancelar
-                          ? "not-allowed"
-                          : "pointer",
-                      }}
-                      onClick={() => {
-                        if (!deshabilitadoCancelar) {
-                          if (
-                            window.confirm(
-                              "¿Estás seguro de que querés cancelar este contrato?"
-                            )
-                          ) {
-                            handleCancelarContrato(c._id);
-                          }
-                        }
-                      }}
-                    >
-                      <X size={16} className="me-1" /> Cancelar
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+          <ContractsTable
+            misContratos={misContratos}
+            setContratoActivo={setContratoActivo}
+            onAbrirModalCalificar={() => setShowModalCalificar(true)}
+            onAbrirModalArchivo={() => setShowModalArchivos(true)}
+            onAbrirModalAgendar={() => setShowModalAgendar(true)}
+            onCancelarContrato={handleCancelarContrato}
+          ></ContractsTable>
         </div>
 
         {/* Tabla de schedulledsessions */}
 
         <div className="container mt-04">
           <h2 className="text-center mb-4">Mis Sesiones</h2>
-          <div className="table-responsive">
-            <table className="table table-bordered table-hover align-middle text-center">
-              <thead className="table-light">
-                <tr>
-                  <th>Profesor</th>
-                  <th>Servicio</th>
-                  <th>Fecha</th>
-                  <th>Estado</th>
-                  <th>Accion</th>
-                </tr>
-              </thead>
-              <tbody>
-                {misSesiones.map((s) => {
-                  return (
-                    <tr key={s._id}>
-                      <td>{s.coach.firstName + " " + s.coach.lastName}</td>
-                      <td>{s.service.name}</td>
-                      <td>{s.date + " " + s.startTime}</td>
-                      <td className="text-center align-middle">
-                        <span
-                          className={`badge bg-${s.status === "Completado" ? "success" : "warning"}`}
-                        >
-                          {s.status}
-                        </span>
-                      </td>
-
-                      <td className="text-center align-middle">
-                        {s.status !== "Completado" && (
-                          <button
-                            className="btn btn-outline-success btn-sm"
-                            onClick={() => {
-                              if (
-                                window.confirm(
-                                  "¿Estás seguro de que querés marcar como realizada la sesión?"
-                                )
-                              ) {
-                                handleMarcarComoCompletada(s._id);
-                              }
-                            }}
-                          >
-                            Marcar como completado
-                          </button>
-                        )}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+          <SessionsTable misSesiones={misSesiones} onMarcarComoCompletada={handleMarcarComoCompletada}></SessionsTable>
+          <div className="table-responsive"></div>
         </div>
 
         <CalificacionModal
