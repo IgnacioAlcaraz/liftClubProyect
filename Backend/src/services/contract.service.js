@@ -31,9 +31,8 @@ const createContract = async (contractData, userId) => {
 
   return await newContract.save();
 };
-
 const getContractById = async (id, userId, role) => {
-  const contract = await Contract.findById(id);
+  const contract = await Contract.findById(id).populate("serviceId");
 
   if (!contract) {
     throw new Error("Contrato no encontrado");
@@ -133,6 +132,20 @@ const updateScheduledSessionStatusById = async (
 
   session.status = status;
   await contract.save();
+
+  // Verificar si se deben marcar como completado el contrato
+  if (status === "Completado") {
+    const completadas = contract.scheduledSessions.filter(
+      (s) => s.status === "Completado"
+    ).length;
+
+    const necesarias = contract.serviceId.duration;
+
+    if (completadas >= necesarias) {
+      contract.status = "Completado";
+      await contract.save();
+    }
+  }
 
   return session;
 };

@@ -32,6 +32,32 @@ const getClientContracts = async (req, res) => {
   }
 };
 
+const getClientScheduledSessions = async (req, res) => {
+  try {
+    const clientId = req.user.userId;
+
+    // Trae todos los contratos del cliente con los datos necesarios
+    const contratos = await Contract.find({ clientId })
+      .populate("serviceId", "name") 
+      .populate("coachId", "firstName lastName"); 
+
+    // Extraer y combinar todas las sesiones embebidas
+    const todasLasSesiones = contratos.flatMap((contrato) =>
+      contrato.scheduledSessions.map((sesion) => ({
+        ...sesion.toObject(),
+        contratoId: contrato._id,
+        service: contrato.serviceId,
+        coach: contrato.coachId,
+      }))
+    );
+
+    res.status(200).json(todasLasSesiones);
+  } catch (error) {
+    console.error("Error al obtener sesiones del cliente:", error);
+    res.status(500).json({ message: "Error al obtener las sesiones" });
+  }
+};
+
 const createContract = async (req, res) => {
   try {
     const { userId } = req.user;
@@ -291,4 +317,5 @@ module.exports = {
   createScheduledSession,
   getClientContracts,
   getPendingContracts,
+  getClientScheduledSessions,
 };

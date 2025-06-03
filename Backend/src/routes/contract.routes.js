@@ -22,6 +22,12 @@ router.get(
   contractController.getClientContracts
 );
 
+router.get(
+  "/cliente/mis-sesiones",
+  auth,
+  contractController.getClientScheduledSessions
+);
+
 router.post(
   "/:id/files",
   auth,
