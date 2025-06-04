@@ -1,9 +1,46 @@
-import React from "react";
+import React, { useRef } from "react";
 import { Modal, Button } from "react-bootstrap";
 import { FileText } from "lucide-react";
 
-export default function ArchivosModal({ show, onHide, contrato }) {
+export default function ArchivosModal({ show, onHide, contrato, isCoach }) {
+  const fileInputRef = useRef(null);
   if (!contrato) return null;
+
+  const handleUploadClick = () => {
+    fileInputRef.current.click();
+  };
+
+  const handleFileUpload = async (event) => {
+    const files = event.target.files;
+    if (!files.length) return;
+
+    const formData = new FormData();
+    for (let i = 0; i < files.length; i++) {
+      formData.append("files", files[i]);
+    }
+
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/contracts/${contrato._id}/files`,
+        {
+          method: "POST",
+          body: formData,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Error al subir los archivos");
+      }
+
+      window.location.reload();
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Error al subir los archivos");
+    }
+  };
 
   const archivos = contrato.files || [];
 
@@ -38,6 +75,19 @@ export default function ArchivosModal({ show, onHide, contrato }) {
         )}
       </Modal.Body>
       <Modal.Footer>
+        {isCoach && (
+          <>
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileUpload}
+              style={{ display: "none" }}
+            />
+            <Button variant="primary" onClick={handleUploadClick}>
+              Subir Archivos
+            </Button>
+          </>
+        )}
         <Button variant="secondary" onClick={onHide}>
           Cerrar
         </Button>

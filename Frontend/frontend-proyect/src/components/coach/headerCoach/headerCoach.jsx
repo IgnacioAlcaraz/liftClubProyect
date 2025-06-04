@@ -56,7 +56,7 @@ const Header = () => {
           <PrimaryButton
             icon={CheckCircle}
             text="Servicios Aceptados"
-            to="/accepted-services"
+            to="/coach-services"
             variant="primary"
           />
 

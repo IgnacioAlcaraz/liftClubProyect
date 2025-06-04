@@ -16,17 +16,7 @@ router.patch("/:id", auth, contractController.updateContractStatusById);
 
 router.get("/:id/files", auth, contractController.getContractFilesById);
 
-router.get(
-  "/cliente/mis-contratos",
-  auth,
-  contractController.getClientContracts
-);
-
-router.get(
-  "/cliente/mis-sesiones",
-  auth,
-  contractController.getClientScheduledSessions
-);
+router.get("/user/scheduledSessions", auth, contractController.getScheduledSessions);
 
 router.post(
   "/:id/files",

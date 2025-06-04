@@ -31,7 +31,7 @@ export default function ClientPageMisServicios() {
     const fetchMisContratos = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/contracts/cliente/mis-contratos",
+          "http://localhost:5000/api/contracts",
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -41,7 +41,8 @@ export default function ClientPageMisServicios() {
 
         console.log(response.data);
         setMisContratos(response.data);
-      } catch (err) {
+      } catch (error) {
+        console.error("Error al cargar contratos:", error);
         setError("No se pudieron cargar los contratos.");
       }
     };
@@ -53,7 +54,7 @@ export default function ClientPageMisServicios() {
     const fetchMisSesiones = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/contracts/cliente/mis-sesiones",
+          "http://localhost:5000/api/contracts/user/scheduledSessions",
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -62,7 +63,8 @@ export default function ClientPageMisServicios() {
         );
         console.log(response.data);
         setMisSesiones(response.data);
-      } catch (err) {
+      } catch (error) {
+        console.error("Error al cargar sesiones:", error);
         setError("No se pudieron cargar los contratos.");
       }
     };
@@ -192,7 +194,11 @@ export default function ClientPageMisServicios() {
 
         <div className="container mt-04">
           <h2 className="text-center mb-4">Mis Sesiones</h2>
-          <SessionsTable misSesiones={misSesiones} onMarcarComoCompletada={handleMarcarComoCompletada}></SessionsTable>
+          <SessionsTable
+            misSesiones={misSesiones}
+            onMarcarComoCompletada={handleMarcarComoCompletada}
+            isCoach={false}
+          ></SessionsTable>
           <div className="table-responsive"></div>
         </div>
 
@@ -206,6 +212,7 @@ export default function ClientPageMisServicios() {
           show={showModalArchivos}
           onHide={() => setShowModalArchivos(false)}
           contrato={contratoActivo}
+          isCoach={false}
         />
         <AgendarSesionModal
           show={showModalAgendar}

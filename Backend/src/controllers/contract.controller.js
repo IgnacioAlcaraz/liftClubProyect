@@ -1,4 +1,5 @@
 const contractService = require("../services/contract.service");
+const Contract = require("../models/Contract");
 
 const getContracts = async (req, res) => {
   try {
@@ -13,46 +14,18 @@ const getContracts = async (req, res) => {
   }
 };
 
-const Contract = require("../models/Contract");
 
-const getClientContracts = async (req, res) => {
+const getScheduledSessions = async (req, res) => {
   try {
-    const clientId = req.user.userId;
+    const { userId, role } = req.user;
 
-    const contracts = await Contract.find({ clientId })
-      .populate("serviceId")
-      .populate("coachId", "firstName lastName");
+    const sessions = await contractService.getScheduledSessions(userId, role);
 
-    const filtered = contracts.filter((c) => c.serviceId !== null);
-
-    res.status(200).json(filtered);
+    res.status(200).json(sessions);
   } catch (error) {
-    console.error("Error al obtener contratos del cliente:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
-  }
-};
-
-const getClientScheduledSessions = async (req, res) => {
-  try {
-    const clientId = req.user.userId;
-
-    // Trae todos los contratos del cliente con los datos necesarios
-    const contratos = await Contract.find({ clientId })
-      .populate("serviceId", "name") 
-      .populate("coachId", "firstName lastName"); 
-
-    // Extraer y combinar todas las sesiones embebidas
-    const todasLasSesiones = contratos.flatMap((contrato) =>
-      contrato.scheduledSessions.map((sesion) => ({
-        ...sesion.toObject(),
-        contratoId: contrato._id,
-        service: contrato.serviceId,
-        coach: contrato.coachId,
-      }))
-    );
-
-    res.status(200).json(todasLasSesiones);
-  } catch (error) {
+    if (error.message === "No se encontraron contratos") {
+      return res.status(404).json({ message: error.message });
+    }
     console.error("Error al obtener sesiones del cliente:", error);
     res.status(500).json({ message: "Error al obtener las sesiones" });
   }
@@ -315,7 +288,6 @@ module.exports = {
   getScheduledSessionsByContractId,
   updateScheduledSessionStatusById,
   createScheduledSession,
-  getClientContracts,
   getPendingContracts,
-  getClientScheduledSessions,
+  getScheduledSessions,
 };

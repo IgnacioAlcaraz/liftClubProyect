@@ -3,13 +3,53 @@ const Service = require("../models/Service");
 const User = require("../models/User");
 
 const getContracts = async (userId, role) => {
+  let query;
   if (role === "client") {
-    return await Contract.find({ clientId: userId });
+    query = Contract.find({ clientId: userId });
   } else if (role === "coach") {
-    return await Contract.find({ coachId: userId });
+    query = Contract.find({ coachId: userId });
+  } else {
+    query = Contract.find();
   }
 
-  return await Contract.find();
+  const contracts = await query
+    .populate("serviceId")
+    .populate("coachId", "firstName lastName")
+    .populate("clientId", "firstName lastName");
+
+  return contracts.filter(c => c.serviceId !== null);
+};
+
+const getScheduledSessions = async (userId, role) => {
+  let contracts;
+  if (role === "client") {
+    contracts = await Contract.find({ clientId: userId })
+      .populate("serviceId", "name")
+      .populate("coachId", "firstName lastName")
+      .populate("clientId", "firstName lastName");
+  } else if (role === "coach") {
+    contracts = await Contract.find({ coachId: userId })
+      .populate("serviceId", "name")
+      .populate("coachId", "firstName lastName")
+      .populate("clientId", "firstName lastName");
+  }
+
+
+  if (!contracts) {
+    throw new Error("No se encontraron contratos");
+  }
+
+  const todasLasSesiones = contracts.flatMap((contract) =>
+    contract.scheduledSessions.map((session) => ({
+      ...session.toObject(),
+      contractId: contract._id,
+      service: contract.serviceId,
+      coach: contract.coachId,
+      client: contract.clientId,
+    }))
+  );
+
+  return todasLasSesiones;
 };
 
 const createContract = async (contractData, userId) => {
@@ -207,4 +247,5 @@ module.exports = {
   updateScheduledSessionStatusById,
   createScheduledSession,
   getPendingContracts,
+  getScheduledSessions,
 };
