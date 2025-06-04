@@ -134,8 +134,6 @@ const ServiceFormModal = ({ show, onClose, onSubmit, initialData = null }) => {
       alert("Por favor, agrega al menos una imagen para el servicio.");
       return;
     }
-    console.log("Datos del formulario a enviar:", formData);
-    console.log("Disponibilidades:", formData.availability);
     onSubmit(
       {
         ...formData,

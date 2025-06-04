@@ -80,10 +80,58 @@ const getMe = async (req, res) => {
   }
 };
 
+const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const result = await authService.forgotPassword(email);
+    return res.status(200).json(result);
+  } catch (error) {
+    if (error.message === "Usuario no encontrado") {
+      return res.status(404).json({ message: error.message });
+    }
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+const verifyResetPasswordCode = async (req, res) => {
+  try {
+    const { email, code } = req.body;
+    const result = await authService.verifyResetPasswordCode(email, code);
+    return res.status(200).json(result);
+  } catch (error) {
+    if (
+      error.message ===
+      "Código de restablecimiento de contraseña inválido o expirado"
+    ) {
+      return res.status(400).json({ message: error.message });
+    }
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+const resetPassword = async (req, res) => {
+  try {
+    const { email, code, newPassword } = req.body;
+    const result = await authService.resetPassword(email, code, newPassword);
+    return res.status(200).json(result);
+  } catch (error) {
+    if (
+      error.message ===
+      "Código de restablecimiento de contraseña inválido o expirado"
+    ) {
+      return res.status(400).json({ message: error.message });
+    }
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   register,
   login,
   googleCallback,
   selectRole,
   getMe,
+  forgotPassword,
+  verifyResetPasswordCode,
+  resetPassword,
 };

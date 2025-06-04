@@ -5,8 +5,6 @@ import ComentariosList from "./ComentariosList";
 import "./ServicioDetalleCard.css";
 
 const ServicioDetalleCard = ({ servicio }) => {
-  console.log("REVIEWS en servicio:", servicio.reviews);
-
   const comentarios = (servicio.reviews || []).map((r) => ({
     author: `${r.clientId?.firstName || "Usuario"} ${
       r.clientId?.lastName || ""

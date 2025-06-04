@@ -5,6 +5,10 @@ body,
   background-color: #f9fafb;
 }
 
+a {
+  text-decoration: none;
+}
+
 .stats-layout {
   padding: 2rem;
   max-width: 1400px;
@@ -40,4 +44,18 @@ body,
   .stats-panel {
     padding: 1.5rem;
   }
+}
+
+.button-container {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+.button-container button {
+  min-width: 160px;
+  height: 40px;
+  font-size: 14px;
+  text-align: left;
 }

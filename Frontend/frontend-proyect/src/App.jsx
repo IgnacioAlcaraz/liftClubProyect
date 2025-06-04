@@ -11,6 +11,7 @@ import ClientPageServicio1 from "./pages/ClientPageServicio1";
 import ClientPagePago from "./pages/ClientPagePago";
 import ClientPageMisServicios from "./pages/ClientPageMisServicios";
 import StatsPage from "./pages/StatsPage";
+import PasswordReset from "./pages/PasswordReset";
 import "./App.css";
 
 const App = () => {
@@ -33,6 +34,7 @@ const App = () => {
         <Route path="/coach-home" element={<CoachHome />} />
         {/* <Route path="/google-success" element={<GoogleSuccess />} /> */}
         <Route path="/select-role" element={<SelectRole />} />
+        <Route path="/forgot-password" element={<PasswordReset />} />
       </Routes>
     </Router>
   );

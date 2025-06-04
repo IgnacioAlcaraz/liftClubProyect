@@ -8,8 +8,6 @@ const GoogleButton = () => {
 
   useEffect(() => {
     const handleMessage = (event) => {
-      console.log("Datos recibidos desde Google:", event.data);
-
       const { token, user } = event.data;
 
       if (token && user) {
