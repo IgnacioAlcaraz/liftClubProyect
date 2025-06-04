@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { loginUser } from "../../app/slices/authSlice";
 import InputField from "../input/InputField";
 import SubmitButton from "../submitButton/SubmitButton";
@@ -20,8 +20,6 @@ const LoginForm = () => {
 
   // Redirige si el usuario se autentica, según el rol
   useEffect(() => {
-    console.log("Usuario recibido:", user);
-
     if (isAuthenticated && user && user.role) {
       if (user.role === "client") {
         navigate("/client-home");
@@ -78,6 +76,9 @@ const LoginForm = () => {
           </span>
         </div>
 
+        <p className="forgot-password-text">
+          <Link to="/forgot-password">¿Olvidaste tu contraseña?</Link>
+        </p>
         {error && <p className="text-danger text-center">{error}</p>}
 
         <SubmitButton

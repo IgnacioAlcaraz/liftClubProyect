@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
+const emailService = require("./email.service");
 require("dotenv").config();
 
 const register = async (userData) => {
@@ -153,10 +154,79 @@ const getMe = async (userId) => {
   return user;
 };
 
+const generateResetPasswordCode = async () => {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+};
+
+const forgotPassword = async (email) => {
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw new Error("Usuario no encontrado");
+  }
+
+  if (!user.password) {
+    throw new Error("El usuario esta registrado con google");
+  }
+
+  const code = await generateResetPasswordCode();
+  user.resetPasswordCode = code;
+  user.resetPasswordExpires = Date.now() + 3600000;
+  await user.save();
+
+  await emailService.sendResetPasswordEmail(email, code);
+
+  return {
+    message: "Correo de restablecimiento de contraseña enviado correctamente",
+  };
+};
+
+const verifyResetPasswordCode = async (email, code) => {
+  const user = await User.findOne({
+    email,
+    resetPasswordCode: code,
+    resetPasswordExpires: { $gt: Date.now() },
+  });
+
+  if (!user) {
+    throw new Error(
+      "Código de restablecimiento de contraseña inválido o expirado"
+    );
+  }
+
+  return {
+    message: "Código de restablecimiento de contraseña válido",
+  };
+};
+
+const resetPassword = async (email, code, newPassword) => {
+  const user = await User.findOne({
+    email,
+    resetPasswordCode: code,
+    resetPasswordExpires: { $gt: Date.now() },
+  });
+  if (!user) {
+    throw new Error(
+      "Código de restablecimiento de contraseña inválido o expirado"
+    );
+  }
+
+  user.password = newPassword;
+  user.resetPasswordCode = undefined;
+  user.resetPasswordExpires = undefined;
+  await user.save();
+
+  return {
+    message: "Contraseña restablecida correctamente",
+  };
+};
+
 module.exports = {
   register,
   login,
   handleGoogleCallback,
   selectRole,
   getMe,
+  forgotPassword,
+  verifyResetPasswordCode,
+  resetPassword,
 };

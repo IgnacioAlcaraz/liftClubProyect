@@ -17,7 +17,6 @@ const ListaDeServicios = ({ searchQuery, filters = {} }) => {
             Authorization: `Bearer ${token}`,
           },
         });
-        console.log("Servicios recibidos:", response.data);
 
         setServices(response.data);
       } catch (error) {

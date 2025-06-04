@@ -38,6 +38,14 @@ const userSchema = new Schema(
     birthDate: {
       type: Date,
     },
+    resetPasswordCode: {
+      type: String,
+      required: false,
+    },
+    resetPasswordExpires: {
+      type: Date,
+      required: false,
+    },
   },
   {
     timestamps: true,
