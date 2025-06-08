@@ -41,15 +41,23 @@ const contractSchema = new Schema(
       default: false,
     },
     paymentDetails: {
-      cardLast4: {
+      method: {
         type: String,
+        enum: ["Tarjeta", "MercadoPago"],
         required: true,
       },
       transactionId: {
         type: String,
         required: true,
       },
+      cardLast4: {
+        type: String,
+        required: function () {
+          return this.paymentDetails.method === "Tarjeta";
+        },
+      },
     },
+
     scheduledSessions: [
       {
         contractId: {

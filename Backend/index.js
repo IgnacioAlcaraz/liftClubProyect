@@ -10,6 +10,8 @@ const serviceRoutes = require("./src/routes/service.routes");
 const contractRoutes = require("./src/routes/contract.routes");
 const reviewRoutes = require("./src/routes/review.routes");
 const statsRoutes = require("./src/routes/stats.routes");
+const paymentRoutes = require("./src/routes/payment.routes");
+
 const passport = require("passport");
 const session = require("express-session");
 require("./src/configs/passport"); // Configuración de Passport
@@ -39,6 +41,7 @@ app.use("/api/services", serviceRoutes);
 app.use("/api/contracts", contractRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/stats", statsRoutes);
+app.use("/api/payments", paymentRoutes);
 
 // Puerto
 const PORT = process.env.PORT || 5000;

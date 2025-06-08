@@ -1,22 +1,24 @@
 import React, { useEffect, useState } from "react";
-
 import { useParams, useNavigate } from "react-router-dom";
-
 import axios from "axios";
+
 import Header from "../components/client/Header/Header";
 import PaymentForm from "../components/client/paymentForm/PaymentForm";
 import ConfirmacionPago from "../components/client/ConfirmacionPago/ConfirmacionPago";
 import PagoExitosoFinal from "../components/client/PagoExitosoFinal/PagoExitosoFinal";
+import MercadoPagoButton from "../components/client/MercadoPagoButton/MercadoPagoButton";
+
 export default function ClientPagePago() {
   const navigate = useNavigate();
-
   const { id } = useParams();
   const [service, setService] = useState(null);
   const [error, setError] = useState(null);
   const token = localStorage.getItem("token");
-  const [stepDePago, setStepDePago] = useState(1); //controlar la 'pantalla' de pasos de pago
+  const [stepDePago, setStepDePago] = useState(1);
   const [tempFormData, setTempFormData] = useState(null);
+  const [preferenceId, setPreferenceId] = useState(null);
 
+  // Tarjeta (no tocar)
   const handleCrearContratoConTarjeta = async (formData) => {
     const last4 = formData.cardNumber.slice(-4);
     const fakeTransactionId =
@@ -29,6 +31,7 @@ export default function ClientPagePago() {
           serviceId: service._id,
           price: service.price,
           paymentDetails: {
+            method: "Tarjeta",
             cardLast4: last4,
             transactionId: fakeTransactionId,
           },
@@ -46,6 +49,54 @@ export default function ClientPagePago() {
     }
   };
 
+  // MercadoPago directo
+  const handleMercadoPago = async () => {
+    try {
+      const res = await axios.post(
+        "http://localhost:5000/api/payments/create_preference",
+        {
+          serviceId: service._id,
+          price: service.price,
+          title: service.title || "Servicio",
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      console.log("Preferencia creada:", res.data);
+
+      setPreferenceId(res.data.preferenceId);
+    } catch (error) {
+      console.error(
+        "Error al crear preferencia",
+        error.response?.data || error.message
+      );
+    }
+  };
+
+  const handlePagoExitosoMP = async (payment) => {
+    if (!payment?.data?.id) {
+      console.warn("❗ No se recibió ID de pago aún");
+      return; // prevenir ejecución antes del pago real
+    }
+
+    try {
+      await axios.post(
+        "http://localhost:5000/api/contracts",
+        {
+          serviceId: service._id,
+          price: service.price,
+          paymentDetails: {
+            method: "MercadoPago",
+            transactionId: payment.data.id,
+          },
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setStepDePago(4);
+    } catch (error) {
+      console.error("Error creando contrato tras pago MP", error);
+    }
+  };
+
   useEffect(() => {
     const fetchServiceById = async () => {
       try {
@@ -57,8 +108,6 @@ export default function ClientPagePago() {
             },
           }
         );
-
-        console.log("Servicio:", response.data);
         setService(response.data);
       } catch (err) {
         console.error("Error al obtener el servicio:", err);
@@ -69,6 +118,7 @@ export default function ClientPagePago() {
     if (token) fetchServiceById();
     else setError("No hay token disponible.");
   }, [id, token]);
+
   return (
     <>
       <Header
@@ -78,15 +128,35 @@ export default function ClientPagePago() {
         showButtons={true}
       />
 
+      {/* STEP 1: Formulario de tarjeta + botón MP */}
       {stepDePago === 1 && (
-        <PaymentForm
-          onSubmit={(formData) => {
-            setTempFormData(formData); // Guardamos datos temporales
-            setStepDePago(2); // Avanzamos a confirmación
-          }}
-        />
+        <>
+          <PaymentForm
+            onSubmit={(formData) => {
+              setTempFormData(formData);
+              setStepDePago(2);
+            }}
+          />
+
+          <div style={{ textAlign: "center", marginTop: "20px" }}>
+            <p>O</p>
+            {!preferenceId ? (
+              <button onClick={handleMercadoPago} className="btn btn-success">
+                Pagar con MercadoPago
+              </button>
+            ) : (
+              <div style={{ marginTop: "20px" }}>
+                <MercadoPagoButton
+                  preferenceId={preferenceId}
+                  onPagoExitoso={handlePagoExitosoMP}
+                />
+              </div>
+            )}
+          </div>
+        </>
       )}
 
+      {/* STEP 2: Confirmación de tarjeta */}
       {stepDePago === 2 && (
         <ConfirmacionPago
           onConfirm={async () => {
@@ -97,7 +167,8 @@ export default function ClientPagePago() {
         />
       )}
 
-      {stepDePago === 3 && (
+      {/* STEP 3 y 4: Éxito final */}
+      {(stepDePago === 3 || stepDePago === 4) && (
         <PagoExitosoFinal onContinue={() => navigate("/client-home")} />
       )}
     </>
