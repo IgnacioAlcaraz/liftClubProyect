@@ -11,6 +11,9 @@ import ClientPagePago from "./pages/ClientPagePago";
 import ClientPageMisServicios from "./pages/ClientPageMisServicios";
 import StatsPage from "./pages/StatsPage";
 import PasswordReset from "./pages/PasswordReset";
+import Success from "./components/client/MercadoPago/Success";
+import Failure from "./components/client/MercadoPago/Failure";
+import Pending from "./components/client/MercadoPago/Pending";
 import "./App.css";
 
 import { initMercadoPago } from "@mercadopago/sdk-react";
@@ -24,6 +27,7 @@ initMercadoPago(PUBLIC_KEY, {
 
 const App = () => {
   //  Mostrar en consola que se cargó correctamente la public key
+
   console.log("Clave pública usada:", PUBLIC_KEY);
 
   return (
@@ -45,9 +49,9 @@ const App = () => {
         <Route path="/forgot-password" element={<PasswordReset />} />
 
         {/* Rutas de resultado de pago */}
-        <Route path="/payment/success" element={<p>Pago exitoso</p>} />
-        <Route path="/payment/failure" element={<p>Pago fallido</p>} />
-        <Route path="/payment/pending" element={<p>Pago pendiente</p>} />
+        <Route path="/payment/success" element={<Success />} />
+        <Route path="/payment/failure" element={<Failure />} />
+        <Route path="/payment/pending" element={<Pending />} />
       </Routes>
     </Router>
   );

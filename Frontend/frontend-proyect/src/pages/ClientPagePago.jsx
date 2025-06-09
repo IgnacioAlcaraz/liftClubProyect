@@ -18,7 +18,7 @@ export default function ClientPagePago() {
   const [tempFormData, setTempFormData] = useState(null);
   const [preferenceId, setPreferenceId] = useState(null);
 
-  // Tarjeta (no tocar)
+  // Crear contrato simulado con tarjeta
   const handleCrearContratoConTarjeta = async (formData) => {
     const last4 = formData.cardNumber.slice(-4);
     const fakeTransactionId =
@@ -49,9 +49,18 @@ export default function ClientPagePago() {
     }
   };
 
-  // MercadoPago directo
+  // Crear preferencia y preparar redirección con MercadoPago
   const handleMercadoPago = async () => {
+    if (!service || !service._id || !service.price) {
+      console.error("El servicio aún no fue cargado completamente.");
+      return;
+    }
+
     try {
+      // Guardar datos reales
+      localStorage.setItem("servicio_pago_actual", service._id);
+      localStorage.setItem("precio_pago_actual", service.price);
+
       const res = await axios.post(
         "http://localhost:5000/api/payments/create_preference",
         {
@@ -59,9 +68,10 @@ export default function ClientPagePago() {
           price: service.price,
           title: service.title || "Servicio",
         },
-        { headers: { Authorization: `Bearer ${token}` } }
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
-      console.log("Preferencia creada:", res.data);
 
       setPreferenceId(res.data.preferenceId);
     } catch (error) {
@@ -72,31 +82,7 @@ export default function ClientPagePago() {
     }
   };
 
-  const handlePagoExitosoMP = async (payment) => {
-    if (!payment?.data?.id) {
-      console.warn("❗ No se recibió ID de pago aún");
-      return; // prevenir ejecución antes del pago real
-    }
-
-    try {
-      await axios.post(
-        "http://localhost:5000/api/contracts",
-        {
-          serviceId: service._id,
-          price: service.price,
-          paymentDetails: {
-            method: "MercadoPago",
-            transactionId: payment.data.id,
-          },
-        },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      setStepDePago(4);
-    } catch (error) {
-      console.error("Error creando contrato tras pago MP", error);
-    }
-  };
-
+  // Obtener servicio desde backend
   useEffect(() => {
     const fetchServiceById = async () => {
       try {
@@ -128,7 +114,7 @@ export default function ClientPagePago() {
         showButtons={true}
       />
 
-      {/* STEP 1: Formulario de tarjeta + botón MP */}
+      {/* STEP 1: Formulario de pago */}
       {stepDePago === 1 && (
         <>
           <PaymentForm
@@ -146,17 +132,14 @@ export default function ClientPagePago() {
               </button>
             ) : (
               <div style={{ marginTop: "20px" }}>
-                <MercadoPagoButton
-                  preferenceId={preferenceId}
-                  onPagoExitoso={handlePagoExitosoMP}
-                />
+                <MercadoPagoButton preferenceId={preferenceId} />
               </div>
             )}
           </div>
         </>
       )}
 
-      {/* STEP 2: Confirmación de tarjeta */}
+      {/* STEP 2: Confirmar tarjeta */}
       {stepDePago === 2 && (
         <ConfirmacionPago
           onConfirm={async () => {
@@ -167,8 +150,8 @@ export default function ClientPagePago() {
         />
       )}
 
-      {/* STEP 3 y 4: Éxito final */}
-      {(stepDePago === 3 || stepDePago === 4) && (
+      {/* STEP 3: Pago exitoso local */}
+      {stepDePago === 3 && (
         <PagoExitosoFinal onContinue={() => navigate("/client-home")} />
       )}
     </>
