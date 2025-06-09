@@ -14,7 +14,7 @@ const ServicioDetalleCard = ({ servicio }) => {
   }));
 
   return (
-    <div className="card shadow p-3 mb-4 bg-white rounded">
+<div className="detalle-card card shadow p-3 mb-4 bg-white rounded">
       <ServicioImagenCarousel imagenes={servicio.images} />
       <ServicioInfo servicio={servicio} />
       <ComentariosList comentarios={comentarios} />

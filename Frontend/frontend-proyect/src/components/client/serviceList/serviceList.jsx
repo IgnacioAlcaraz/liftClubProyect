@@ -76,7 +76,11 @@ const ListaDeServicios = ({ searchQuery, filters = {} }) => {
         <ServiceCard
           key={s._id}
           id={s._id}
-          image={s.images?.[0]?.url || s.image}
+          image={
+            s.images?.[0]?.url
+              ? `http://localhost:5000${s.images[0].url}`
+              : null
+          }
           title={s.name}
           coachName={`${s.coachId?.firstName || ""} ${
             s.coachId?.lastName || ""
