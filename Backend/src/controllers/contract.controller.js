@@ -153,12 +153,12 @@ const uploadContractFiles = async (req, res) => {
 
 const downloadContractFile = async (req, res) => {
   try {
-    const { id, fileId } = req.params;
+    const { id, fileName } = req.params;
     const { userId, role } = req.user;
 
     const file = await contractService.downloadContractFile(
       id,
-      fileId,
+      fileName,
       userId,
       role
     );

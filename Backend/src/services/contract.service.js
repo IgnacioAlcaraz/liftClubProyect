@@ -140,10 +140,10 @@ const uploadContractFiles = async (id, files, userId, role) => {
   return fileObjects;
 };
 
-const downloadContractFile = async (id, fileId, userId, role) => {
+const downloadContractFile = async (id, fileName, userId, role) => {
   const contract = await getContractById(id, userId, role);
 
-  const file = contract.files.id(fileId);
+  const file = contract.files.find((f) => f.name === fileName);
   if (!file) {
     throw new Error("Archivo no encontrado");
   }

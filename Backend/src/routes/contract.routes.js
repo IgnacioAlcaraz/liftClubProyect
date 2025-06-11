@@ -25,7 +25,7 @@ router.post(
   contractController.uploadContractFiles
 );
 
-router.get("/:id/files/:fileId", auth, contractController.downloadContractFile);
+router.get("/:id/files/:fileName", auth, contractController.downloadContractFile);
 
 router.get(
   "/:id/scheduledSessions",

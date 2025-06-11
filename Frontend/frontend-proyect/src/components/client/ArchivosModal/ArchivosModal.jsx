@@ -42,6 +42,36 @@ export default function ArchivosModal({ show, onHide, contrato, isCoach }) {
     }
   };
 
+  const handleDownload = async (archivo) => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/contracts/${contrato._id}/files/${archivo.name}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Error al descargar el archivo");
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = archivo.name;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Error al descargar el archivo");
+    }
+  };
+
   const archivos = contrato.files || [];
 
   return (
@@ -57,11 +87,11 @@ export default function ArchivosModal({ show, onHide, contrato, isCoach }) {
               {archivos.map((archivo, index) => (
                 <li key={index} className="mb-2">
                   <a
-                    href={`http://localhost:5000/uploads/${archivo.path}`}
-                    download
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-decoration-none d-flex align-items-center"
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleDownload(archivo);
+                    }}
                   >
                     <FileText className="me-2 text-purple" size={20} />
                     {archivo.name}
