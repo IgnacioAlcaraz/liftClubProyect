@@ -78,9 +78,13 @@ const respondToReview = async (req, res) => {
     }
 
     const { id } = req.params;
-    const { response } = req.body;
+    const { trainerResponse } = req.body;
 
-    const review = await reviewService.respondToReview(id, response, userId);
+    const review = await reviewService.respondToReview(
+      id,
+      trainerResponse,
+      userId
+    );
     return res
       .status(200)
       .json({ message: "Respuesta enviada correctamente", review });

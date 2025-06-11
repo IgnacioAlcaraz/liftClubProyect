@@ -80,7 +80,7 @@ const getReviewsByCoachId = async (coachId, page, limit) => {
   };
 };
 
-const respondToReview = async (reviewId, response, userId) => {
+const respondToReview = async (reviewId, trainerResponse, userId) => {
   const review = await Review.findById(reviewId);
 
   if (!review) {
@@ -95,7 +95,7 @@ const respondToReview = async (reviewId, response, userId) => {
     throw new Error("Ya has respondido a esta reseña");
   }
 
-  review.trainerResponse = response;
+  review.trainerResponse = trainerResponse;
   return await review.save();
 };
 

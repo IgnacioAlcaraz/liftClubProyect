@@ -28,12 +28,14 @@ export default function Success() {
           }
         );
 
-        console.log("Respuesta completa de MercadoPago:", response.data);
-        console.log("Metadata recibida:", response.data.metadata);
+        console.log(" Respuesta completa de MercadoPago:", response.data);
+        console.log("📦 Metadata recibida:", response.data.metadata);
 
         const metadata = response.data.metadata;
         const serviceId = metadata?.service_id;
         const price = metadata?.price;
+        const token = metadata?.token;
+        localStorage.setItem("token", token);
 
         if (!serviceId || !price) {
           setStatus("No se encontraron los datos necesarios en metadata.");
@@ -53,9 +55,7 @@ export default function Success() {
           },
           {
             headers: {
-              // Token JWT hardcodeado para entorno ngrok/sandbox
-              Authorization:
-                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODJjZDg1MjBmMjdkYTkyNDYzNmJlOWMiLCJyb2xlIjoiY2xpZW50IiwiaWF0IjoxNzQ5Njc3NTA2LCJleHAiOjE3NDk3NjM5MDZ9.dPL_h3hcqeFTkWfTSKTSykA2Qka6JLF1651_Ep0rTqo",
+              Authorization: `Bearer ${token}`,
             },
           }
         );

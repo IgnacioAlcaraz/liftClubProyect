@@ -9,6 +9,7 @@ import LogoutButton from "../../logoutButton/LogoutButton";
 import logo from "../../../assets/logo.png";
 import "./headerCoach.css";
 import PendingContractsModal from "../pendingContractsModal/PendingContractsModal";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const [isPendingContractsModalOpen, setIsPendingContractsModalOpen] =
@@ -16,7 +17,7 @@ const Header = () => {
   const [pendingContracts, setPendingContracts] = useState([]);
   const reduxToken = useSelector((state) => state.auth.token);
   const token = reduxToken || localStorage.getItem("token");
-
+  const navigate = useNavigate();
   const getPendingContracts = async () => {
     try {
       const response = await axios.get(
@@ -40,7 +41,13 @@ const Header = () => {
     <div className="custom-header">
       <div className="left">
         <div className="logo-container">
-          <img src={logo} alt="LiftClub" className="logo" />
+          <img
+            onClick={() => navigate("/coach-home")}
+            src={logo}
+            alt="LiftClub"
+            className="logo"
+            style={{ cursor: "pointer" }}
+          />
         </div>
       </div>
 

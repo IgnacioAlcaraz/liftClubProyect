@@ -1,5 +1,6 @@
 import React from "react";
 import "./reviewMetrics.css";
+import ComentarioItem from "../../../../client/ServicioDetalle/ComentarioItem";
 
 const ReviewMetrics = ({
   averageRating,
@@ -7,6 +8,15 @@ const ReviewMetrics = ({
   totalResponses,
   reviews,
 }) => {
+  const formattedReviews = reviews.map((review) => ({
+    _id: review._id,
+    author: `${review.clientId?.firstName || "Usuario"} ${
+      review.clientId?.lastName || ""
+    }`,
+    text: review.comment,
+    reply: review.trainerResponse,
+  }));
+
   return (
     <div className="review-metrics">
       <div className="metrics-boxes">
@@ -26,8 +36,12 @@ const ReviewMetrics = ({
       <div className="comments-container">
         <h3>Comentarios</h3>
         <div className="comments-list">
-          {reviews.map((review) => (
-            <p key={review._id}>{review.comment}</p>
+          {formattedReviews.map((review) => (
+            <ComentarioItem
+              key={review._id}
+              comentario={review}
+              isCoach={true}
+            />
           ))}
         </div>
       </div>

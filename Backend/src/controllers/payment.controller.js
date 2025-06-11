@@ -13,7 +13,7 @@ const preference = new Preference(client);
 
 const createPreference = async (req, res) => {
   try {
-    const { serviceId, price, title } = req.body;
+    const { serviceId, price, title, token } = req.body;
 
     if (!price || isNaN(price)) {
       return res.status(400).json({
@@ -40,6 +40,7 @@ const createPreference = async (req, res) => {
       metadata: {
         serviceId,
         price,
+        token,
       },
     };
 

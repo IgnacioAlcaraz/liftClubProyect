@@ -11,7 +11,7 @@ const SecondaryButton = ({
     <button
       type="submit"
       className={`btn btn-primary ${className}`}
-      style={{ backgroundColor: "#7b42f6" }}
+      style={{ backgroundColor: "#7b42f6", border: "none" }}
       onClick={onClick}
       disabled={disabled}
     >

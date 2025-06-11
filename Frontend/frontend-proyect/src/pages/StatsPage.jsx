@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import ReviewPanel from "../components/coach/stats/reviewsPanel/ReviewPanel";
 import VisitPanel from "../components/coach/stats/visitPanel/VisitPanel";
-import HeaderCoach from "../components/coach/HeaderCoach/HeaderCoach";
+import HeaderCoach from "../components/coach/headerCoach/headerCoach";
 import "../App.css";
 
 const StatsPage = () => {

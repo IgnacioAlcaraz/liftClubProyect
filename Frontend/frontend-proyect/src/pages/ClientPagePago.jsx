@@ -67,6 +67,7 @@ export default function ClientPagePago() {
           serviceId: service._id,
           price: service.price,
           title: service.title || "Servicio",
+          token: token,
         },
         {
           headers: { Authorization: `Bearer ${token}` },
