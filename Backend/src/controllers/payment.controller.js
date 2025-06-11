@@ -32,7 +32,7 @@ const createPreference = async (req, res) => {
       ],
       back_urls: {
         success:
-          "https://4647-2800-21e1-4000-637-59b2-4ad4-a4ca-a912.ngrok-free.app/payment/success",
+          "https://5353-2800-21e1-4000-8c7-e996-11c8-4c31-73df.ngrok-free.app/payment/success",
         failure: "https://www.ejemplo.com/failure",
         pending: "https://www.ejemplo.com/pending",
       },
@@ -44,7 +44,7 @@ const createPreference = async (req, res) => {
     };
 
     console.log(
-      "📦 Enviando preferencia a MercadoPago:",
+      "Enviando preferencia a MercadoPago:",
       JSON.stringify(preferenceData, null, 2)
     );
 
@@ -54,7 +54,7 @@ const createPreference = async (req, res) => {
       preferenceId: response.id,
     });
   } catch (error) {
-    console.error("❌ Error:", JSON.stringify(error, null, 2));
+    console.error("Error:", JSON.stringify(error, null, 2));
     res.status(500).json({ error: "Error al crear la preferencia" });
   }
 };
