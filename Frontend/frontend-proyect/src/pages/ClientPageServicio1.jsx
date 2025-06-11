@@ -50,12 +50,12 @@ export default function ClientPageServicio1() {
       />
 
       <div className="container mt-4">
-        <div className="row align-items-stretch same-height-row">
-          <div className="col-lg-7 col-md-12 mb-4 d-flex">
+        <div className="row align-items-stretch g-3">
+          <div className="col-lg-6 col-md-12 d-flex">
             <ServicioDetalleCard servicio={service} />
           </div>
 
-          <div className="col-lg-5 col-md-12 mb-4 d-flex">
+          <div className="col-lg-6 col-md-12 d-flex">
             <ReservaServicioCard servicio={service} />
           </div>
         </div>

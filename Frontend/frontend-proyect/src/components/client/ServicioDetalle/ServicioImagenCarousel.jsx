@@ -1,7 +1,9 @@
 import React from "react";
 
 const ServicioImagenCarousel = ({ imagenes = [] }) => {
-  const imagenSrc = imagenes[0] || "https://via.placeholder.com/600x300";
+  if (!imagenes.length || !imagenes[0].url) return null;
+
+  const imagenSrc = `http://localhost:5000${imagenes[0].url}`;
 
   return (
     <div style={{ width: "100%", height: "300px", overflow: "hidden" }}>
