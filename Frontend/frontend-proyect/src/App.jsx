@@ -14,7 +14,6 @@ import PasswordReset from "./pages/PasswordReset";
 import CoachServices from "./pages/CoachServices";
 import Success from "./components/client/MercadoPago/Success";
 import Failure from "./components/client/MercadoPago/Failure";
-import Pending from "./components/client/MercadoPago/Pending";
 import "./App.css";
 
 import { initMercadoPago } from "@mercadopago/sdk-react";
@@ -48,7 +47,6 @@ const App = () => {
         {/* Rutas de resultado de pago */}
         <Route path="/payment/success" element={<Success />} />
         <Route path="/payment/failure" element={<Failure />} />
-        <Route path="/payment/pending" element={<Pending />} />
       </Routes>
     </Router>
   );
