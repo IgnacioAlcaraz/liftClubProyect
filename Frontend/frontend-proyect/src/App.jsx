@@ -19,18 +19,13 @@ import "./App.css";
 
 import { initMercadoPago } from "@mercadopago/sdk-react";
 
-// Inicializar MercadoPago con clave pública desde .env
 const PUBLIC_KEY = import.meta.env.VITE_MERCADOPAGO_PUBLIC_KEY;
 initMercadoPago(PUBLIC_KEY, {
   locale: "es-AR",
-  advancedFraudPrevention: false, // ideal para entorno sandbox
+  advancedFraudPrevention: false,
 });
 
 const App = () => {
-  //  Mostrar en consola que se cargó correctamente la public key
-
-  console.log("Clave pública usada:", PUBLIC_KEY);
-
   return (
     <Router>
       <Routes>
