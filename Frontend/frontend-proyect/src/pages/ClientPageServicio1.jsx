@@ -10,13 +10,20 @@ import ReservaServicioCard from "../components/client/ServicioDetalle/ReservaSer
 export default function ClientPageServicio1() {
   const { id } = useParams();
   const [service, setService] = useState(null);
+  const [reviews, setReviews] = useState([]);
   const [error, setError] = useState(null);
   const token = localStorage.getItem("token");
 
   useEffect(() => {
-    const fetchServiceById = async () => {
+    const fetchData = async () => {
+      if (!token) {
+        setError("No hay token disponible.");
+        return;
+      }
+
       try {
-        const response = await axios.get(
+        // Obtener servicio
+        const serviceResponse = await axios.get(
           `http://localhost:5000/api/services/${id}`,
           {
             headers: {
@@ -24,17 +31,25 @@ export default function ClientPageServicio1() {
             },
           }
         );
+        setService(serviceResponse.data);
 
-        console.log("Servicio con reviews:", response.data);
-        setService(response.data);
+        // Obtener reviews del servicio
+        const reviewsResponse = await axios.get(
+          `http://localhost:5000/api/reviews/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setReviews(reviewsResponse.data.reviews || []);
       } catch (err) {
-        console.error("Error al obtener el servicio:", err);
-        setError("No se pudo cargar el servicio.");
+        console.error("Error al obtener los datos:", err);
+        setError("No se pudo cargar la información.");
       }
     };
 
-    if (token) fetchServiceById();
-    else setError("No hay token disponible.");
+    fetchData();
   }, [id, token]);
 
   if (error) return <p className="text-danger">{error}</p>;
@@ -52,7 +67,7 @@ export default function ClientPageServicio1() {
       <div className="container mt-4">
         <div className="row align-items-stretch g-3">
           <div className="col-lg-6 col-md-12 d-flex">
-            <ServicioDetalleCard servicio={service} />
+            <ServicioDetalleCard servicio={service} reviews={reviews} />
           </div>
 
           <div className="col-lg-6 col-md-12 d-flex">

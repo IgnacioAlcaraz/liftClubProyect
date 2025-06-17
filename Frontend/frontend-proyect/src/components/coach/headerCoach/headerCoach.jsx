@@ -71,10 +71,13 @@ const Header = () => {
             className="notification-button"
             onClick={() => setIsPendingContractsModalOpen(true)}
           >
-            <Bell />
-            {pendingContracts.length > 0 && (
+            <Bell size={18} />
+            {pendingContracts.length > 0 && pendingContracts.length !== 1 && (
               <span className="notification-badge">
                 {pendingContracts.length}
+                {pendingContracts.length > 1
+                  ? " Notificaciones"
+                  : " Notificacion"}
               </span>
             )}
           </button>

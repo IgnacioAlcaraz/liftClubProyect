@@ -4,8 +4,8 @@ import ServicioInfo from "./ServicioInfo";
 import ComentariosList from "./ComentariosList";
 import "./ServicioDetalleCard.css";
 
-const ServicioDetalleCard = ({ servicio }) => {
-  const comentarios = (servicio.reviews || []).map((r) => ({
+const ServicioDetalleCard = ({ servicio, reviews }) => {
+  const comentarios = (reviews || []).map((r) => ({
     author: `${r.clientId?.firstName || "Usuario"} ${
       r.clientId?.lastName || ""
     }`,
@@ -14,7 +14,7 @@ const ServicioDetalleCard = ({ servicio }) => {
   }));
 
   return (
-<div className="detalle-card card shadow p-3 mb-4 bg-white rounded">
+    <div className="detalle-card card shadow p-3 mb-4 bg-white rounded">
       <ServicioImagenCarousel imagenes={servicio.images} />
       <ServicioInfo servicio={servicio} />
       <ComentariosList comentarios={comentarios} />

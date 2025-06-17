@@ -7,27 +7,37 @@
   border-radius: 8px;
   margin-bottom: 10px;
   border: 1px solid #e0d5ff;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .contract-info {
   flex-grow: 1;
+  min-width: 0;
 }
 
 .contract-info h3 {
   margin: 0;
   font-size: 1rem;
   color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .contract-name {
   margin: 5px 0 0;
   font-size: 0.9rem;
   color: #666;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .contract-actions {
   display: flex;
   gap: 10px;
+  flex-shrink: 0;
 }
 
 .contract-actions button {

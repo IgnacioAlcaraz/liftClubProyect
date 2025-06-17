@@ -58,7 +58,7 @@
   background-color: #7749f8;
   color: white;
   border: none;
-  padding: 10px 20px;
+  padding: 10px 20px; /* Mismo padding que btn-confirm */
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
@@ -66,11 +66,23 @@
   transition: background-color 0.3s ease;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 8px; /* Mismo gap que btn-confirm */
+  height: 41px; /* Altura fija para coincidir con PrimaryButton */
 }
 
 .notification-badge {
   background-color: #7749f8;
   color: white;
   border-radius: 50%;
+  display: flex;
+  align-items: center;
+}
+
+.notification-button .button-icon {
+  display: flex;
+  align-items: center;
+}
+
+.notification-button .button-text {
+  margin-left: 4px;
 }

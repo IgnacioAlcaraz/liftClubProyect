@@ -19,7 +19,6 @@ const StatsPage = () => {
     totalPages: 1,
   });
   const [totalResponses, setTotalResponses] = useState(0);
-  const ITEMS_PER_PAGE = 10;
 
   const decodedToken = JSON.parse(atob(token.split(".")[1]));
   const coachId = decodedToken.userId;
@@ -53,9 +52,7 @@ const StatsPage = () => {
 
       setReviewsData({
         reviews: reviews,
-        total: data.total || 0,
-        currentPage: data.currentPage || 1,
-        totalPages: data.totalPages || 1,
+        total: reviews.length || 0,
       });
 
       const responses = reviews.reduce((total, review) => {

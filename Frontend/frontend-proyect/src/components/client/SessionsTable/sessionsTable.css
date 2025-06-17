@@ -1,5 +1,5 @@
-.table-container {
-  max-height: 500px;
+.sessions-table-container {
+  max-height: 400px;
   overflow-y: auto;
   position: relative;
 }
@@ -14,20 +14,20 @@
   z-index: 1;
 }
 
-.table-container::-webkit-scrollbar {
+.sessions-table-container::-webkit-scrollbar {
   width: 8px;
 }
 
-.table-container::-webkit-scrollbar-track {
+.sessions-table-container::-webkit-scrollbar-track {
   background: #f1f1f1;
   border-radius: 4px;
 }
 
-.table-container::-webkit-scrollbar-thumb {
+.sessions-table-container::-webkit-scrollbar-thumb {
   background: #888;
   border-radius: 4px;
 }
 
-.table-container::-webkit-scrollbar-thumb:hover {
+.sessions-table-container::-webkit-scrollbar-thumb:hover {
   background: #555;
 }

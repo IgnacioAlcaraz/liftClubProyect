@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Star } from "lucide-react";
 import Card from "react-bootstrap/Card";
 import "./serviceCard.css";
+import StarRating from "../../starRating/starRating";
 
 const ServiceCard = ({
   id,
@@ -37,15 +38,7 @@ const ServiceCard = ({
         <Card.Text style={{ fontSize: "0.9rem" }}>{description}</Card.Text>
 
         <div className="mb-2">
-          {Array.from({ length: Math.round(rating) }).map((_, idx) => (
-            <Star
-              key={idx}
-              size={16}
-              fill="#ffc107"
-              stroke="#ffc107"
-              className="me-1"
-            />
-          ))}
+          <StarRating rating={rating} />
         </div>
 
         <Card.Text className="fw-bold">{price} USD</Card.Text>

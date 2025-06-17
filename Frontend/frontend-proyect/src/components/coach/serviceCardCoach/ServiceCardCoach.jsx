@@ -1,6 +1,7 @@
 import React from "react";
 import "./ServiceCardCoach.css";
 import { Edit, Trash2, Star } from "lucide-react";
+import StarRating from "../../starRating/starRating";
 
 const ServiceCardCoach = ({ service, onEdit, onDelete }) => {
   const getImageUrl = () => {
@@ -18,17 +19,7 @@ const ServiceCardCoach = ({ service, onEdit, onDelete }) => {
         <h5 className="card-title fw-bold">{service.name}</h5>
         <p className="card-text text-secondary">{service.description}</p>
         <div className="mb-2">
-          {Array.from({ length: service.averageRating || 5 }).map(
-            (_, index) => (
-              <Star
-                key={index}
-                fill="#ffc107"
-                stroke="#ffc107"
-                className="me-1"
-                size={18}
-              />
-            )
-          )}
+          <StarRating rating={service.averageRating || 5} />
         </div>
         <div className="d-flex justify-content-between mt-3">
           <button className="btn-edit-service" onClick={() => onEdit(service)}>

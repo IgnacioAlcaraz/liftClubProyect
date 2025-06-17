@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import "./reviewMetrics.css";
 import ComentarioItem from "../../../../client/ServicioDetalle/ComentarioItem";
+import Pagination from "../../../../pagination/Pagination";
 
 const ReviewMetrics = ({
   averageRating,
@@ -8,6 +9,9 @@ const ReviewMetrics = ({
   totalResponses,
   reviews,
 }) => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 3;
+
   const formattedReviews = reviews.map((review) => ({
     _id: review._id,
     author: `${review.clientId?.firstName || "Usuario"} ${
@@ -35,15 +39,19 @@ const ReviewMetrics = ({
       </div>
       <div className="comments-container">
         <h3>Comentarios</h3>
-        <div className="comments-list">
-          {formattedReviews.map((review) => (
+        <Pagination
+          currentPage={currentPage}
+          itemsPerPage={itemsPerPage}
+          items={formattedReviews}
+          onPageChange={setCurrentPage}
+          renderItem={(review) => (
             <ComentarioItem
               key={review._id}
               comentario={review}
               isCoach={true}
             />
-          ))}
-        </div>
+          )}
+        />
       </div>
     </div>
   );

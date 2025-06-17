@@ -1,4 +1,5 @@
 import React from "react";
+import StarRating from "../../starRating/starRating";
 
 const ServicioInfo = ({ servicio }) => {
   const coach = servicio.coachId || {};
@@ -11,11 +12,7 @@ const ServicioInfo = ({ servicio }) => {
       }`}</p>
 
       <div className="mb-3">
-        {Array.from({ length: Math.round(servicio.averageRating || 5) }).map(
-          (_, i) => (
-            <span key={i}>⭐</span>
-          )
-        )}
+        <StarRating rating={servicio.averageRating || 5} />
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-.table-container {
+.contracts-table-container {
   max-height: 500px;
   overflow-y: auto;
   position: relative;
@@ -14,20 +14,20 @@
   z-index: 1;
 }
 
-.table-container::-webkit-scrollbar {
+.contracts-table-container::-webkit-scrollbar {
   width: 8px;
 }
 
-.table-container::-webkit-scrollbar-track {
+.contracts-table-container::-webkit-scrollbar-track {
   background: #f1f1f1;
   border-radius: 4px;
 }
 
-.table-container::-webkit-scrollbar-thumb {
+.contracts-table-container::-webkit-scrollbar-thumb {
   background: #888;
   border-radius: 4px;
 }
 
-.table-container::-webkit-scrollbar-thumb:hover {
+.contracts-table-container::-webkit-scrollbar-thumb:hover {
   background: #555;
 }

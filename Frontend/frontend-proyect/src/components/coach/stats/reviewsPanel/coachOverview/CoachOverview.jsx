@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import StarRating from "../../../../starRating/StarRating";
+import StarRating from "../../../../starRating/starRating";
 import "./coachOverview.css";
 
 const CoachOverview = ({ averageRating }) => {
