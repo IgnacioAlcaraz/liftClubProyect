@@ -38,8 +38,6 @@ export default function ClientPageMisServicios() {
             },
           }
         );
-
-        console.log(response.data);
         setMisContratos(response.data);
       } catch (error) {
         console.error("Error al cargar contratos:", error);
@@ -61,7 +59,6 @@ export default function ClientPageMisServicios() {
             },
           }
         );
-        console.log(response.data);
         setMisSesiones(response.data);
       } catch (error) {
         console.error("Error al cargar sesiones:", error);

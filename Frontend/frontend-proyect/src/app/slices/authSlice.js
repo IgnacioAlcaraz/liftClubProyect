@@ -84,6 +84,7 @@ export const loginUser = (credentials) => async (dispatch) => {
 
     // Guardar token en localStorage
     localStorage.setItem("token", data.token);
+    localStorage.setItem("user", JSON.stringify(data.user));
 
     dispatch(loginSuccess(data));
   } catch (error) {

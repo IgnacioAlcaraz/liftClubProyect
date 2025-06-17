@@ -14,6 +14,8 @@ import PasswordReset from "./pages/PasswordReset";
 import CoachServices from "./pages/CoachServices";
 import Success from "./components/client/MercadoPago/Success";
 import Failure from "./components/client/MercadoPago/Failure";
+import ProtectedRoute from "./components/protectedRoute/ProtectedRoute";
+import NotFound from "./pages/NotFound";
 import "./App.css";
 
 import { initMercadoPago } from "@mercadopago/sdk-react";
@@ -28,25 +30,82 @@ const App = () => {
   return (
     <Router>
       <Routes>
+        {/* Rutas de autenticación */}
         <Route path="/" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/google-success" element={<GoogleSuccess />} />
         <Route path="/client-home" element={<ClientHome />} />
-        <Route
-          path="/client-page-servicio1/:id"
-          element={<ClientPageServicio1 />}
-        />
-        <Route path="/stats" element={<StatsPage />} />
-        <Route path="/client-page-pago/:id" element={<ClientPagePago />} />
-        <Route path="/mis-servicios" element={<ClientPageMisServicios />} />
-        <Route path="/coach-home" element={<CoachHome />} />
         <Route path="/select-role" element={<SelectRole />} />
         <Route path="/forgot-password" element={<PasswordReset />} />
-        <Route path="/coach-services" element={<CoachServices />} />
 
-        {/* Rutas de resultado de pago */}
-        <Route path="/payment/success" element={<Success />} />
-        <Route path="/payment/failure" element={<Failure />} />
+        {/* Rutas de cliente */}
+        <Route
+          path="/client-page-pago/:id"
+          element={
+            <ProtectedRoute allowedRoles={["client"]}>
+              <ClientPagePago />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/mis-servicios"
+          element={
+            <ProtectedRoute allowedRoles={["client"]}>
+              <ClientPageMisServicios />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/client-page-servicio1/:id"
+          element={
+            <ProtectedRoute allowedRoles={["client"]}>
+              <ClientPageServicio1 />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/payment/success"
+          element={
+            <ProtectedRoute allowedRoles={["client"]}>
+              <Success />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/payment/failure"
+          element={
+            <ProtectedRoute allowedRoles={["client"]}>
+              <Failure />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Rutas de coach */}
+        <Route
+          path="/stats"
+          element={
+            <ProtectedRoute allowedRoles={["coach"]}>
+              <StatsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/coach-home"
+          element={
+            <ProtectedRoute allowedRoles={["coach"]}>
+              <CoachHome />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/coach-services"
+          element={
+            <ProtectedRoute allowedRoles={["coach"]}>
+              <CoachServices />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
   );
