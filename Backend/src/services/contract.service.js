@@ -17,7 +17,7 @@ const getContracts = async (userId, role) => {
     .populate("coachId", "firstName lastName")
     .populate("clientId", "firstName lastName");
 
-  return contracts.filter(c => c.serviceId !== null);
+  return contracts.filter((c) => c.serviceId !== null);
 };
 
 const getScheduledSessions = async (userId, role) => {
@@ -33,7 +33,6 @@ const getScheduledSessions = async (userId, role) => {
       .populate("coachId", "firstName lastName")
       .populate("clientId", "firstName lastName");
   }
-
 
   if (!contracts) {
     throw new Error("No se encontraron contratos");
@@ -51,7 +50,6 @@ const getScheduledSessions = async (userId, role) => {
 
   return todasLasSesiones;
 };
-
 const createContract = async (contractData, userId) => {
   const service = await Service.findById(contractData.serviceId);
   if (!service) {
@@ -63,6 +61,18 @@ const createContract = async (contractData, userId) => {
     throw new Error("Solo los clientes pueden crear contratos");
   }
 
+  //  Verificar si ya existe un contrato con ese transactionId
+  if (contractData.paymentDetails?.transactionId) {
+    const contratoExistente = await Contract.findOne({
+      "paymentDetails.transactionId": contractData.paymentDetails.transactionId,
+    });
+
+    if (contratoExistente) {
+      // Opcional: podés devolver el contrato existente o lanzar error
+      return contratoExistente;
+    }
+  }
+
   const newContract = new Contract({
     ...contractData,
     clientId: userId,
@@ -71,6 +81,7 @@ const createContract = async (contractData, userId) => {
 
   return await newContract.save();
 };
+
 const getContractById = async (id, userId, role) => {
   const contract = await Contract.findById(id).populate("serviceId");
 

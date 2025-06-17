@@ -7,6 +7,8 @@ import PaymentForm from "../components/client/paymentForm/PaymentForm";
 import ConfirmacionPago from "../components/client/ConfirmacionPago/ConfirmacionPago";
 import PagoExitosoFinal from "../components/client/PagoExitosoFinal/PagoExitosoFinal";
 import MercadoPagoButton from "../components/client/MercadoPagoButton/MercadoPagoButton";
+import SecondaryButton from "../components/secondaryButton/SecondaryButton";
+import "./ClientPagePago.css";
 
 export default function ClientPagePago() {
   const navigate = useNavigate();
@@ -18,7 +20,6 @@ export default function ClientPagePago() {
   const [tempFormData, setTempFormData] = useState(null);
   const [preferenceId, setPreferenceId] = useState(null);
 
-  // Crear contrato simulado con tarjeta
   const handleCrearContratoConTarjeta = async (formData) => {
     const last4 = formData.cardNumber.slice(-4);
     const fakeTransactionId =
@@ -49,7 +50,6 @@ export default function ClientPagePago() {
     }
   };
 
-  // Crear preferencia y preparar redirección con MercadoPago
   const handleMercadoPago = async () => {
     if (!service || !service._id || !service.price) {
       console.error("El servicio aún no fue cargado completamente.");
@@ -57,7 +57,6 @@ export default function ClientPagePago() {
     }
 
     try {
-      // Guardar datos reales
       localStorage.setItem("servicio_pago_actual", service._id);
       localStorage.setItem("precio_pago_actual", service.price);
 
@@ -83,7 +82,6 @@ export default function ClientPagePago() {
     }
   };
 
-  // Obtener servicio desde backend
   useEffect(() => {
     const fetchServiceById = async () => {
       try {
@@ -115,32 +113,51 @@ export default function ClientPagePago() {
         showButtons={true}
       />
 
-      {/* STEP 1: Formulario de pago */}
+      {/* STEP 1 */}
       {stepDePago === 1 && (
-        <>
-          <PaymentForm
-            onSubmit={(formData) => {
-              setTempFormData(formData);
-              setStepDePago(2);
-            }}
-          />
+        <div className="page-pago-container">
+          <h2 className="pago-titulo">Detalles de Pago</h2>
+          <div className="page-pago-flex">
+            {/* Columna izquierda */}
+            <div className="pago-col-izquierda">
+              <div className="pago-card">
+                <img src="/creditcard.png" alt="Tarjeta crédito" />
 
-          <div style={{ textAlign: "center", marginTop: "20px" }}>
-            <p>O</p>
-            {!preferenceId ? (
-              <button onClick={handleMercadoPago} className="btn btn-success">
-                Pagar con MercadoPago
-              </button>
-            ) : (
-              <div style={{ marginTop: "20px" }}>
-                <MercadoPagoButton preferenceId={preferenceId} />
+                <div className="pago-separador">
+                  <div className="pago-separador-linea" />
+                  <span className="pago-separador-texto">OR</span>
+                  <div className="pago-separador-linea" />
+                </div>
+
+                {!preferenceId ? (
+                  <SecondaryButton
+                    texto="Pagar con MercadoPago"
+                    onClick={handleMercadoPago}
+                  />
+                ) : (
+                  <div style={{ marginTop: "30px" }}>
+                    <MercadoPagoButton preferenceId={preferenceId} />
+                  </div>
+                )}
               </div>
-            )}
+            </div>
+
+            {/* Columna derecha */}
+            <div className="pago-col-derecha">
+              <div className="pago-formulario">
+                <PaymentForm
+                  onSubmit={(formData) => {
+                    setTempFormData(formData);
+                    setStepDePago(2);
+                  }}
+                />
+              </div>
+            </div>
           </div>
-        </>
+        </div>
       )}
 
-      {/* STEP 2: Confirmar tarjeta */}
+      {/* STEP 2 */}
       {stepDePago === 2 && (
         <ConfirmacionPago
           onConfirm={async () => {
@@ -151,7 +168,7 @@ export default function ClientPagePago() {
         />
       )}
 
-      {/* STEP 3: Pago exitoso local */}
+      {/* STEP 3 */}
       {stepDePago === 3 && (
         <PagoExitosoFinal onContinue={() => navigate("/client-home")} />
       )}

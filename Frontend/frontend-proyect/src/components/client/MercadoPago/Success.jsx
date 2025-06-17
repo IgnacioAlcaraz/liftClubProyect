@@ -70,7 +70,7 @@ export default function Success() {
     };
 
     obtenerPreferenciaYCrearContrato();
-  }, [navigate, token]);
+  }, []);
 
   return (
     <div style={{ textAlign: "center", marginTop: "100px" }}>
