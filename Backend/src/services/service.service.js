@@ -134,6 +134,12 @@ const getServiceByCoachId = async (coachId) => {
   return await Service.find({ coachId: coachId });
 };
 
+const incrementViews = async (id) => {
+  const service = await Service.findById(id);
+  service.views++;
+  return await service.save();
+};
+
 module.exports = {
   getServices,
   createService,
@@ -141,4 +147,5 @@ module.exports = {
   updateServiceById,
   deleteServiceById,
   getServiceByCoachId,
+  incrementViews,
 };

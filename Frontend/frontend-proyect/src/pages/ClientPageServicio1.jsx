@@ -22,6 +22,15 @@ export default function ClientPageServicio1() {
       }
 
       try {
+        // Incrementar vistas
+        await axios.post(
+          `http://localhost:5000/api/services/${id}/views`,
+          {},
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
         // Obtener servicio
         const serviceResponse = await axios.get(
           `http://localhost:5000/api/services/${id}`,

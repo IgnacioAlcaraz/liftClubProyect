@@ -141,6 +141,19 @@ const getServiceByCoachId = async (req, res) => {
   }
 };
 
+const incrementViews = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const service = await serviceService.incrementViews(id);
+    res.status(200).json(service);
+  } catch (error) {
+    return res.status(500).json({
+      message: "Error al incrementar las vistas",
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
   getServices,
   createService,
@@ -148,4 +161,5 @@ module.exports = {
   updateServiceById,
   deleteServiceById,
   getServiceByCoachId,
+  incrementViews,
 };
