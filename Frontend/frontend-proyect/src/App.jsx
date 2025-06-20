@@ -16,6 +16,7 @@ import Success from "./components/client/MercadoPago/Success";
 import Failure from "./components/client/MercadoPago/Failure";
 import ProtectedRoute from "./components/protectedRoute/ProtectedRoute";
 import NotFound from "./pages/NotFound";
+import Home from "./pages/Home";
 import "./App.css";
 
 import { initMercadoPago } from "@mercadopago/sdk-react";
@@ -31,7 +32,8 @@ const App = () => {
     <Router>
       <Routes>
         {/* Rutas de autenticación */}
-        <Route path="/" element={<LoginPage />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/google-success" element={<GoogleSuccess />} />
         <Route path="/client-home" element={<ClientHome />} />

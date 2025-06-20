@@ -187,7 +187,7 @@ export default function ClientPageMisServicios() {
 
         {/* Tabla de schedulledsessions */}
 
-        <div className="container mt-04">
+        <div className="container mt-4">
           <h2 className="text-center mb-4">Mis Sesiones</h2>
           <SessionsTable
             misSesiones={misSesiones}

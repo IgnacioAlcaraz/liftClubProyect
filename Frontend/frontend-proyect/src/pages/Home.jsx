@@ -1,30 +1,31 @@
 import React, { useState } from "react";
-import HeaderClient from "../components/client/headerClient/HeaderClient";
+import HeaderGuest from "../components/headerGuest/HeaderGuest";
 import ServiceListClient from "../components/client/serviceList/serviceListClient";
 
-const ClientHome = () => {
+const Home = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [filters, setFilters] = useState({});
 
   return (
     <>
-      <HeaderClient
-        showSearch={true}
+      <HeaderGuest
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
-        showButtons={true}
         setFilters={setFilters}
       />
-
       <div className="container py-4">
-        <h2 className="fw-bold mb-2">Encontra los mejores entrenadores...</h2>
+        <h2 className="fw-bold mb-2">Descubre Nuestros Servicios...</h2>
         <p className="text-secondary mb-4">
-          Descubre profesionales que te ayudarán a alcanzar objetivos
+          Inicia sesión para ver más detalles y comenzar tu entrenamiento
         </p>
-        <ServiceListClient searchQuery={searchQuery} filters={filters} />
+        <ServiceListClient
+          searchQuery={searchQuery}
+          filters={filters}
+          isGuest={true}
+        />
       </div>
     </>
   );
 };
 
-export default ClientHome;
+export default Home;

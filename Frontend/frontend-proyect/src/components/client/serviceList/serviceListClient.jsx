@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import ServiceCard from "../serviceCard/ServiceCard";
+import ServiceCard from "../serviceCardClient/ServiceCardClient";
 import axios from "axios";
+import BaseServiceList from "../../baseServiceList/BaseServiceList";
 
-const ListaDeServicios = ({ searchQuery, filters = {} }) => {
+const ListaDeServicios = ({ searchQuery, filters = {}, isGuest = false }) => {
   const reduxToken = useSelector((state) => state.auth.token);
   const token = reduxToken || localStorage.getItem("token");
 
@@ -12,11 +13,16 @@ const ListaDeServicios = ({ searchQuery, filters = {} }) => {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/services", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await axios.get(
+          "http://localhost:5000/api/services",
+          isGuest
+            ? {}
+            : {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+        );
 
         setServices(response.data);
       } catch (error) {
@@ -24,8 +30,8 @@ const ListaDeServicios = ({ searchQuery, filters = {} }) => {
       }
     };
 
-    if (token) fetchServices();
-  }, [token]);
+    fetchServices();
+  }, [token, isGuest]);
 
   const filteredServices = services.filter((s) => {
     const nameMatch = s.name.toLowerCase().includes(searchQuery.toLowerCase());
@@ -50,13 +56,6 @@ const ListaDeServicios = ({ searchQuery, filters = {} }) => {
     const ratingMatch =
       !filters.rating || s.averageRating >= Number(filters.rating);
 
-    const getImageUrl = (service) => {
-      if (service.images && service.images.length > 0) {
-        return `http://localhost:5000${service.images[0].url}`;
-      }
-      return service.image || "https://via.placeholder.com/400x300";
-    };
-
     return (
       nameMatch &&
       categoryMatch &&
@@ -71,7 +70,7 @@ const ListaDeServicios = ({ searchQuery, filters = {} }) => {
   });
 
   return (
-    <div className="d-flex flex-wrap justify-content-center gap-4">
+    <BaseServiceList>
       {filteredServices.map((s) => (
         <ServiceCard
           key={s._id}
@@ -88,9 +87,10 @@ const ListaDeServicios = ({ searchQuery, filters = {} }) => {
           description={s.description}
           rating={s.averageRating || 5}
           price={s.price}
+          isGuest={isGuest}
         />
       ))}
-    </div>
+    </BaseServiceList>
   );
 };
 

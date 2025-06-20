@@ -5,6 +5,7 @@ import ServiceCardCoach from "../serviceCardCoach/ServiceCardCoach";
 import AddServiceCard from "../addServiceCard/AddServiceCard";
 import ServiceFormModal from "../serviceFormModal/ServiceFormModal";
 import "./serviceListCoach.css";
+import BaseServiceList from "../../baseServiceList/BaseServiceList";
 
 const ServiceListCoach = () => {
   const reduxToken = useSelector((state) => state.auth.token);
@@ -129,7 +130,7 @@ const ServiceListCoach = () => {
   };
 
   return (
-    <div className="d-flex flex-wrap">
+    <BaseServiceList>
       {services.length > 0 ? (
         services.map((service) => (
           <ServiceCardCoach
@@ -150,7 +151,7 @@ const ServiceListCoach = () => {
         onSubmit={handleSubmitService}
         initialData={editingService}
       />
-    </div>
+    </BaseServiceList>
   );
 };
 

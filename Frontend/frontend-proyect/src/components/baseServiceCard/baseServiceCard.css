@@ -1,0 +1,25 @@
+.base-service-card {
+  width: 300px !important;
+  height: 420px !important;
+  border-radius: 1rem;
+  overflow: hidden;
+  border: none !important;
+  cursor: pointer;
+}
+
+.service-image {
+  width: 100% !important;
+  height: 200px !important;
+  object-fit: cover !important;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+}
+
+.card-text {
+  font-size: 0.9rem;
+  overflow: hidden;
+}
+
+.card-price {
+  margin-bottom: 8px !important;
+}

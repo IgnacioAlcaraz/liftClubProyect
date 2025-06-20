@@ -1,8 +1,17 @@
 @import "bootstrap/dist/css/bootstrap.min.css";
 
+html,
 body,
 #root {
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
   background-color: #f9fafb;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
 }
 
 a {
