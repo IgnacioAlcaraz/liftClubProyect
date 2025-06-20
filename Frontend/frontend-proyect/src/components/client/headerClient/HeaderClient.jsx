@@ -4,11 +4,10 @@ import PrimaryButton from "../../primaryButton/PrimaryButton";
 import LogoutButton from "../../logoutButton/LogoutButton";
 import SearchBar from "../SearchBar/SearchBar";
 import StepsBar from "../stepsBar/StepsBar";
-import logo from "../../../assets/logo.png";
-import "./Header.css";
-import { useNavigate } from "react-router-dom";
+import Header from "../../header/Header";
+import "../../header/header.css";
 
-const Header = ({
+const HeaderClient = ({
   showSearch = false,
   searchQuery = "",
   setSearchQuery = () => {},
@@ -18,22 +17,8 @@ const Header = ({
   setFilters = () => {},
   showMisServiciosButton = true,
 }) => {
-  const navigate = useNavigate();
-
   return (
-    <div className="custom-header">
-      <div className="left">
-        <div className="logo-container">
-          <img
-            src={logo}
-            alt="LiftClub"
-            className="logo"
-            onClick={() => navigate("/client-home")}
-            style={{ cursor: "pointer" }}
-          />
-        </div>
-      </div>
-
+    <Header onLogoClick="/client-home">
       <div className="center">
         {showSearch && (
           <SearchBar
@@ -58,8 +43,8 @@ const Header = ({
           <LogoutButton />
         </div>
       )}
-    </div>
+    </Header>
   );
 };
 
-export default Header;
+export default HeaderClient;

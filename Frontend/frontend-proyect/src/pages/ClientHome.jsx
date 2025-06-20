@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import ListaDeServicios from "../components/client/serviceList/serviceList";
-import Header from "../components/client/Header/Header";
+import HeaderClient from "../components/client/headerClient/HeaderClient";
 
 const ClientHome = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -8,7 +8,7 @@ const ClientHome = () => {
 
   return (
     <>
-      <Header
+      <HeaderClient
         showSearch={true}
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}

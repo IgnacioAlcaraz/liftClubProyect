@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-// Estado inicial del slice
 const initialState = {
   isAuthenticated: false,
   token: null,
@@ -13,13 +12,11 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    // Inicia la carga de login
     loginStart: (state) => {
       state.loading = true;
       state.error = null;
     },
 
-    // Login exitoso con email/contraseña
     loginSuccess: (state, action) => {
       state.loading = false;
       state.isAuthenticated = true;
@@ -27,13 +24,11 @@ const authSlice = createSlice({
       state.user = action.payload.user;
     },
 
-    // Login fallido
     loginFailure: (state, action) => {
       state.loading = false;
       state.error = action.payload;
     },
 
-    // Cierre de sesión
     logout: (state) => {
       state.isAuthenticated = false;
       state.token = null;
@@ -52,7 +47,6 @@ const authSlice = createSlice({
   },
 });
 
-// Exportación de las acciones
 export const {
   loginStart,
   loginSuccess,
@@ -61,7 +55,6 @@ export const {
   googleLoginSuccess,
 } = authSlice.actions;
 
-// Exportación del reducer
 export default authSlice.reducer;
 
 export const loginUser = (credentials) => async (dispatch) => {
@@ -82,7 +75,6 @@ export const loginUser = (credentials) => async (dispatch) => {
 
     const data = await response.json();
 
-    // Guardar token en localStorage
     localStorage.setItem("token", data.token);
     localStorage.setItem("user", JSON.stringify(data.user));
 

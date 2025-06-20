@@ -89,7 +89,7 @@ const StatsPage = () => {
           </div>
           <div className="stats-panel shadow">
             <VisitPanel
-              totalViews={stats?.totalViews || 0}
+              totalViews={stats?.views || 0}
               conversionRate={stats?.conversionRate || 0}
               conversionRatePerService={stats?.conversionRatePerService}
             />

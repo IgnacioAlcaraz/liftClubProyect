@@ -3,9 +3,9 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import "../App.css";
 // Componentes
-import Header from "../components/client/Header/Header";
-import ServicioDetalleCard from "../components/client/ServicioDetalle/ServicioDetalleCard";
-import ReservaServicioCard from "../components/client/ServicioDetalle/ReservaServicioCard";
+import Header from "../components/client/headerClient/HeaderClient";
+import ServicioDetalleCard from "../components/client/servicioDetalle/ServicioDetalleCard";
+import ReservaServicioCard from "../components/client/servicioDetalle/ReservaServicioCard";
 
 export default function ClientPageServicio1() {
   const { id } = useParams();
@@ -66,7 +66,7 @@ export default function ClientPageServicio1() {
 
   return (
     <>
-      <Header
+      <HeaderClient
         showSteps={true}
         currentStep={1}
         showSearch={false}

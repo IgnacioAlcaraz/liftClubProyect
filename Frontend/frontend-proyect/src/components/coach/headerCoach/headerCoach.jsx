@@ -1,23 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { BarChart } from "lucide-react";
-import { CheckCircle } from "lucide-react";
-import { Bell } from "lucide-react";
+import { BarChart, CheckCircle, Bell } from "lucide-react";
 import axios from "axios";
 import PrimaryButton from "../../primaryButton/PrimaryButton";
 import LogoutButton from "../../logoutButton/LogoutButton";
-import logo from "../../../assets/logo.png";
-import "./headerCoach.css";
+import "../../header/header.css";
 import PendingContractsModal from "../pendingContractsModal/PendingContractsModal";
-import { useNavigate } from "react-router-dom";
+import Header from "../../header/Header";
 
-const Header = () => {
+const HeaderCoach = () => {
   const [isPendingContractsModalOpen, setIsPendingContractsModalOpen] =
     useState(false);
   const [pendingContracts, setPendingContracts] = useState([]);
   const reduxToken = useSelector((state) => state.auth.token);
   const token = reduxToken || localStorage.getItem("token");
-  const navigate = useNavigate();
+
   const getPendingContracts = async () => {
     try {
       const response = await axios.get(
@@ -38,62 +35,48 @@ const Header = () => {
   }, []);
 
   return (
-    <div className="custom-header">
-      <div className="left">
-        <div className="logo-container">
-          <img
-            onClick={() => navigate("/coach-home")}
-            src={logo}
-            alt="LiftClub"
-            className="logo"
-            style={{ cursor: "pointer" }}
-          />
-        </div>
+    <Header onLogoClick="/coach-home">
+      <div className="right">
+        <PrimaryButton
+          icon={BarChart}
+          text="Estadísticas"
+          to="/stats"
+          variant="primary"
+        />
+
+        <PrimaryButton
+          icon={CheckCircle}
+          text="Servicios Aceptados"
+          to="/coach-services"
+          variant="primary"
+        />
+
+        <button
+          className="notification-button"
+          onClick={() => setIsPendingContractsModalOpen(true)}
+        >
+          <Bell size={18} />
+          {pendingContracts.length > 0 && pendingContracts.length !== 1 && (
+            <span className="notification-badge">
+              {pendingContracts.length}
+              {pendingContracts.length > 1
+                ? " Notificaciones"
+                : " Notificacion"}
+            </span>
+          )}
+        </button>
+
+        <LogoutButton />
+
+        <PendingContractsModal
+          isOpen={isPendingContractsModalOpen}
+          onClose={() => setIsPendingContractsModalOpen(false)}
+          contracts={pendingContracts}
+          onContractsUpdate={getPendingContracts}
+        />
       </div>
-
-      {
-        <div className="right">
-          <PrimaryButton
-            icon={BarChart}
-            text="Estadísticas"
-            to="/stats"
-            variant="primary"
-          />
-
-          <PrimaryButton
-            icon={CheckCircle}
-            text="Servicios Aceptados"
-            to="/coach-services"
-            variant="primary"
-          />
-
-          <button
-            className="notification-button"
-            onClick={() => setIsPendingContractsModalOpen(true)}
-          >
-            <Bell size={18} />
-            {pendingContracts.length > 0 && pendingContracts.length !== 1 && (
-              <span className="notification-badge">
-                {pendingContracts.length}
-                {pendingContracts.length > 1
-                  ? " Notificaciones"
-                  : " Notificacion"}
-              </span>
-            )}
-          </button>
-
-          <LogoutButton />
-
-          <PendingContractsModal
-            isOpen={isPendingContractsModalOpen}
-            onClose={() => setIsPendingContractsModalOpen(false)}
-            contracts={pendingContracts}
-            onContractsUpdate={getPendingContracts}
-          />
-        </div>
-      }
-    </div>
+    </Header>
   );
 };
 
-export default Header;
+export default HeaderCoach;

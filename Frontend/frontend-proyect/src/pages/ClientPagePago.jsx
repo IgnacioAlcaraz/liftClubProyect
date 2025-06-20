@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-import Header from "../components/client/Header/Header";
 import PaymentForm from "../components/client/paymentForm/PaymentForm";
+import HeaderClient from "../components/client/headerClient/HeaderClient";
 import ConfirmacionPago from "../components/client/ConfirmacionPago/ConfirmacionPago";
 import PagoExitosoFinal from "../components/client/PagoExitosoFinal/PagoExitosoFinal";
 import MercadoPagoButton from "../components/client/MercadoPagoButton/MercadoPagoButton";
@@ -106,7 +106,7 @@ export default function ClientPagePago() {
 
   return (
     <>
-      <Header
+      <HeaderClient
         showSteps={true}
         currentStep={stepDePago + 1}
         showSearch={false}
