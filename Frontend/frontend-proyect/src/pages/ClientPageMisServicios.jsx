@@ -5,9 +5,9 @@ import { FileText, Calendar, X } from "lucide-react"; // Íconos de lucide-react
 import CalificacionModal from "../components/client/CalificacionModal/CalificacionModal";
 import ArchivosModal from "../components/client/ArchivosModal/ArchivosModal";
 import AgendarSesionModal from "../components/client/AgendarSesionModal/AgendarSesionModal";
-import Header from "../components/client/headerClient/HeaderClient";
-import ContractsTable from "../components/client/contractsTable/ContractsTable";
-import SessionsTable from "../components/client/sessionsTable/SessionsTable";
+import HeaderClient from "../components/client/headerClient/HeaderClient";
+import ContractsTable from "../components/client/ContractsTable/ContractsTable";
+import SessionsTable from "../components/client/SessionsTable/SessionsTable";
 
 export default function ClientPageMisServicios() {
   const reduxToken = useSelector((state) => state.auth.token);
@@ -173,8 +173,6 @@ export default function ClientPageMisServicios() {
       <div className="container mt-4">
         <h2 className="text-center mb-4">Mis Servicios</h2>
         {error && <p style={{ color: "red" }}>{error}</p>}
-
-        {/* Tabla de contratos */}
 
         <div className="table-responsive">
           <ContractsTable

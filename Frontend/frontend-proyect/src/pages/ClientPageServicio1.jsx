@@ -2,10 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import "../App.css";
-// Componentes
-import Header from "../components/client/headerClient/HeaderClient";
 import ServicioDetalleCard from "../components/client/servicioDetalle/ServicioDetalleCard";
 import ReservaServicioCard from "../components/client/servicioDetalle/ReservaServicioCard";
+import HeaderClient from "../components/client/headerClient/HeaderClient";
 
 export default function ClientPageServicio1() {
   const { id } = useParams();
@@ -22,7 +21,6 @@ export default function ClientPageServicio1() {
       }
 
       try {
-        // Incrementar vistas
         await axios.post(
           `http://localhost:5000/api/services/${id}/views`,
           {},
@@ -31,7 +29,6 @@ export default function ClientPageServicio1() {
           }
         );
 
-        // Obtener servicio
         const serviceResponse = await axios.get(
           `http://localhost:5000/api/services/${id}`,
           {
@@ -42,7 +39,6 @@ export default function ClientPageServicio1() {
         );
         setService(serviceResponse.data);
 
-        // Obtener reviews del servicio
         const reviewsResponse = await axios.get(
           `http://localhost:5000/api/reviews/${id}`,
           {
