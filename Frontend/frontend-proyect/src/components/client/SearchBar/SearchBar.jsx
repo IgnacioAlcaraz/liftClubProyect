@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { InputGroup, FormControl, Modal, Button, Form } from "react-bootstrap";
+import { InputGroup, FormControl, Form, Button } from "react-bootstrap";
 import { FilterButton } from "../filterButton/FilterButton";
-import { Star } from "lucide-react";
 import RatingDropdown from "../ratingDropDown/RatingDropDown";
+import BaseModal from "../../baseModal/BaseModal";
 import "./SearchBar.css";
+import SecondaryButton from "../../secondaryButton/SecondaryButton";
 
 const SearchBar = ({ searchQuery, setSearchQuery, setFilters }) => {
   const [showFilters, setShowFilters] = useState(false);
@@ -39,132 +40,135 @@ const SearchBar = ({ searchQuery, setSearchQuery, setFilters }) => {
 
       <FilterButton onClick={handleFilterClick} />
 
-      <Modal show={showFilters} onHide={handleCloseFilters} centered size="lg">
-        <Modal.Body>
-          <h5 className="mb-3">Filtrar Servicios</h5>
-          <Form>
-            <Form.Group className="mb-3">
-              <Form.Label>Categoría</Form.Label>
-              <Form.Select
-                value={localFilters.categoria}
-                onChange={(e) =>
-                  setLocalFilters({
-                    ...localFilters,
-                    categoria: e.target.value,
-                  })
-                }
-              >
-                <option value="">Todas</option>
-                <option>Running</option>
-                <option>Gimnasio</option>
-                <option>Nutrición</option>
-                <option>Yoga</option>
-                <option>Otro</option>
-              </Form.Select>
-            </Form.Group>
+      <BaseModal
+        show={showFilters}
+        onClose={handleCloseFilters}
+        title="Filtrar Servicios"
+        footer={
+          <div className="gap-2 w-100 d-flex justify-content-end">
+            <SecondaryButton
+              texto="Aplicar Cambios"
+              onClick={handleApplyFilters}
+            />
+            <Button className="btn btn-secondary" onClick={handleCloseFilters}>
+              Cerrar
+            </Button>
+          </div>
+        }
+      >
+        <Form>
+          <Form.Group className="mb-3">
+            <Form.Label>Categoría</Form.Label>
+            <Form.Select
+              value={localFilters.categoria}
+              onChange={(e) =>
+                setLocalFilters({
+                  ...localFilters,
+                  categoria: e.target.value,
+                })
+              }
+            >
+              <option value="">Todas</option>
+              <option>Running</option>
+              <option>Gimnasio</option>
+              <option>Nutrición</option>
+              <option>Yoga</option>
+              <option>Otro</option>
+            </Form.Select>
+          </Form.Group>
 
-            <div className="d-flex justify-content-between mb-3">
-              <Form.Group className="me-2 w-50">
-                <Form.Label>Precio Mínimo</Form.Label>
-                <Form.Control
-                  type="number"
-                  value={localFilters.precioMin}
-                  onChange={(e) =>
-                    setLocalFilters({
-                      ...localFilters,
-                      precioMin: e.target.value,
-                    })
-                  }
-                />
-              </Form.Group>
-              <Form.Group className="ms-2 w-50">
-                <Form.Label>Precio Máximo</Form.Label>
-                <Form.Control
-                  type="number"
-                  value={localFilters.precioMax}
-                  onChange={(e) =>
-                    setLocalFilters({
-                      ...localFilters,
-                      precioMax: e.target.value,
-                    })
-                  }
-                />
-              </Form.Group>
-            </div>
-
-            <Form.Group className="mb-3">
-              <Form.Label>Duración (Cantidad de sesiones)</Form.Label>
+          <div className="d-flex justify-content-between mb-3">
+            <Form.Group className="me-2 w-50">
+              <Form.Label>Precio Mínimo</Form.Label>
               <Form.Control
                 type="number"
-                value={localFilters.duracion}
-                onChange={(e) =>
-                  setLocalFilters({ ...localFilters, duracion: e.target.value })
-                }
-              />
-            </Form.Group>
-
-            <Form.Group className="mb-3">
-              <Form.Label>Zona</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Ej. Palermo, Recoleta..."
-                value={localFilters.zona}
-                onChange={(e) =>
-                  setLocalFilters({ ...localFilters, zona: e.target.value })
-                }
-              />
-            </Form.Group>
-
-            <Form.Group className="mb-3">
-              <Form.Label>Idioma</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Español, Inglés..."
-                value={localFilters.idioma}
-                onChange={(e) =>
-                  setLocalFilters({ ...localFilters, idioma: e.target.value })
-                }
-              />
-            </Form.Group>
-
-            <Form.Group className="mb-3">
-              <Form.Label>Modalidad</Form.Label>
-              <Form.Select
-                value={localFilters.modalidad}
+                value={localFilters.precioMin}
                 onChange={(e) =>
                   setLocalFilters({
                     ...localFilters,
-                    modalidad: e.target.value,
+                    precioMin: e.target.value,
                   })
-                }
-              >
-                <option value="">Todas</option>
-                <option>Presencial</option>
-                <option>Online</option>
-              </Form.Select>
-            </Form.Group>
-
-            <Form.Group className="mb-3">
-              <Form.Label>Calificación mínima</Form.Label>
-              <RatingDropdown
-                value={localFilters.rating}
-                onChange={(val) =>
-                  setLocalFilters({ ...localFilters, rating: val })
                 }
               />
             </Form.Group>
-          </Form>
-        </Modal.Body>
+            <Form.Group className="ms-2 w-50">
+              <Form.Label>Precio Máximo</Form.Label>
+              <Form.Control
+                type="number"
+                value={localFilters.precioMax}
+                onChange={(e) =>
+                  setLocalFilters({
+                    ...localFilters,
+                    precioMax: e.target.value,
+                  })
+                }
+              />
+            </Form.Group>
+          </div>
 
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseFilters}>
-            Cerrar
-          </Button>
-          <Button variant="primary" onClick={handleApplyFilters}>
-            Aplicar Cambios
-          </Button>
-        </Modal.Footer>
-      </Modal>
+          <Form.Group className="mb-3">
+            <Form.Label>Duración (Cantidad de sesiones)</Form.Label>
+            <Form.Control
+              type="number"
+              value={localFilters.duracion}
+              onChange={(e) =>
+                setLocalFilters({ ...localFilters, duracion: e.target.value })
+              }
+            />
+          </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Label>Zona</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Ej. Palermo, Recoleta..."
+              value={localFilters.zona}
+              onChange={(e) =>
+                setLocalFilters({ ...localFilters, zona: e.target.value })
+              }
+            />
+          </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Label>Idioma</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Español, Inglés..."
+              value={localFilters.idioma}
+              onChange={(e) =>
+                setLocalFilters({ ...localFilters, idioma: e.target.value })
+              }
+            />
+          </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Label>Modalidad</Form.Label>
+            <Form.Select
+              value={localFilters.modalidad}
+              onChange={(e) =>
+                setLocalFilters({
+                  ...localFilters,
+                  modalidad: e.target.value,
+                })
+              }
+            >
+              <option value="">Todas</option>
+              <option>Presencial</option>
+              <option>Online</option>
+            </Form.Select>
+          </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Label>Calificación mínima</Form.Label>
+            <RatingDropdown
+              value={localFilters.rating}
+              onChange={(val) =>
+                setLocalFilters({ ...localFilters, rating: val })
+              }
+            />
+          </Form.Group>
+        </Form>
+      </BaseModal>
     </div>
   );
 };

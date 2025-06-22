@@ -1,7 +1,7 @@
 import React from "react";
-import { X } from "lucide-react";
 import PendingContractsCard from "../pendingContractsCard/PendingContractsCard";
-import "./PendingContractsModal.css";
+import BaseModal from "../../baseModal/BaseModal";
+import { Button } from "react-bootstrap";
 
 const PendingContractsModal = ({
   isOpen,
@@ -9,19 +9,21 @@ const PendingContractsModal = ({
   contracts,
   onContractsUpdate,
 }) => {
-  if (!isOpen) return null;
-
   return (
-    <div className="modal-overlay">
-      <div className="pending-contracts-modal">
-        <div className="modal-header">
-          <h2>Solicitudes Pendientes</h2>
-          <button className="close-button" onClick={onClose}>
-            <X />
-          </button>
-        </div>
-        <div className="modal-content">
-          {contracts.length === 0 && <p>No hay solicitudes pendientes</p>}
+    <BaseModal
+      show={isOpen}
+      onClose={onClose}
+      title="Solicitudes Pendientes"
+      footer={
+        <Button className="btn btn-secondary w-100" onClick={onClose}>
+          Cerrar
+        </Button>
+      }
+    >
+      {contracts.length === 0 ? (
+        <p className="text-center">No hay solicitudes pendientes</p>
+      ) : (
+        <div className="pending-contracts-list">
           {contracts
             .filter((contract) => contract.serviceId && contract.clientId)
             .map((contract) => (
@@ -32,13 +34,8 @@ const PendingContractsModal = ({
               />
             ))}
         </div>
-        <div className="modal-footer">
-          <button className="btn-cancel" onClick={onClose}>
-            Cerrar
-          </button>
-        </div>
-      </div>
-    </div>
+      )}
+    </BaseModal>
   );
 };
 

@@ -5,6 +5,7 @@ import { loginSuccess } from "../app/slices/authSlice";
 import InputField from "../components/input/InputField";
 import SubmitButton from "../components/submitButton/SubmitButton";
 import GoogleButton from "../components/googleButton/GoogleButton";
+import "../components/loginForm/loginForm.css";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -21,12 +22,47 @@ const Register = () => {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+
+  const validatePassword = (password) => {
+    const minLength = 8;
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasNumber = /\d/.test(password);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+    const errors = [];
+
+    if (password.length < minLength) {
+      errors.push(`Mínimo ${minLength} caracteres`);
+    }
+    if (!hasUpperCase) {
+      errors.push("Una mayúscula");
+    }
+    if (!hasNumber) {
+      errors.push("Un número");
+    }
+    if (!hasSpecialChar) {
+      errors.push("Un carácter especial");
+    }
+
+    return errors;
+  };
 
   const handleChange = (e) => {
+    const { name, value } = e.target;
     setForm({
       ...form,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
+
+    if (name === "password") {
+      const errors = validatePassword(value);
+      if (errors.length > 0) {
+        setPasswordError(`La contraseña debe tener: ${errors.join(", ")}`);
+      } else {
+        setPasswordError("");
+      }
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -50,7 +86,6 @@ const Register = () => {
       }
 
       const { token, user } = data;
-
       localStorage.setItem("token", token);
       dispatch(loginSuccess({ token, user }));
 
@@ -58,7 +93,7 @@ const Register = () => {
         navigate("/client-home");
       } else if (user.role === "coach") {
         navigate("/coach-home");
-      } 
+      }
     } catch (err) {
       setError(err.message);
     } finally {
@@ -67,82 +102,95 @@ const Register = () => {
   };
 
   return (
-    <div style={{ maxWidth: "400px", margin: "0 auto", padding: "2rem" }}>
-      <h2 style={{ fontWeight: "bold" }}>Crear cuenta</h2>
+    <div className="login-wrapper">
+      <div className="login-card">
+        <form onSubmit={handleSubmit} className="login-form">
+          <h2>Crear cuenta</h2>
 
-      <form onSubmit={handleSubmit}>
-        <label>Seleccione su rol</label>
-        <select
-          name="role"
-          value={form.role}
-          onChange={handleChange}
-          required
-          style={{
-            width: "100%",
-            padding: "0.5rem",
-            marginBottom: "1rem",
-          }}
-        >
-          <option value="">--</option>
-          <option value="client">Cliente</option>
-          <option value="coach">Entrenador</option>
-        </select>
+          <div className="form-group">
+            <label>Seleccione su rol</label>
+            <select
+              name="role"
+              value={form.role}
+              onChange={handleChange}
+              required
+              className="form-select"
+            >
+              <option value="">--</option>
+              <option value="client">Cliente</option>
+              <option value="coach">Entrenador</option>
+            </select>
+          </div>
 
-        <h4>Información Personal</h4>
+          <h4>Información Personal</h4>
 
-        <div style={{ display: "flex", gap: "1rem", marginBottom: "1rem" }}>
+          <div className="name-fields">
+            <InputField
+              type="text"
+              name="firstName"
+              placeholder="Nombre"
+              value={form.firstName}
+              onChange={handleChange}
+              required
+            />
+            <InputField
+              type="text"
+              name="lastName"
+              placeholder="Apellido"
+              value={form.lastName}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
           <InputField
-            type="text"
-            name="firstName"
-            placeholder="Nombre"
-            value={form.firstName}
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={form.email}
             onChange={handleChange}
+            required
           />
+          <div className="password-field">
+            <InputField
+              type="password"
+              name="password"
+              placeholder="Contraseña"
+              value={form.password}
+              onChange={handleChange}
+              required
+            />
+            {passwordError && (
+              <small className="text-danger">{passwordError}</small>
+            )}
+          </div>
           <InputField
-            type="text"
-            name="lastName"
-            placeholder="Apellido"
-            value={form.lastName}
+            type="date"
+            name="birthDate"
+            placeholder="Fecha de Nacimiento"
+            value={form.birthDate}
             onChange={handleChange}
+            required
           />
-        </div>
 
-        <InputField
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={form.email}
-          onChange={handleChange}
-        />
-        <InputField
-          type="password"
-          name="password"
-          placeholder="Contraseña"
-          value={form.password}
-          onChange={handleChange}
-        />
-        <InputField
-          type="date"
-          name="birthDate"
-          placeholder="Fecha de Nacimiento"
-          value={form.birthDate}
-          onChange={handleChange}
-        />
+          {error && <p className="text-danger text-center">{error}</p>}
 
-        {error && <p style={{ color: "red", marginTop: "0.5rem" }}>{error}</p>}
+          <SubmitButton
+            text={loading ? "Registrando..." : "Completar registro"}
+            disabled={loading}
+          />
 
-        <SubmitButton
-          text={loading ? "Registrando..." : "Completar registro"}
-          disabled={loading}
-        />
-      </form>
+          <p className="register-text">
+            ¿Ya tienes una cuenta? <Link to="/login">Inicia sesión</Link>
+          </p>
 
-      <p style={{ textAlign: "center", marginTop: "1rem" }}>
-        ¿Ya tienes una cuenta? <Link to="/">Inicia sesión</Link>
-      </p>
+          <div className="divider">
+            <hr /> <span>O</span> <hr />
+          </div>
 
-      <hr />
-      <GoogleButton />
+          <GoogleButton />
+        </form>
+      </div>
     </div>
   );
 };

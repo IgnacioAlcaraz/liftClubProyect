@@ -18,6 +18,8 @@ a {
   text-decoration: none;
 }
 
+/* Estilos para la pagina de estadisticas */
+
 .stats-layout {
   padding: 2rem;
   max-width: 1400px;
@@ -54,6 +56,8 @@ a {
   }
 }
 
+/* Estilos para el 404 */
+
 .button-container {
   display: flex;
   gap: 1rem;
@@ -88,4 +92,77 @@ a {
 .text-404 {
   font-size: 1.5rem;
   margin-bottom: 30px;
+}
+
+/* Estilos para la pagina de pago */
+
+.page-pago-container {
+  padding: 80px 0px;
+  width: fit-content;
+  margin: 0 auto;
+}
+
+.pago-titulo {
+  font-weight: bold;
+  margin-bottom: 30px;
+  text-align: left;
+  margin-left: 0;
+}
+
+.page-pago-flex {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+  align-items: stretch;
+  min-height: 500px;
+}
+
+.pago-col-izquierda,
+.pago-col-derecha {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 350px;
+}
+
+.pago-card,
+.pago-formulario {
+  background-color: white;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.06);
+  font-family: "Inter", sans-serif;
+  width: 100% !important;
+  height: 100% !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+}
+
+.pago-card img {
+  width: 100%;
+  border-radius: 12px;
+  max-height: 180px;
+  object-fit: cover;
+}
+
+.pago-separador {
+  display: flex;
+  align-items: center;
+  margin: 30px 0 20px;
+  gap: 10px;
+  width: 100%;
+}
+
+.pago-separador-linea {
+  flex: 1;
+  height: 1px;
+  background-color: #ccc;
+}
+
+.pago-separador-texto {
+  font-weight: bold;
+  color: #666;
 }

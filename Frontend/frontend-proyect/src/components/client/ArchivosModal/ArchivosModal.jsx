@@ -1,6 +1,8 @@
 import React, { useRef } from "react";
-import { Modal, Button } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import { FileText } from "lucide-react";
+import BaseModal from "../../baseModal/BaseModal";
+import SecondaryButton from "../../secondaryButton/SecondaryButton";
 
 export default function ArchivosModal({ show, onHide, contrato, isCoach }) {
   const fileInputRef = useRef(null);
@@ -20,19 +22,21 @@ export default function ArchivosModal({ show, onHide, contrato, isCoach }) {
     }
 
     try {
+      const token = localStorage.getItem("token");
       const response = await fetch(
         `http://localhost:5000/api/contracts/${contrato._id}/files`,
         {
           method: "POST",
           body: formData,
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );
 
       if (!response.ok) {
-        throw new Error("Error al subir los archivos");
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Error al subir los archivos");
       }
 
       window.location.reload();
@@ -75,53 +79,55 @@ export default function ArchivosModal({ show, onHide, contrato, isCoach }) {
   const archivos = contrato.files || [];
 
   return (
-    <Modal show={show} onHide={onHide} centered>
-      <Modal.Header closeButton>
-        <Modal.Title>Archivos Subidos</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        {archivos.length > 0 ? (
-          <>
-            <p>Haz clic en un archivo para descargarlo:</p>
-            <ul className="list-unstyled">
-              {archivos.map((archivo, index) => (
-                <li key={index} className="mb-2">
-                  <a
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleDownload(archivo);
-                    }}
-                  >
-                    <FileText className="me-2 text-purple" size={20} />
-                    {archivo.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </>
-        ) : (
-          <p>No hay archivos subidos para este contrato. </p>
-        )}
-      </Modal.Body>
-      <Modal.Footer>
-        {isCoach && (
-          <>
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={handleFileUpload}
-              style={{ display: "none" }}
-            />
-            <Button variant="primary" onClick={handleUploadClick}>
-              Subir Archivos
-            </Button>
-          </>
-        )}
-        <Button variant="secondary" onClick={onHide}>
-          Cerrar
-        </Button>
-      </Modal.Footer>
-    </Modal>
+    <BaseModal
+      show={show}
+      onClose={onHide}
+      title="Archivos Subidos"
+      footer={
+        <div className="gap-2 w-100 d-flex justify-content-end">
+          {isCoach && (
+            <>
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleFileUpload}
+                style={{ display: "none" }}
+              />
+              <SecondaryButton
+                texto="Subir Archivos"
+                onClick={handleUploadClick}
+              />
+            </>
+          )}
+          <Button className="btn-secondary" onClick={onHide}>
+            Cerrar
+          </Button>
+        </div>
+      }
+    >
+      {archivos.length > 0 ? (
+        <>
+          <p>Haz clic en un archivo para descargarlo:</p>
+          <ul className="list-unstyled">
+            {archivos.map((archivo, index) => (
+              <li key={index} className="mb-2">
+                <a
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleDownload(archivo);
+                  }}
+                >
+                  <FileText className="me-2 text-purple" size={20} />
+                  {archivo.name}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </>
+      ) : (
+        <p>No hay archivos subidos para este contrato.</p>
+      )}
+    </BaseModal>
   );
 }

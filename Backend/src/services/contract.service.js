@@ -127,7 +127,11 @@ const getContractFilesById = async (id, userId, role) => {
 };
 
 const uploadContractFiles = async (id, files, userId, role) => {
-  const contract = await getContractById(id, userId, role);
+  const contract = await Contract.findById(id);
+
+  if (!contract) {
+    throw new Error("Contrato no encontrado");
+  }
 
   if (role !== "coach" || contract.coachId.toString() !== userId.toString()) {
     throw new Error("Solo el coach puede subir archivos");
@@ -145,8 +149,10 @@ const uploadContractFiles = async (id, files, userId, role) => {
     uploadDate: new Date(),
   }));
 
-  contract.files.push(...fileObjects);
-  await contract.save();
+  await Contract.updateOne(
+    { _id: id },
+    { $push: { files: { $each: fileObjects } } }
+  );
 
   return fileObjects;
 };

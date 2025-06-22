@@ -1,6 +1,7 @@
 import React from "react";
 import { Star, FileText, Calendar, X } from "lucide-react";
 import "./contractsTable.css";
+
 export default function ContractsTable({
   misContratos,
   setContratoActivo,
@@ -24,6 +25,28 @@ export default function ContractsTable({
     );
   };
 
+  const renderActionButton = (
+    icon,
+    text,
+    isDisabled,
+    onClick,
+    colorClass = "text-secondary"
+  ) => (
+    <div
+      className={`action-button ${isDisabled ? "text-muted" : colorClass}`}
+      style={{
+        cursor: isDisabled ? "not-allowed" : "pointer",
+      }}
+      onClick={() => {
+        if (!isDisabled) {
+          onClick();
+        }
+      }}
+    >
+      {icon} <span>{text}</span>
+    </div>
+  );
+
   return (
     <div className="contracts-table-container">
       <table className="table table-bordered table-hover align-middle text-center">
@@ -41,7 +64,6 @@ export default function ContractsTable({
         </thead>
         <tbody>
           {misContratos.map((c) => {
-            //deshabilitar los botones segun el estado del contrato
             const deshabilitadoCalificar = c.status !== "Completado";
             const deshabilitadoArchivo =
               c.status === "Pendiente" ||
@@ -63,75 +85,46 @@ export default function ContractsTable({
                 <td>{c.serviceId?.name || "Servicio no disponible"}</td>
                 <td>{renderEstadoBadge(c.status)}</td>
                 <td>{c.serviceId?.duration || "N/A"} sesiones</td>
-
-                {/* Calificar */}
-                <td
-                  className={
-                    deshabilitadoCalificar ? "text-muted" : "text-primary"
-                  }
-                  style={{
-                    cursor: deshabilitadoCalificar ? "not-allowed" : "pointer",
-                  }}
-                  onClick={() => {
-                    if (!deshabilitadoCalificar) {
+                <td>
+                  {renderActionButton(
+                    <Star size={16} className="me-1" />,
+                    "Calificar",
+                    deshabilitadoCalificar,
+                    () => {
                       setContratoActivo(c);
                       onAbrirModalCalificar();
-                    }
-                  }}
-                >
-                  <Star size={16} className="me-1" /> Calificar
+                    },
+                    "text-primary"
+                  )}
                 </td>
-
-                {/* Archivos */}
-                <td
-                  className={
-                    deshabilitadoArchivo
-                      ? "text-muted"
-                      : "text-secondary fw-semibold"
-                  }
-                  style={{
-                    cursor: deshabilitadoArchivo ? "not-allowed" : "pointer",
-                  }}
-                  onClick={() => {
-                    if (!deshabilitadoArchivo) {
+                <td>
+                  {renderActionButton(
+                    <FileText size={16} className="me-1" />,
+                    "Archivos",
+                    deshabilitadoArchivo,
+                    () => {
                       setContratoActivo(c);
                       onAbrirModalArchivo();
                     }
-                  }}
-                >
-                  <FileText size={16} className="me-1" /> Archivos
+                  )}
                 </td>
-
-                {/* Agendar */}
-                <td
-                  className={
-                    deshabilitadoAgendar
-                      ? "text-muted"
-                      : "text-secondary fw-semibold"
-                  }
-                  style={{
-                    cursor: deshabilitadoAgendar ? "not-allowed" : "pointer",
-                  }}
-                  onClick={() => {
-                    if (!deshabilitadoAgendar) {
+                <td>
+                  {renderActionButton(
+                    <Calendar size={16} className="me-1" />,
+                    "Agendar",
+                    deshabilitadoAgendar,
+                    () => {
                       setContratoActivo(c);
                       onAbrirModalAgendar();
                     }
-                  }}
-                >
-                  <Calendar size={16} className="me-1" /> Agendar
+                  )}
                 </td>
-
-                {/* Cancelar */}
-                <td
-                  className={
-                    deshabilitadoCancelar ? "text-muted" : "text-danger"
-                  }
-                  style={{
-                    cursor: deshabilitadoCancelar ? "not-allowed" : "pointer",
-                  }}
-                  onClick={() => {
-                    if (!deshabilitadoCancelar) {
+                <td>
+                  {renderActionButton(
+                    <X size={16} className="me-1" />,
+                    "Cancelar",
+                    deshabilitadoCancelar,
+                    () => {
                       if (
                         window.confirm(
                           "¿Estás seguro de que querés cancelar este contrato?"
@@ -139,10 +132,9 @@ export default function ContractsTable({
                       ) {
                         onCancelarContrato(c._id);
                       }
-                    }
-                  }}
-                >
-                  <X size={16} className="me-1" /> Cancelar
+                    },
+                    "text-danger"
+                  )}
                 </td>
               </tr>
             );

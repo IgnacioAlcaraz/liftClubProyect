@@ -8,7 +8,7 @@ import ConfirmacionPago from "../components/client/ConfirmacionPago/Confirmacion
 import PagoExitosoFinal from "../components/client/PagoExitosoFinal/PagoExitosoFinal";
 import MercadoPagoButton from "../components/client/MercadoPagoButton/MercadoPagoButton";
 import SecondaryButton from "../components/secondaryButton/SecondaryButton";
-import "./ClientPagePago.css";
+import "../App.css";
 
 export default function ClientPagePago() {
   const navigate = useNavigate();

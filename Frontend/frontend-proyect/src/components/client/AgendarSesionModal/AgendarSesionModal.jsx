@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { Calendar } from "lucide-react";
 import axios from "axios";
+import BaseModal from "../../baseModal/BaseModal";
+import SecondaryButton from "../../secondaryButton/SecondaryButton";
 
 const AgendarSesionModal = ({ contrato, show, onHide, onAgendar }) => {
   // Estados locales
@@ -13,21 +15,20 @@ const AgendarSesionModal = ({ contrato, show, onHide, onAgendar }) => {
   const token = localStorage.getItem("token");
 
   // Función para convertir fecha YYYY-MM-DD en nombre del día ("Lunes", "Martes", etc.)
-const obtenerNombreDia = (fechaStr) => {
-  const dias = [
-    "Domingo",
-    "Lunes",
-    "Martes",
-    "Miércoles",
-    "Jueves",
-    "Viernes",
-    "Sábado",
-  ];
-  const [year, month, day] = fechaStr.split("-");
-  const fecha = new Date(Number(year), Number(month) - 1, Number(day)); // zona local
-  return dias[fecha.getDay()];
-};
-
+  const obtenerNombreDia = (fechaStr) => {
+    const dias = [
+      "Domingo",
+      "Lunes",
+      "Martes",
+      "Miércoles",
+      "Jueves",
+      "Viernes",
+      "Sábado",
+    ];
+    const [year, month, day] = fechaStr.split("-");
+    const fecha = new Date(Number(year), Number(month) - 1, Number(day)); // zona local
+    return dias[fecha.getDay()];
+  };
 
   // Al abrir el modal, resetear campos
   useEffect(() => {
@@ -45,9 +46,11 @@ const obtenerNombreDia = (fechaStr) => {
     // Obtener el nombre del día (por ej. "Martes")
     const nombreDelDia = obtenerNombreDia(dia);
     console.log("Día seleccionado:", dia);
-console.log("Nombre del día:", nombreDelDia);
-console.log("Disponibilidad del servicio:", contrato.serviceId.availability);
-
+    console.log("Nombre del día:", nombreDelDia);
+    console.log(
+      "Disponibilidad del servicio:",
+      contrato.serviceId.availability
+    );
 
     // Buscar disponibilidad para ese día de la semana
     const disponibilidad = contrato.serviceId.availability.find(
@@ -70,7 +73,6 @@ console.log("Disponibilidad del servicio:", contrato.serviceId.availability);
     }
   }, [dia, contrato]);
 
-  
   // Confirmar la reserva de la sesión
   const handleConfirmar = async () => {
     if (!dia || !horaSeleccionada) {
@@ -90,7 +92,7 @@ console.log("Disponibilidad del servicio:", contrato.serviceId.availability);
     try {
       setLoading(true);
 
-      const response=await axios.post(
+      const response = await axios.post(
         `http://localhost:5000/api/contracts/${contrato._id}/scheduledSessions`,
         {
           date: dia, // Guardamos como YYYY-MM-DD
@@ -116,61 +118,53 @@ console.log("Disponibilidad del servicio:", contrato.serviceId.availability);
     }
   };
 
-  
-
   return (
-    <Modal show={show} onHide={onHide} centered>
-      <Modal.Header closeButton>
-        <Modal.Title>
-          <Calendar className="me-2" /> Agendar sesión de entrenamiento
-        </Modal.Title>
-      </Modal.Header>
+    <BaseModal
+      show={show}
+      onClose={onHide}
+      title="Agendar sesión de entrenamiento"
+      footer={
+        <div className="gap-2 w-100 d-flex justify-content-end">
+          <SecondaryButton texto="Confirmar Cita" onClick={handleConfirmar} />
+          <Button className="btn btn-secondary" onClick={onHide}>
+            Cerrar
+          </Button>
+        </div>
+      }
+    >
+      <Form.Group className="mb-3">
+        <Form.Label>Seleccioná día</Form.Label>
+        <Form.Control
+          type="date"
+          value={dia}
+          onChange={(e) => setDia(e.target.value)}
+        />
+      </Form.Group>
 
-      <Modal.Body>
-        {/* Selector de fecha */}
-        <Form.Group className="mb-3">
-          <Form.Label>Seleccioná día</Form.Label>
-          <Form.Control
-            type="date"
-            value={dia}
-            onChange={(e) => setDia(e.target.value)}
-          />
-        </Form.Group>
-
-        {/* Mostrar horarios disponibles */}
-        {horariosDisponibles.length > 0 ? (
-          <>
-            <p className="mb-2">Horarios disponibles:</p>
-            <div className="d-flex flex-wrap gap-2">
-              {horariosDisponibles.map((hora) => (
-                <Button
-                  key={hora}
-                  variant={
-                    horaSeleccionada === hora ? "primary" : "outline-secondary"
-                  }
-                  onClick={() => setHoraSeleccionada(hora)}
-                >
-                  {hora}
-                </Button>
-              ))}
-            </div>
-          </>
-        ) : (
-          <p className="text-muted">
-            No hay horarios disponibles para este día.
-          </p>
-        )}
-      </Modal.Body>
-
-      <Modal.Footer>
-        <Button variant="secondary" onClick={onHide}>
-          Cerrar
-        </Button>
-        <Button variant="primary" onClick={handleConfirmar} disabled={loading}>
-          {loading ? "Agendando..." : "Confirmar Cita"}
-        </Button>
-      </Modal.Footer>
-    </Modal>
+      {horariosDisponibles.length > 0 ? (
+        <>
+          <p className="mb-2">Horarios disponibles:</p>
+          <div className="d-flex flex-wrap gap-2">
+            {horariosDisponibles.map((hora) => (
+              <button
+                key={hora}
+                type="button"
+                className={`btn ${
+                  horaSeleccionada === hora
+                    ? "btn-primary"
+                    : "btn-outline-secondary"
+                }`}
+                onClick={() => setHoraSeleccionada(hora)}
+              >
+                {hora}
+              </button>
+            ))}
+          </div>
+        </>
+      ) : (
+        <p className="text-muted">No hay horarios disponibles para este día.</p>
+      )}
+    </BaseModal>
   );
 };
 

@@ -21,6 +21,7 @@ const AcceptedContractsTable = ({
       </span>
     );
   };
+
   return (
     <div className="table-container">
       <table className="table table-bordered table-hover align-middle text-center">
@@ -52,32 +53,36 @@ const AcceptedContractsTable = ({
                 </td>
                 <td>{contract.serviceId.name}</td>
                 <td>{renderEstadoBadge(contract.status)}</td>
-                <td
-                  className={disableFileUpload ? "text-muted" : "text-primary"}
-                  onClick={() => {
-                    if (!disableFileUpload) {
-                      setActiveContract(contract);
-                      onShowModalFileUpload(contract._id);
-                    }
-                  }}
-                  style={{
-                    cursor: disableFileUpload ? "not-allowed" : "pointer",
-                  }}
-                >
-                  <Paperclip size={16} className="me-1" /> Subir archivos
+                <td>
+                  <div
+                    className={`file-upload-action ${disableFileUpload ? "text-muted" : "text-primary"}`}
+                    onClick={() => {
+                      if (!disableFileUpload) {
+                        setActiveContract(contract);
+                        onShowModalFileUpload(contract._id);
+                      }
+                    }}
+                    style={{
+                      cursor: disableFileUpload ? "not-allowed" : "pointer",
+                    }}
+                  >
+                    <Paperclip size={16} className="me-1" /> Subir archivos
+                  </div>
                 </td>
-                <td
-                  className={disableCancel ? "text-muted" : "text-danger"}
-                  onClick={() => {
-                    if (!disableCancel) {
-                      onCancelContract(contract._id);
-                    }
-                  }}
-                  style={{
-                    cursor: disableCancel ? "not-allowed" : "pointer",
-                  }}
-                >
-                  <X size={16} className="me-1" /> Cancelar
+                <td>
+                  <div
+                    className={`cancel-action ${disableCancel ? "text-muted" : "text-danger"}`}
+                    onClick={() => {
+                      if (!disableCancel) {
+                        onCancelContract(contract._id);
+                      }
+                    }}
+                    style={{
+                      cursor: disableCancel ? "not-allowed" : "pointer",
+                    }}
+                  >
+                    <X size={16} className="me-1" /> Cancelar
+                  </div>
                 </td>
               </tr>
             );

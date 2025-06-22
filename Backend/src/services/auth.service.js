@@ -3,12 +3,44 @@ const jwt = require("jsonwebtoken");
 const emailService = require("./email.service");
 require("dotenv").config();
 
+const validatePassword = (password) => {
+  const minLength = 8;
+  const hasUppercase = /[A-Z]/.test(password);
+  const hasNumber = /[0-9]/.test(password);
+  const hasSpecialChar = /[!@#$%^&*,.?":{}|<>]/.test(password);
+
+  const errors = [];
+
+  if (password.length < minLength) {
+    errors.push("La contraseña debe tener al menos 8 caracteres");
+  }
+
+  if (!hasUppercase) {
+    errors.push("La contraseña debe tener al menos una letra mayúscula");
+  }
+
+  if (!hasNumber) {
+    errors.push("La contraseña debe tener al menos un número");
+  }
+
+  if (!hasSpecialChar) {
+    errors.push("La contraseña debe tener al menos un carácter especial");
+  }
+
+  return errors;
+};
+
 const register = async (userData) => {
   const { email, password, firstName, lastName, birthDate, role } = userData;
 
   const existingUser = await User.findOne({ email });
   if (existingUser) {
     throw new Error("El email ya está registrado");
+  }
+
+  const passwordErrors = validatePassword(password);
+  if (passwordErrors.length > 0) {
+    throw new Error(passwordErrors.join(", "));
   }
 
   const newUser = new User({

@@ -2,12 +2,15 @@ import { useSearchParams, Navigate } from "react-router-dom";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { googleLoginSuccess } from "../app/slices/authSlice";
+import BaseModal from "../components/baseModal/BaseModal";
+import { useNavigate } from "react-router-dom";
+import SecondaryButton from "../components/secondaryButton/SecondaryButton";
 
 const SelectRole = () => {
   const [searchParams] = useSearchParams();
   const token = searchParams.get("token"); // Token temporal de Google
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   const [role, setRole] = useState("");
   const [redirect, setRedirect] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -17,14 +20,17 @@ const SelectRole = () => {
   const handleSelectRole = async () => {
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:5000/api/auth/select-role", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ role }),
-      });
+      const response = await fetch(
+        "http://localhost:5000/api/auth/select-role",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ role }),
+        }
+      );
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -34,9 +40,10 @@ const SelectRole = () => {
       const data = await response.json();
       const finalToken = data.token;
 
-      // Guardar token final en localStorage y Redux
       localStorage.setItem("token", finalToken);
-      dispatch(googleLoginSuccess({ token: finalToken, user: { role: data.role } }));
+      dispatch(
+        googleLoginSuccess({ token: finalToken, user: { role: data.role } })
+      );
 
       if (data.role === "client") {
         setRedirect("/client-home");
@@ -56,31 +63,31 @@ const SelectRole = () => {
   if (redirect) return <Navigate to={redirect} />;
 
   return (
-    <div style={{ padding: "2rem", maxWidth: "400px", margin: "0 auto" }}>
-      <h2>Selecciona tu rol</h2>
-      <select
-        onChange={(e) => setRole(e.target.value)}
-        value={role}
-        style={{ width: "100%", padding: "0.5rem", marginBottom: "1rem" }}
+    <div className="login-wrapper">
+      <BaseModal
+        show={true}
+        onClose={() => navigate("/")}
+        title="Selecciona tu rol"
+        footer={
+          <div className="gap-2 w-100 d-flex justify-content-end">
+            <SecondaryButton
+              texto={loading ? "Cargando..." : "Confirmar"}
+              onClick={handleSelectRole}
+              disabled={!role || loading}
+            />
+          </div>
+        }
       >
-        <option value="">-- Selecciona uno --</option>
-        <option value="client">Cliente</option>
-        <option value="coach">Entrenador</option>
-      </select>
-      <button
-        onClick={handleSelectRole}
-        disabled={!role || loading}
-        style={{
-          width: "100%",
-          padding: "0.75rem",
-          backgroundColor: "#007bff",
-          color: "white",
-          border: "none",
-          cursor: loading ? "not-allowed" : "pointer",
-        }}
-      >
-        {loading ? "Cargando..." : "Confirmar"}
-      </button>
+        <select
+          className="form-select mb-3"
+          onChange={(e) => setRole(e.target.value)}
+          value={role}
+        >
+          <option value="">-- Selecciona uno --</option>
+          <option value="client">Cliente</option>
+          <option value="coach">Entrenador</option>
+        </select>
+      </BaseModal>
     </div>
   );
 };
