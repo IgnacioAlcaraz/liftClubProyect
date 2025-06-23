@@ -65,14 +65,7 @@ const App = () => {
             </ProtectedRoute>
           }
         />
-        <Route
-          path="/payment/success"
-          element={
-            <ProtectedRoute allowedRoles={["client"]}>
-              <Success />
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/payment/success" element={<Success />} />
         <Route
           path="/payment/failure"
           element={

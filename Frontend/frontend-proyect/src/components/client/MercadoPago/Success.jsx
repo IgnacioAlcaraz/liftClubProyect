@@ -29,7 +29,7 @@ export default function Success() {
         );
 
         console.log(" Respuesta completa de MercadoPago:", response.data);
-        console.log("📦 Metadata recibida:", response.data.metadata);
+        console.log(" Metadata recibida:", response.data.metadata);
 
         const metadata = response.data.metadata;
         const serviceId = metadata?.service_id;
