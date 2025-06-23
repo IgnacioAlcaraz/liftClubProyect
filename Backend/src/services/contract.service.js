@@ -68,7 +68,6 @@ const createContract = async (contractData, userId) => {
     });
 
     if (contratoExistente) {
-      // Opcional: podés devolver el contrato existente o lanzar error
       return contratoExistente;
     }
   }

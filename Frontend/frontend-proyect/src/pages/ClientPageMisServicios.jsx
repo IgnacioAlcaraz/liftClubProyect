@@ -93,7 +93,7 @@ export default function ClientPageMisServicios() {
         )
       );
 
-      await fetchMisContratos(); // 🔄 sincroniza estado actualizado
+      await fetchMisContratos(); //  sincroniza estado actualizado
       alert("Sesión marcada como completada.");
     } catch (error) {
       console.error("Error al marcar como completada:", error);

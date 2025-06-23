@@ -34,8 +34,25 @@ const PaymentForm = ({ onSubmit }) => {
       newErrors.fullName = "Nombre inválido (solo letras y espacios)";
     }
 
+    // Validar formato MM/AA
     if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(formData.expiryDate)) {
       newErrors.expiryDate = "Formato inválido (debe ser MM/AA)";
+    } else {
+      // Validar que esté en el futuro
+      const [monthStr, yearStr] = formData.expiryDate.split("/");
+      const inputMonth = parseInt(monthStr, 10);
+      const inputYear = parseInt("20" + yearStr, 10);
+
+      const now = new Date();
+      const currentMonth = now.getMonth() + 1;
+      const currentYear = now.getFullYear();
+
+      if (
+        inputYear < currentYear ||
+        (inputYear === currentYear && inputMonth < currentMonth)
+      ) {
+        newErrors.expiryDate = "La tarjeta está vencida";
+      }
     }
 
     if (!/^\d{3,4}$/.test(formData.cvv)) {
