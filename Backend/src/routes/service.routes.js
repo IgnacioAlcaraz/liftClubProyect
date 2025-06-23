@@ -23,4 +23,6 @@ router.get("/coach/:coachId", auth, serviceController.getServiceByCoachId);
 
 router.post("/:id/views", auth, serviceController.incrementViews);
 
+router.get("/:id/occupiedSessions", serviceController.getOccupiedSessions);
+
 module.exports = router;

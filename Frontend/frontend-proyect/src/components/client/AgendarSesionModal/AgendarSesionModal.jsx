@@ -11,6 +11,7 @@ const AgendarSesionModal = ({ contrato, show, onHide, onAgendar }) => {
   const [horaSeleccionada, setHoraSeleccionada] = useState(""); // Hora elegida
   const [loading, setLoading] = useState(false); // Estado de carga del botón
   const [horariosDisponibles, setHorariosDisponibles] = useState([]); // Horarios según el día
+  const [horasOcupadas, setHorasOcupadas] = useState([]);
 
   const token = localStorage.getItem("token");
 
@@ -26,8 +27,32 @@ const AgendarSesionModal = ({ contrato, show, onHide, onAgendar }) => {
       "Sábado",
     ];
     const [year, month, day] = fechaStr.split("-");
-    const fecha = new Date(Number(year), Number(month) - 1, Number(day)); // zona local
+    const fecha = new Date(Number(year), Number(month) - 1, Number(day)); 
     return dias[fecha.getDay()];
+  };
+
+  const fetchHorasOcupadas = async (fecha) => {
+    if (!contrato?.serviceId?._id || !fecha) return;
+
+    try {
+      const response = await axios.get(
+        `http://localhost:5000/api/services/${contrato.serviceId._id}/occupiedSessions`,
+        {
+          params: { date: fecha },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const horas = response.data.map((s) =>
+        parseInt(s.startTime.split(":")[0])
+      );
+      setHorasOcupadas(horas);
+    } catch (error) {
+      console.error("Error al obtener horas ocupadas:", error);
+      setHorasOcupadas([]);
+    }
   };
 
   // Al abrir el modal, resetear campos
@@ -39,38 +64,49 @@ const AgendarSesionModal = ({ contrato, show, onHide, onAgendar }) => {
     }
   }, [show]);
 
-  // Cada vez que se selecciona un día, buscar disponibilidad en el contrato
   useEffect(() => {
-    if (!dia || !contrato?.serviceId?.availability) return;
+    const actualizarHorariosDisponibles = async () => {
+      if (!dia || !contrato?.serviceId?.availability) return;
 
-    // Obtener el nombre del día (por ej. "Martes")
-    const nombreDelDia = obtenerNombreDia(dia);
-    console.log("Día seleccionado:", dia);
-    console.log("Nombre del día:", nombreDelDia);
-    console.log(
-      "Disponibilidad del servicio:",
-      contrato.serviceId.availability
-    );
+      // traemos los horarios ocupados
+      const response = await axios.get(
+        `http://localhost:5000/api/services/${contrato.serviceId._id}/occupiedSessions`,
+        {
+          params: { date: dia },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-    // Buscar disponibilidad para ese día de la semana
-    const disponibilidad = contrato.serviceId.availability.find(
-      (d) => d.date === nombreDelDia
-    );
+      const ocupadas = response.data.map((s) =>
+        parseInt(s.startTime.split(":")[0])
+      );
 
-    // Si hay disponibilidad, generar lista de horarios en bloques de 1 hora
-    if (disponibilidad) {
-      const horaInicio = parseInt(disponibilidad.startTime.split(":")[0]);
-      const horaFin = parseInt(disponibilidad.endTime.split(":")[0]);
-      const horarios = [];
+      const nombreDelDia = obtenerNombreDia(dia);
 
-      for (let h = horaInicio; h < horaFin; h++) {
-        horarios.push(`${h}:00`);
+      const disponibilidad = contrato.serviceId.availability.find(
+        (d) => d.date === nombreDelDia
+      );
+
+      if (disponibilidad) {
+        const horaInicio = parseInt(disponibilidad.startTime.split(":")[0]);
+        const horaFin = parseInt(disponibilidad.endTime.split(":")[0]);
+        const horarios = [];
+
+        for (let h = horaInicio; h < horaFin; h++) {
+          if (!ocupadas.includes(h)) {
+            horarios.push(`${h}:00`);
+          }
+        }
+
+        setHorariosDisponibles(horarios);
+      } else {
+        setHorariosDisponibles([]);
       }
+    };
 
-      setHorariosDisponibles(horarios);
-    } else {
-      setHorariosDisponibles([]); // Si no hay disponibilidad, limpiar lista
-    }
+    actualizarHorariosDisponibles();
   }, [dia, contrato]);
 
   // Confirmar la reserva de la sesión

@@ -154,6 +154,26 @@ const incrementViews = async (req, res) => {
   }
 };
 
+const getOccupiedSessions = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { date } = req.query;
+
+    if (!date) {
+      return res.status(400).json({ message: "La fecha es obligatoria" });
+    }
+
+    const sesiones = await serviceService.getOccupiedSessions(id, date);
+    res.status(200).json(sesiones);
+  } catch (error) {
+    console.error("Error al obtener sesiones ocupadas:", error);
+    return res.status(500).json({
+      message: "Error al obtener sesiones ocupadas",
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
   getServices,
   createService,
@@ -162,4 +182,5 @@ module.exports = {
   deleteServiceById,
   getServiceByCoachId,
   incrementViews,
+  getOccupiedSessions,
 };

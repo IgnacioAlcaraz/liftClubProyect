@@ -64,7 +64,7 @@ export default function ContractsTable({
         </thead>
         <tbody>
           {misContratos.map((c) => {
-            const deshabilitadoCalificar = c.status !== "Completado";
+            const deshabilitadoCalificar = c.status !== "Completado" || c.reviewSubmitted;
             const deshabilitadoArchivo =
               c.status === "Pendiente" ||
               c.status === "Cancelado" ||

@@ -229,6 +229,22 @@ const createScheduledSession = async (id, sessionData, userId, role) => {
   contract.scheduledSessions.push(newSession);
   await contract.save();
 
+  // Guardar en el servicio
+  const serviceId = contract.serviceId;
+  const service = await Service.findById(serviceId);
+  if (!service) throw new Error("Servicio no encontrado");
+
+  const sessionForService = {
+    date: sessionData.date,
+    startTime: sessionData.startTime,
+    endTime: sessionData.endTime,
+    contractId: contract._id,
+    clientId: contract.clientId,
+  };
+
+  service.allScheduledSessions.push(sessionForService);
+  await service.save();
+
   return contract.scheduledSessions[contract.scheduledSessions.length - 1];
 };
 

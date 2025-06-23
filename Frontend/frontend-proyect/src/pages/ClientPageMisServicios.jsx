@@ -27,61 +27,54 @@ export default function ClientPageMisServicios() {
 
   const [showModalAgendar, setShowModalAgendar] = useState(false);
 
-  useEffect(() => {
-    const fetchMisContratos = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:5000/api/contracts",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        setMisContratos(response.data);
-      } catch (error) {
-        console.error("Error al cargar contratos:", error);
-        setError("No se pudieron cargar los contratos.");
-      }
-    };
+  const fetchMisSesiones = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5000/api/contracts/user/scheduledSessions",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setMisSesiones(response.data);
+    } catch (error) {
+      console.error("Error al cargar sesiones:", error);
+      setError("No se pudieron cargar los contratos.");
+    }
+  };
 
+  const fetchMisContratos = async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/api/contracts", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setMisContratos(response.data);
+    } catch (error) {
+      console.error("Error al cargar contratos:", error);
+      setError("No se pudieron cargar los contratos.");
+    }
+  };
+  useEffect(() => {
     if (token) fetchMisContratos();
   }, [token]);
 
   useEffect(() => {
-    const fetchMisSesiones = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:5000/api/contracts/user/scheduledSessions",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        setMisSesiones(response.data);
-      } catch (error) {
-        console.error("Error al cargar sesiones:", error);
-        setError("No se pudieron cargar los contratos.");
-      }
-    };
     if (token) fetchMisSesiones();
   }, [token]);
 
   //funcion para cambiar estado de una sesion
   const handleMarcarComoCompletada = async (sessionId) => {
     try {
-      // Buscar el contrato que contiene esta sesión
-      const contratoConSesion = misContratos.find((contrato) =>
-        contrato.scheduledSessions?.some((s) => s._id === sessionId)
-      );
-
-      if (!contratoConSesion) {
-        alert("No se encontró el contrato asociado a esta sesión.");
+      const sesion = misSesiones.find((s) => s._id === sessionId);
+      if (!sesion || !sesion.contractId) {
+        alert("No se encontró la sesión o el contrato asociado.");
         return;
       }
 
-      const contractId = contratoConSesion._id;
+      const contractId = sesion.contractId;
 
       await axios.patch(
         `http://localhost:5000/api/contracts/${contractId}/scheduledSessions/${sessionId}`,
@@ -100,6 +93,7 @@ export default function ClientPageMisServicios() {
         )
       );
 
+      await fetchMisContratos(); // 🔄 sincroniza estado actualizado
       alert("Sesión marcada como completada.");
     } catch (error) {
       console.error("Error al marcar como completada:", error);
@@ -132,6 +126,7 @@ export default function ClientPageMisServicios() {
       );
 
       alert("¡Calificación enviada con éxito!");
+      await fetchMisContratos(); //  actualiza el estado del contrato
     } catch (error) {
       console.error("Error completo:", error);
       console.error("Mensaje del servidor:", error.response?.data);
@@ -213,6 +208,7 @@ export default function ClientPageMisServicios() {
           show={showModalAgendar}
           onHide={() => setShowModalAgendar(false)}
           contrato={contratoActivo}
+          onAgendar={fetchMisSesiones}
         />
       </div>
     </>

@@ -55,6 +55,23 @@ const serviceSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+
+    allScheduledSessions: [
+      {
+        date: { type: String, required: true }, // "YYYY-MM-DD"
+        startTime: { type: String, required: true }, // "10:00"
+        endTime: { type: String, required: true },
+        contractId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Contract",
+        },
+        clientId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+        },
+      },
+    ],
+
     image: {
       type: String,
       default: "https://via.placeholder.com/400x300",

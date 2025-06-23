@@ -140,6 +140,21 @@ const incrementViews = async (id) => {
   return await service.save();
 };
 
+const getOccupiedSessions = async (serviceId, date) => {
+  const service = await Service.findById(serviceId);
+
+  if (!service) {
+    throw new Error("Servicio no encontrado");
+  }
+
+  // Filtrar las sesiones por fecha
+  const sesionesOcupadas = service.allScheduledSessions.filter(
+    (s) => s.date === date
+  );
+
+  return sesionesOcupadas;
+};
+
 module.exports = {
   getServices,
   createService,
@@ -148,4 +163,5 @@ module.exports = {
   deleteServiceById,
   getServiceByCoachId,
   incrementViews,
+  getOccupiedSessions,
 };
