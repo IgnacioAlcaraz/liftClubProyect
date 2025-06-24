@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import StarRating from "../../../../starRating/starRating";
+import StarRating from "../../../../starRating/StarRating";
 import "./coachOverview.css";
 
 const CoachOverview = ({ averageRating, totalReviews }) => {

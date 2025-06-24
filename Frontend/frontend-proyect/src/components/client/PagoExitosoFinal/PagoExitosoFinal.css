@@ -17,7 +17,7 @@
 .icono-check {
   width: 60px;
   height: 60px;
-  border: 2.5px solid #10b981; /* verde */
+  border: 2.5px solid #10b981; 
   border-radius: 50%;
   display: flex;
   align-items: center;

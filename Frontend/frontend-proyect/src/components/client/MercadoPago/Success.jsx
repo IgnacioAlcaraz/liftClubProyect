@@ -18,7 +18,7 @@ export default function Success() {
 
     const obtenerPreferenciaYCrearContrato = async () => {
       try {
-        // Obtener los datos del pago desde la API de MercadoPago
+        // obtener los datos del pago desde la API de MercadoPago
         const response = await axios.get(
           `https://api.mercadopago.com/v1/payments/${paymentId}`,
           {
@@ -42,7 +42,7 @@ export default function Success() {
           return;
         }
 
-        // Crear contrato en tu backend
+        // crear contrato 
         await axios.post(
           "http://localhost:5000/api/contracts",
           {
