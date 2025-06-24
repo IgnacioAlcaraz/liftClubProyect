@@ -33,7 +33,7 @@ export default function ContractsTable({
     colorClass = "text-secondary"
   ) => (
     <div
-      className={`action-button ${isDisabled ? "text-muted" : colorClass}`}
+      className={`action-button fs-6 ${isDisabled ? "text-muted" : colorClass}`}
       style={{
         cursor: isDisabled ? "not-allowed" : "pointer",
       }}
@@ -64,7 +64,8 @@ export default function ContractsTable({
         </thead>
         <tbody>
           {misContratos.map((c) => {
-            const deshabilitadoCalificar = c.status !== "Completado" || c.reviewSubmitted;
+            const deshabilitadoCalificar =
+              c.status !== "Completado" || c.reviewSubmitted;
             const deshabilitadoArchivo =
               c.status === "Pendiente" ||
               c.status === "Cancelado" ||
@@ -94,7 +95,7 @@ export default function ContractsTable({
                       setContratoActivo(c);
                       onAbrirModalCalificar();
                     },
-                    "text-primary"
+                    "text-warning"
                   )}
                 </td>
                 <td>
@@ -105,7 +106,8 @@ export default function ContractsTable({
                     () => {
                       setContratoActivo(c);
                       onAbrirModalArchivo();
-                    }
+                    },
+                    "text-primary"
                   )}
                 </td>
                 <td>
@@ -116,7 +118,8 @@ export default function ContractsTable({
                     () => {
                       setContratoActivo(c);
                       onAbrirModalAgendar();
-                    }
+                    },
+                    "text-success"
                   )}
                 </td>
                 <td>

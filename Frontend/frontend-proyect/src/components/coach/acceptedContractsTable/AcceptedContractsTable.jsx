@@ -55,7 +55,7 @@ const AcceptedContractsTable = ({
                 <td>{renderEstadoBadge(contract.status)}</td>
                 <td>
                   <div
-                    className={`file-upload-action ${disableFileUpload ? "text-muted" : "text-primary"}`}
+                    className={`file-upload-action fs-6 ${disableFileUpload ? "text-muted" : "text-primary"}`}
                     onClick={() => {
                       if (!disableFileUpload) {
                         setActiveContract(contract);
@@ -71,7 +71,7 @@ const AcceptedContractsTable = ({
                 </td>
                 <td>
                   <div
-                    className={`cancel-action ${disableCancel ? "text-muted" : "text-danger"}`}
+                    className={`cancel-action fs-6 ${disableCancel ? "text-muted" : "text-danger"}`}
                     onClick={() => {
                       if (!disableCancel) {
                         onCancelContract(contract._id);
