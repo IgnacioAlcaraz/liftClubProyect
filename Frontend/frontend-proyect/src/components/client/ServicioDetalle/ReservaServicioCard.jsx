@@ -8,7 +8,6 @@ const ReservaServicioCard = ({ servicio }) => {
 
 
   const handleReservar = () => {
-    // Navegamos a la pantalla de pago usando el ID del servicio
     navigate(`/client-page-pago/${servicio._id}`);
   };
 

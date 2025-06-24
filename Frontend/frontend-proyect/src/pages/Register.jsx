@@ -5,6 +5,7 @@ import { loginSuccess } from "../app/slices/authSlice";
 import InputField from "../components/input/InputField";
 import SubmitButton from "../components/submitButton/SubmitButton";
 import GoogleButton from "../components/googleButton/GoogleButton";
+import { Eye, EyeOff } from "lucide-react";
 import "../components/loginForm/loginForm.css";
 
 const Register = () => {
@@ -23,6 +24,7 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const validatePassword = (password) => {
     const minLength = 8;
@@ -156,19 +158,34 @@ const Register = () => {
             onChange={handleChange}
             required
           />
-          <div className="password-field">
+
+          <div className="password-field" style={{ position: "relative" }}>
             <InputField
-              type="password"
+              type={showPassword ? "text" : "password"}
               name="password"
               placeholder="Contraseña"
               value={form.password}
               onChange={handleChange}
               required
             />
+            <span
+              onClick={() => setShowPassword(!showPassword)}
+              style={{
+                position: "absolute",
+                top: "50%",
+                right: "10px",
+                transform: "translateY(-50%)",
+                cursor: "pointer",
+                color: "#666",
+              }}
+            >
+              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            </span>
             {passwordError && (
               <small className="text-danger">{passwordError}</small>
             )}
           </div>
+
           <InputField
             type="date"
             name="birthDate"

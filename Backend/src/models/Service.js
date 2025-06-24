@@ -59,7 +59,7 @@ const serviceSchema = new mongoose.Schema(
     allScheduledSessions: [
       {
         date: { type: String, required: true }, // "YYYY-MM-DD"
-        startTime: { type: String, required: true }, // "10:00"
+        startTime: { type: String, required: true }, 
         endTime: { type: String, required: true },
         contractId: {
           type: mongoose.Schema.Types.ObjectId,
