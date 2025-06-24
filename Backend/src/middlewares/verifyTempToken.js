@@ -1,4 +1,3 @@
-// middlewares/verifyTempToken.js
 const jwt = require("jsonwebtoken");
 
 const verifyTempToken = (req, res, next) => {

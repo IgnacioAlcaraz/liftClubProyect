@@ -18,15 +18,12 @@ const LoginForm = () => {
     (state) => state.auth
   );
 
-  // Redirige si el usuario se autentica, según el rol
   useEffect(() => {
     if (isAuthenticated && user && user.role) {
       if (user.role === "client") {
         navigate("/client-home");
       } else if (user.role === "coach") {
         navigate("/coach-home");
-      } else {
-        console.warn("Rol no reconocido:", user.role);
       }
     }
   }, [isAuthenticated, user, navigate]);

@@ -1,6 +1,5 @@
 import React from "react";
 import CoachOverview from "./coachOverview/CoachOverview";
-import "./reviewPanel.css";
 import ReviewMetrics from "./reviewMetrics/ReviewMetrics";
 
 const ReviewPanel = ({

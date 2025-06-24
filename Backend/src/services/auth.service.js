@@ -76,6 +76,7 @@ const login = async (credentials) => {
   const { email, password } = credentials;
 
   const user = await User.findOne({ email });
+
   if (!user) {
     throw new Error("Credenciales inválidas");
   }
@@ -90,7 +91,7 @@ const login = async (credentials) => {
     { expiresIn: "1d" }
   );
 
-  return {
+  const result = {
     token,
     user: {
       id: user._id,
@@ -100,82 +101,104 @@ const login = async (credentials) => {
       role: user.role,
     },
   };
+
+  return result;
 };
 
 const handleGoogleCallback = async (googleUser) => {
   const existingUser = await User.findOne({ email: googleUser.email });
 
-  if (!existingUser) {
-    throw new Error(
-      "El usuario no está registrado. Por favor, registrese primero."
-    );
-  }
-
-  // Paso 3: Si existe pero no tiene rol, redirigir a selector de rol
-  if (!existingUser.role) {
-    const tempToken = jwt.sign(
-      { id: existingUser._id },
-      process.env.SECRET_KEY,
+  if (existingUser && existingUser.role) {
+    const token = jwt.sign(
       {
-        expiresIn: "15m",
-      }
+        userId: existingUser._id,
+        role: existingUser.role,
+        email: existingUser.email,
+        firstName: existingUser.firstName,
+        lastName: existingUser.lastName,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
     );
 
     return {
-      redirect: true,
-      url: `http://localhost:5173/select-role?token=${tempToken}`,
+      redirect: false,
+      data: {
+        token,
+        user: {
+          id: existingUser._id,
+          email: existingUser.email,
+          firstName: existingUser.firstName,
+          lastName: existingUser.lastName,
+          role: existingUser.role,
+        },
+      },
     };
   }
 
-  // Paso 4: Si tiene todo correcto, generar el token final
-  const token = jwt.sign(
-    { id: existingUser._id, role: existingUser.role },
+  const tempToken = jwt.sign(
+    {
+      googleData: {
+        email: googleUser.email,
+        firstName: googleUser.firstName,
+        lastName: googleUser.lastName,
+      },
+    },
     process.env.SECRET_KEY,
-    { expiresIn: "1d" }
+    { expiresIn: "15m" }
   );
 
   return {
-    redirect: false,
-    data: {
-      token,
-      user: {
-        id: existingUser._id,
-        email: existingUser.email,
-        role: existingUser.role,
-      },
-    },
+    redirect: true,
+    url: `http://localhost:5173/select-role?token=${tempToken}`,
   };
 };
 
-// Seleccionar rol despues de autenticacion con google
-const selectRole = async (userId, role) => {
+const selectRole = async (googleData, role) => {
   if (!role) {
     throw new Error("El rol es requerido");
   }
 
-  const user = await User.findById(userId);
-  if (!user) {
-    throw new Error("Usuario no encontrado");
+  if (!googleData || !googleData.email) {
+    throw new Error("Datos de Google inválidos");
   }
 
-  user.role = role;
+  let user = await User.findOne({ email: googleData.email });
+
+  if (!user) {
+    user = new User({
+      email: googleData.email,
+      firstName: googleData.firstName,
+      lastName: googleData.lastName,
+      role: role,
+    });
+  } else {
+    throw new Error("El usuario ya existe");
+  }
+
   await user.save();
 
-  // Generar un token final para el usuario
-  const finalToken = jwt.sign(
+  const token = jwt.sign(
     {
-      id: user._id,
+      userId: user._id,
       role: user.role,
     },
-    process.env.SECRET_KEY,
-    { expiresIn: "1h" }
+    process.env.JWT_SECRET,
+    { expiresIn: "1d" }
   );
 
-  return {
-    message: "Usuario actualizado correctamente",
-    token: finalToken,
-    role: user.role,
+  const result = {
+    token,
+    user: {
+      id: user._id,
+      role: user.role,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+    },
   };
+
+  return result;
 };
 
 const getMe = async (userId) => {

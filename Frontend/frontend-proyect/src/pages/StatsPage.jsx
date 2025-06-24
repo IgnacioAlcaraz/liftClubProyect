@@ -63,7 +63,6 @@ const StatsPage = () => {
       }, 0);
 
       setTotalResponses(responses);
-      console.log("Reviews obtenidas:", reviews);
     } catch (error) {
       console.error("Error obteniendo reseñas:", error);
     }

@@ -26,16 +26,16 @@ const Register = () => {
 
   const validatePassword = (password) => {
     const minLength = 8;
-    const hasUpperCase = /[A-Z]/.test(password);
-    const hasNumber = /\d/.test(password);
-    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+    const hasUppercase = /[A-Z]/.test(password);
+    const hasNumber = /[0-9]/.test(password);
+    const hasSpecialChar = /[!@#$%^&*,.?":{}|<>]/.test(password);
 
     const errors = [];
 
     if (password.length < minLength) {
       errors.push(`Mínimo ${minLength} caracteres`);
     }
-    if (!hasUpperCase) {
+    if (!hasUppercase) {
       errors.push("Una mayúscula");
     }
     if (!hasNumber) {
@@ -86,16 +86,21 @@ const Register = () => {
       }
 
       const { token, user } = data;
+
+      if (!user || !user.role || !["client", "coach"].includes(user.role)) {
+        throw new Error("Rol de usuario inválido");
+      }
+
       localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
       dispatch(loginSuccess({ token, user }));
 
-      if (user.role === "client") {
-        navigate("/client-home");
-      } else if (user.role === "coach") {
-        navigate("/coach-home");
-      }
+      const redirectPath =
+        user.role === "client" ? "/client-home" : "/coach-home";
+      navigate(redirectPath);
     } catch (err) {
       setError(err.message);
+      localStorage.clear();
     } finally {
       setLoading(false);
     }

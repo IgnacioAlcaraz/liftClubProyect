@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Camera } from "lucide-react";
 import "./ServiceFormModal.css";
 import InputField from "../../input/InputField";
-import AvailabilitySection from "./AvailabilitySection";
+import AvailabilitySection from "./availabilitySection/AvailabilitySection";
 
 const ServiceFormModal = ({ show, onClose, onSubmit, initialData = null }) => {
   const [formData, setFormData] = useState({

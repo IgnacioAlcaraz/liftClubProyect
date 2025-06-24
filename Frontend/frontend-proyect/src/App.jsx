@@ -1,5 +1,10 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import LoginPage from "./pages/Login";
 import SelectRole from "./pages/SelectRole";
 import RegisterPage from "./pages/Register";
@@ -18,8 +23,8 @@ import ProtectedRoute from "./components/protectedRoute/ProtectedRoute";
 import NotFound from "./pages/NotFound";
 import Home from "./pages/Home";
 import "./App.css";
-
 import { initMercadoPago } from "@mercadopago/sdk-react";
+import { useSelector } from "react-redux";
 
 const PUBLIC_KEY = import.meta.env.VITE_MERCADOPAGO_PUBLIC_KEY;
 initMercadoPago(PUBLIC_KEY, {
@@ -28,19 +33,47 @@ initMercadoPago(PUBLIC_KEY, {
 });
 
 const App = () => {
+  const { isAuthenticated, user } = useSelector((state) => state.auth);
+
+  const redirectToHome = () => {
+    if (!isAuthenticated) return <Navigate to="/" />;
+    return user?.role === "client" ? (
+      <Navigate to="/client-home" />
+    ) : (
+      <Navigate to="/coach-home" />
+    );
+  };
+
   return (
     <Router>
       <Routes>
-        {/* Rutas de autenticación */}
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
+        {/* Rutas públicas */}
+        <Route
+          path="/"
+          element={isAuthenticated ? redirectToHome() : <Home />}
+        />
+        <Route
+          path="/login"
+          element={isAuthenticated ? redirectToHome() : <LoginPage />}
+        />
+        <Route
+          path="/register"
+          element={isAuthenticated ? redirectToHome() : <RegisterPage />}
+        />
         <Route path="/google-success" element={<GoogleSuccess />} />
-        <Route path="/client-home" element={<ClientHome />} />
         <Route path="/select-role" element={<SelectRole />} />
         <Route path="/forgot-password" element={<PasswordReset />} />
 
         {/* Rutas de cliente */}
+        <Route
+          path="/client-home"
+          element={
+            <ProtectedRoute allowedRoles={["client"]}>
+              <ClientHome />
+            </ProtectedRoute>
+          }
+        />
+
         <Route
           path="/client-page-pago/:id"
           element={
@@ -49,6 +82,7 @@ const App = () => {
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/mis-servicios"
           element={
@@ -57,6 +91,7 @@ const App = () => {
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/client-page-servicio1/:id"
           element={
@@ -65,7 +100,16 @@ const App = () => {
             </ProtectedRoute>
           }
         />
-        <Route path="/payment/success" element={<Success />} />
+
+        <Route
+          path="/payment/success"
+          element={
+            <ProtectedRoute allowedRoles={["client"]}>
+              <Success />
+            </ProtectedRoute>
+          }
+        />
+
         <Route
           path="/payment/failure"
           element={
@@ -77,14 +121,6 @@ const App = () => {
 
         {/* Rutas de coach */}
         <Route
-          path="/stats"
-          element={
-            <ProtectedRoute allowedRoles={["coach"]}>
-              <StatsPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
           path="/coach-home"
           element={
             <ProtectedRoute allowedRoles={["coach"]}>
@@ -92,6 +128,16 @@ const App = () => {
             </ProtectedRoute>
           }
         />
+
+        <Route
+          path="/stats"
+          element={
+            <ProtectedRoute allowedRoles={["coach"]}>
+              <StatsPage />
+            </ProtectedRoute>
+          }
+        />
+
         <Route
           path="/coach-services"
           element={
@@ -100,6 +146,8 @@ const App = () => {
             </ProtectedRoute>
           }
         />
+
+        {/* Ruta 404 */}
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>

@@ -8,17 +8,26 @@ import SecondaryButton from "../components/secondaryButton/SecondaryButton";
 
 const SelectRole = () => {
   const [searchParams] = useSearchParams();
-  const token = searchParams.get("token"); // Token temporal de Google
+  const tempToken = searchParams.get("token");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [role, setRole] = useState("");
-  const [redirect, setRedirect] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  if (!token) return <Navigate to="/" />;
+  if (!tempToken) {
+    return <Navigate to="/" />;
+  }
 
   const handleSelectRole = async () => {
+    if (!role) {
+      setError("Debes seleccionar un rol");
+      return;
+    }
+
     setLoading(true);
+    setError("");
+
     try {
       const response = await fetch(
         "http://localhost:5000/api/auth/select-role",
@@ -26,41 +35,51 @@ const SelectRole = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${tempToken}`,
           },
           body: JSON.stringify({ role }),
         }
       );
 
+      const data = await response.json();
+
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Error al seleccionar el rol");
+        throw new Error(data.message || "Error al seleccionar el rol");
       }
 
-      const data = await response.json();
-      const finalToken = data.token;
+      if (!data.token || !data.user || !data.user.role) {
+        throw new Error("Respuesta del servidor incompleta");
+      }
 
-      localStorage.setItem("token", finalToken);
+      localStorage.setItem("token", data.token);
+
+      const userInfo = {
+        id: data.user.id,
+        role: data.user.role,
+        email: data.user.email,
+        firstName: data.user.firstName,
+        lastName: data.user.lastName,
+      };
+
+      localStorage.setItem("user", JSON.stringify(userInfo));
+
       dispatch(
-        googleLoginSuccess({ token: finalToken, user: { role: data.role } })
+        googleLoginSuccess({
+          token: data.token,
+          user: userInfo,
+        })
       );
 
-      if (data.role === "client") {
-        setRedirect("/client-home");
-      } else if (data.role === "coach") {
-        setRedirect("/coach-home");
-      } else {
-        alert("Rol no reconocido");
-      }
+      const redirectPath =
+        data.user.role === "client" ? "/client-home" : "/coach-home";
+      navigate(redirectPath, { replace: true });
     } catch (error) {
-      console.error("Error al seleccionar rol:", error.message);
-      alert("Hubo un problema al seleccionar el rol");
+      setError(error.message || "Hubo un problema al seleccionar el rol");
+      localStorage.clear();
     } finally {
       setLoading(false);
     }
   };
-
-  if (redirect) return <Navigate to={redirect} />;
 
   return (
     <div className="login-wrapper">
@@ -68,25 +87,35 @@ const SelectRole = () => {
         show={true}
         onClose={() => navigate("/")}
         title="Selecciona tu rol"
+        staticBackdrop={true}
         footer={
           <div className="gap-2 w-100 d-flex justify-content-end">
             <SecondaryButton
-              texto={loading ? "Cargando..." : "Confirmar"}
+              texto={loading ? "Procesando..." : "Confirmar"}
               onClick={handleSelectRole}
               disabled={!role || loading}
             />
           </div>
         }
       >
-        <select
-          className="form-select mb-3"
-          onChange={(e) => setRole(e.target.value)}
-          value={role}
-        >
-          <option value="">-- Selecciona uno --</option>
-          <option value="client">Cliente</option>
-          <option value="coach">Entrenador</option>
-        </select>
+        <div className="mb-3">
+          <select
+            className="form-select"
+            onChange={(e) => setRole(e.target.value)}
+            value={role}
+            disabled={loading}
+          >
+            <option value="">-- Selecciona uno --</option>
+            <option value="client">Cliente</option>
+            <option value="coach">Entrenador</option>
+          </select>
+        </div>
+
+        {error && (
+          <div className="alert alert-danger" role="alert">
+            {error}
+          </div>
+        )}
       </BaseModal>
     </div>
   );

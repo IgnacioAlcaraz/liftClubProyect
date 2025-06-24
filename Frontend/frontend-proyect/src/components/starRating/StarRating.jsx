@@ -1,5 +1,4 @@
 import React from "react";
-import "./starRating.css";
 import { Star } from "lucide-react";
 
 const StarRating = ({ rating }) => {

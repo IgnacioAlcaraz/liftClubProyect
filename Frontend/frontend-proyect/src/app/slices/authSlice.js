@@ -1,12 +1,34 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {
-  isAuthenticated: false,
-  token: null,
-  user: null,
-  loading: false,
-  error: null,
+const loadInitialState = () => {
+  try {
+    const token = localStorage.getItem("token");
+    const user = JSON.parse(localStorage.getItem("user") || "null");
+
+    if (token && user && user.role) {
+      return {
+        isAuthenticated: true,
+        token,
+        user,
+        loading: false,
+        error: null,
+      };
+    }
+  } catch (error) {
+    console.error("Error cargando desde localStorage:", error);
+    localStorage.clear();
+  }
+
+  return {
+    isAuthenticated: false,
+    token: null,
+    user: null,
+    loading: false,
+    error: null,
+  };
 };
+
+const initialState = loadInitialState();
 
 const authSlice = createSlice({
   name: "auth",
@@ -22,11 +44,15 @@ const authSlice = createSlice({
       state.isAuthenticated = true;
       state.token = action.payload.token;
       state.user = action.payload.user;
+      state.error = null;
     },
 
     loginFailure: (state, action) => {
       state.loading = false;
       state.error = action.payload;
+      state.isAuthenticated = false;
+      state.token = null;
+      state.user = null;
     },
 
     logout: (state) => {
@@ -35,6 +61,7 @@ const authSlice = createSlice({
       state.user = null;
       state.loading = false;
       state.error = null;
+      localStorage.clear();
     },
 
     googleLoginSuccess: (state, action) => {
@@ -59,6 +86,7 @@ export default authSlice.reducer;
 
 export const loginUser = (credentials) => async (dispatch) => {
   dispatch(loginStart());
+
   try {
     const response = await fetch("http://localhost:5000/api/auth/login", {
       method: "POST",
@@ -75,11 +103,17 @@ export const loginUser = (credentials) => async (dispatch) => {
 
     const data = await response.json();
 
+    if (!data.token || !data.user || !data.user.role) {
+      throw new Error("Respuesta del servidor incompleta");
+    }
+
     localStorage.setItem("token", data.token);
     localStorage.setItem("user", JSON.stringify(data.user));
 
     dispatch(loginSuccess(data));
   } catch (error) {
+    console.error("Error completo:", error);
+    localStorage.clear();
     dispatch(loginFailure(error.message));
   }
 };

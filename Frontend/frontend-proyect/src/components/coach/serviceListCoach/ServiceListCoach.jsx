@@ -4,7 +4,6 @@ import axios from "axios";
 import ServiceCardCoach from "../serviceCardCoach/ServiceCardCoach";
 import AddServiceCard from "../addServiceCard/AddServiceCard";
 import ServiceFormModal from "../serviceFormModal/ServiceFormModal";
-import "./serviceListCoach.css";
 import BaseServiceList from "../../baseServiceList/BaseServiceList";
 
 const ServiceListCoach = () => {
@@ -131,18 +130,14 @@ const ServiceListCoach = () => {
 
   return (
     <BaseServiceList>
-      {services.length > 0 ? (
-        services.map((service) => (
-          <ServiceCardCoach
-            key={service._id}
-            service={service}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-          />
-        ))
-      ) : (
-        <p>No se encontraron servicios</p>
-      )}
+      {services.map((service) => (
+        <ServiceCardCoach
+          key={service._id}
+          service={service}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+        />
+      ))}
       <AddServiceCard onAddClick={handleAddService} />
 
       <ServiceFormModal
