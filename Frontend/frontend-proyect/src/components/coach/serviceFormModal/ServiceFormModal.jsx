@@ -181,7 +181,7 @@ const ServiceFormModal = ({ show, onClose, onSubmit, initialData = null }) => {
 
         <form onSubmit={handleSubmit}>
           <div className="image-upload-section">
-            {existingImages && existingImages.length > 0 && (
+            {existingImages.length > 0 && (
               <>
                 <h3>Imágenes actuales</h3>
                 <div className="existing-images">
@@ -294,11 +294,17 @@ const ServiceFormModal = ({ show, onClose, onSubmit, initialData = null }) => {
             <textarea
               name="description"
               value={formData.description}
-              onChange={handleInputChange}
-              placeholder="Descripción del servicio"
+              onChange={(e) => {
+                const newText = e.target.value;
+                if (newText.length <= 60) {
+                  setFormData((prev) => ({ ...prev, description: newText })); //si el nuevo txt tiene menos de 60 actualiza el estado, sino no
+                }
+              }}
+              placeholder="Descripción del servicio (máx. 60 caracteres)"
               className="form-control"
               required
             />
+            <small>Caracteres: {formData.description.length} / 60</small>
           </div>
 
           <AvailabilitySection

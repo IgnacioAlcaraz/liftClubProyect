@@ -18,7 +18,7 @@ const ReservaServicioCard = ({ servicio }) => {
 
       <div className="precio bg-purple-light">
         <p className="label">Precio final</p>
-        <h4 className="monto">{servicio.price} USD</h4>
+        <h4 className="monto">${servicio.price}</h4>
       </div>
 
       <div className="info">

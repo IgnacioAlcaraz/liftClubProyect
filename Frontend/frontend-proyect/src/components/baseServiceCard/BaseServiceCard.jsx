@@ -23,7 +23,7 @@ const BaseServiceCard = ({
       <Card.Body>
         <Card.Title className="fw-bold">{title}</Card.Title>
         <Card.Text className="card-text">{description}</Card.Text>
-        <Card.Text className="card-price fw-bold">{price} USD</Card.Text>
+        <Card.Text className="card-price fw-bold">${price} </Card.Text>
         <div>
           <StarRating rating={rating} />
         </div>
