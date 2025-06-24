@@ -1,18 +1,26 @@
 import React from "react";
+import { Carousel } from "react-bootstrap";
 
 const ServicioImagenCarousel = ({ imagenes = [] }) => {
   if (!imagenes.length || !imagenes[0].url) return null;
 
-  const imagenSrc = `http://localhost:5000${imagenes[0].url}`;
-
   return (
     <div style={{ width: "100%", maxHeight: "300px", overflow: "hidden" }}>
-      <img
-        src={imagenSrc}
-        alt="Servicio"
-        className="img-fluid w-100"
-        style={{ objectFit: "cover", height: "300px" }}
-      />
+      <Carousel interval={3000} indicators={true}>
+        {imagenes.map((imagen, index) => (
+          <Carousel.Item key={index}>
+            <img
+              src={`http://localhost:5000${imagen.url}`}
+              alt={`Imagen ${index + 1} del servicio`}
+              className="img-fluid w-100"
+              style={{
+                objectFit: "cover",
+                height: "300px",
+              }}
+            />
+          </Carousel.Item>
+        ))}
+      </Carousel>
     </div>
   );
 };
