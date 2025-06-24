@@ -154,7 +154,8 @@ const SearchBar = ({ searchQuery, setSearchQuery, setFilters }) => {
             >
               <option value="">Todas</option>
               <option>Presencial</option>
-              <option>Online</option>
+              <option>Virtual</option>
+              <option>Híbrida</option>
             </Form.Select>
           </Form.Group>
 
