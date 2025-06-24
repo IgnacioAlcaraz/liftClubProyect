@@ -9,6 +9,7 @@ const BaseServiceCard = ({
   description,
   price,
   rating,
+  reviewsCount,
   children,
   onClick,
 }) => {
@@ -25,7 +26,7 @@ const BaseServiceCard = ({
         <Card.Text className="card-text">{description}</Card.Text>
         <Card.Text className="card-price fw-bold">${price} </Card.Text>
         <div>
-          <StarRating rating={rating} />
+          <StarRating rating={rating} reviewsCount={reviewsCount} />
         </div>
         {children}
       </Card.Body>

@@ -52,11 +52,7 @@ export default function SessionsTable({
                       <button
                         className="btn btn-outline-success btn-sm"
                         onClick={() => {
-                          if (
-                            window.confirm(
-                              "¿Estás seguro de que querés marcar como realizada la sesión?"
-                            )
-                          ) {
+                          {
                             onMarcarComoCompletada(s._id);
                           }
                         }}

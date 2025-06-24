@@ -85,7 +85,8 @@ const ListaDeServicios = ({ searchQuery, filters = {}, isGuest = false }) => {
             s.coachId?.lastName || ""
           }`}
           description={s.description}
-          rating={s.averageRating || 5}
+          rating={s.averageRating || 0}
+          reviewsCount={s.reviews?.length || 0}
           price={s.price}
           isGuest={isGuest}
         />

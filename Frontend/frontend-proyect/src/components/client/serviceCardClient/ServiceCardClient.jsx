@@ -12,6 +12,7 @@ const ServiceCard = ({
   rating,
   price,
   isGuest,
+  reviewsCount,
 }) => {
   const navigate = useNavigate();
 
@@ -30,6 +31,7 @@ const ServiceCard = ({
       description={description}
       price={price}
       rating={rating}
+      reviewsCount={reviewsCount}
       onClick={handleClick}
     >
       <Card.Subtitle style={{ paddingTop: "8px" }} className="mb-2">

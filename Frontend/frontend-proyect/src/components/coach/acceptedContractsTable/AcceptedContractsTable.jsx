@@ -29,6 +29,7 @@ const AcceptedContractsTable = ({
           <tr>
             <th>Cliente</th>
             <th>Servicio</th>
+            <th>Sesiones</th>
             <th>Estado</th>
             <th>Archivos</th>
             <th>Acciones</th>
@@ -52,6 +53,16 @@ const AcceptedContractsTable = ({
                   {contract.clientId.firstName} {contract.clientId.lastName}
                 </td>
                 <td>{contract.serviceId.name}</td>
+                <td>
+                  {(() => {
+                    const total = contract.serviceId?.duration || 0;
+                    const completadas =
+                      contract.scheduledSessions?.filter(
+                        (s) => s.status === "Completado"
+                      ).length || 0;
+                    return `${completadas}/${total}`;
+                  })()}
+                </td>
                 <td>{renderEstadoBadge(contract.status)}</td>
                 <td>
                   <div

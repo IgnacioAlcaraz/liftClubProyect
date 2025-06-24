@@ -55,7 +55,7 @@ export default function ContractsTable({
             <th>Profesor</th>
             <th>Servicio</th>
             <th>Estado</th>
-            <th>Duración</th>
+            <th>Sesiones</th>
             <th>Calificar</th>
             <th>Archivos</th>
             <th>Agendar</th>
@@ -85,7 +85,16 @@ export default function ContractsTable({
                 </td>
                 <td>{c.serviceId?.name || "Servicio no disponible"}</td>
                 <td>{renderEstadoBadge(c.status)}</td>
-                <td>{c.serviceId?.duration || "N/A"} sesiones</td>
+                <td>
+                  {(() => {
+                    const total = c.serviceId?.duration || 0;
+                    const completadas =
+                      c.scheduledSessions?.filter(
+                        (s) => s.status === "Completado"
+                      ).length || 0;
+                    return `${completadas}/${total}`;
+                  })()}
+                </td>
                 <td>
                   {renderActionButton(
                     <Star size={16} className="me-1" />,

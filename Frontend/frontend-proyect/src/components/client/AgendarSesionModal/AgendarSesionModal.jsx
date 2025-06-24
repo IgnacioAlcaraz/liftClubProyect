@@ -27,7 +27,7 @@ const AgendarSesionModal = ({ contrato, show, onHide, onAgendar }) => {
       "Sábado",
     ];
     const [year, month, day] = fechaStr.split("-");
-    const fecha = new Date(Number(year), Number(month) - 1, Number(day)); 
+    const fecha = new Date(Number(year), Number(month) - 1, Number(day));
     return dias[fecha.getDay()];
   };
 
@@ -143,12 +143,10 @@ const AgendarSesionModal = ({ contrato, show, onHide, onAgendar }) => {
       );
       console.log("Sesión agendada:", response.data);
 
-      alert("Sesión agendada con éxito");
       if (onAgendar) onAgendar(); // Callback para actualizar la UI
       onHide(); // Cerrar modal
     } catch (err) {
       console.error("Error al agendar sesión:", err);
-      alert("Error al agendar sesión");
     } finally {
       setLoading(false);
     }
@@ -172,6 +170,7 @@ const AgendarSesionModal = ({ contrato, show, onHide, onAgendar }) => {
         <Form.Label>Seleccioná día</Form.Label>
         <Form.Control
           type="date"
+          min={new Date().toISOString().split("T")[0]}
           value={dia}
           onChange={(e) => setDia(e.target.value)}
         />

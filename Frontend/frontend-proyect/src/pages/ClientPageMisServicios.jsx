@@ -94,7 +94,6 @@ export default function ClientPageMisServicios() {
       );
 
       await fetchMisContratos(); //  sincroniza estado actualizado
-      alert("Sesión marcada como completada.");
     } catch (error) {
       console.error("Error al marcar como completada:", error);
       alert(
@@ -125,7 +124,6 @@ export default function ClientPageMisServicios() {
         }
       );
 
-      alert("¡Calificación enviada con éxito!");
       await fetchMisContratos(); //  actualiza el estado del contrato
     } catch (error) {
       console.error("Error completo:", error);

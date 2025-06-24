@@ -245,15 +245,23 @@ const ServiceFormModal = ({
           </div>
 
           <div className="form-grid">
-            <InputField
-              label="Nombre"
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleInputChange}
-              placeholder="Nombre del servicio"
-              required
-            />
+            <div className="form-group">
+              <InputField
+                label="Nombre"
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={(e) => {
+                  const newText = e.target.value;
+                  if (newText.length <= 30) {
+                    setFormData((prev) => ({ ...prev, name: newText }));
+                  }
+                }}
+                placeholder="Nombre del servicio"
+                required
+              />
+              <small>Caracteres: {formData.name.length} / 30</small>
+            </div>
 
             <div className="form-group">
               <label>Categoría</label>
