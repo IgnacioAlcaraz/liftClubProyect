@@ -23,8 +23,6 @@ router.get(
 
 router.post("/select-role", verifyTempToken, authController.selectRole);
 
-router.get("/me", auth, authController.getMe);
-
 router.post("/forgot-password", authController.forgotPassword);
 
 router.post("/code-verification", authController.verifyResetPasswordCode);

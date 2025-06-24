@@ -2,10 +2,11 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { googleLoginSuccess } from "../../app/slices/authSlice";
 import "./GoogleButton.css";
+import { useNavigate } from "react-router-dom";
 
 const GoogleButton = () => {
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   useEffect(() => {
     const handleMessage = (event) => {
       const { token, user } = event.data;
@@ -15,9 +16,9 @@ const GoogleButton = () => {
         localStorage.setItem("token", token);
 
         if (user.role === "client") {
-          window.location.href = "/client-home";
+          navigate("/client-home");
         } else if (user.role === "coach") {
-          window.location.href = "/coach-home";
+          navigate("/coach-home");
         } else {
           console.warn("Rol no reconocido:", user.role);
         }

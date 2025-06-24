@@ -136,6 +136,16 @@ const handleGoogleCallback = async (googleUser) => {
     };
   }
 
+  if (!existingUser) {
+    const newUser = new User({
+      email: googleUser.email,
+      firstName: googleUser.firstName,
+      lastName: googleUser.lastName,
+      role: null,
+    });
+    await newUser.save();
+  }
+
   const tempToken = jwt.sign(
     {
       googleData: {
@@ -163,19 +173,19 @@ const selectRole = async (googleData, role) => {
     throw new Error("Datos de Google inválidos");
   }
 
-  let user = await User.findOne({ email: googleData.email });
+  const user = await User.findOne({ email: googleData.email });
 
   if (!user) {
-    user = new User({
-      email: googleData.email,
-      firstName: googleData.firstName,
-      lastName: googleData.lastName,
-      role: role,
-    });
-  } else {
-    throw new Error("El usuario ya existe");
+    throw new Error(
+      "Usuario no encontrado. Error en el flujo de autenticación."
+    );
   }
 
+  if (user.role && user.role !== null) {
+    throw new Error("El usuario ya tiene un rol asignado");
+  }
+
+  user.role = role;
   await user.save();
 
   const token = jwt.sign(
@@ -199,14 +209,6 @@ const selectRole = async (googleData, role) => {
   };
 
   return result;
-};
-
-const getMe = async (userId) => {
-  const user = await User.findById(userId);
-  if (!user) {
-    throw new Error("Usuario no encontrado");
-  }
-  return user;
 };
 
 const generateResetPasswordCode = async () => {
@@ -280,7 +282,6 @@ module.exports = {
   login,
   handleGoogleCallback,
   selectRole,
-  getMe,
   forgotPassword,
   verifyResetPasswordCode,
   resetPassword,

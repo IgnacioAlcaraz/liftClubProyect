@@ -26,15 +26,18 @@ const upload = multer({
       "image/gif",
       "application/pdf",
       "application/msword",
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // .docx
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
       "application/vnd.ms-excel",
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", // .xlsx
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       "text/plain",
+      "image/webp",
     ];
     if (allowedMimeTypes.includes(file.mimetype)) {
       cb(null, true);
     } else {
-      cb(new Error("Solo se permiten archivos de imagen, pdf, docx, xlsx"));
+      cb(
+        new Error("Solo se permiten archivos de imagen, pdf, docx, xlsx, webp")
+      );
     }
   },
   limits: {

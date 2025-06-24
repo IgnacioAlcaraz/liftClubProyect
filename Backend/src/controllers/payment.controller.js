@@ -42,11 +42,6 @@ const createPreference = async (req, res) => {
       },
     };
 
-    console.log(
-      "Enviando preferencia a MercadoPago:",
-      JSON.stringify(preferenceData, null, 2)
-    );
-
     const response = await preference.create({ body: preferenceData });
 
     return res.status(200).json({

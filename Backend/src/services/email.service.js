@@ -19,9 +19,8 @@ const sendResetPasswordEmail = async (email, code) => {
 
   try {
     await transporter.sendMail(mailOptions);
-    console.log("Correo enviado correctamente");
   } catch (error) {
-    console.error("Error al enviar el correo", error);
+    throw new Error("Error al enviar el correo");
   }
 };
 

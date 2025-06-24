@@ -9,10 +9,13 @@ const VisitPanel = ({
   const getScaledWidth = (rate) => {
     if (rate === 0) return 0;
 
-    const minWidth = 10;
-    const scaledWidth = minWidth + (rate * (100 - minWidth)) / 100;
+    const maxDisplayRate = 10;
+    const minWidth = 20;
 
-    return Math.min(scaledWidth, 100);
+    if (rate >= maxDisplayRate) return 100;
+
+    const scaledRate = Math.log(rate + 1) / Math.log(maxDisplayRate + 1);
+    return minWidth + scaledRate * (100 - minWidth);
   };
 
   return (
@@ -44,7 +47,7 @@ const VisitPanel = ({
                 <div className="service-bar">
                   <div
                     className="service-bar-fill"
-                    style={{ width: `${getScaledWidth(rate)}%` }}
+                    style={{ width: `${getScaledWidth(parseFloat(rate))}%` }}
                   />
                 </div>
               </div>

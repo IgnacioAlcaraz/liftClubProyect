@@ -14,7 +14,6 @@ const getContracts = async (req, res) => {
   }
 };
 
-
 const getScheduledSessions = async (req, res) => {
   try {
     const { userId, role } = req.user;
@@ -240,10 +239,6 @@ const createScheduledSession = async (req, res) => {
     const { id } = req.params;
     const { userId, role } = req.user;
 
-    console.log(" Body recibido:", req.body);
-    console.log(" Usuario:", userId, "| Rol:", role);
-    console.log("ID contrato:", id);
-
     const session = await contractService.createScheduledSession(
       id,
       req.body,
@@ -253,7 +248,6 @@ const createScheduledSession = async (req, res) => {
 
     return res.status(201).json(session);
   } catch (error) {
-    console.error("❌ Error en backend:", error.message);
     return res.status(500).json({
       message: "Error al crear la sesión programada",
       error: error.message,

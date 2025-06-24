@@ -304,7 +304,7 @@ const ServiceFormModal = ({
               onChange={(e) => {
                 const newText = e.target.value;
                 if (newText.length <= 60) {
-                  setFormData((prev) => ({ ...prev, description: newText })); //si el nuevo txt tiene menos de 60 actualiza el estado, sino no
+                  setFormData((prev) => ({ ...prev, description: newText }));
                 }
               }}
               placeholder="Descripción del servicio (máx. 60 caracteres)"

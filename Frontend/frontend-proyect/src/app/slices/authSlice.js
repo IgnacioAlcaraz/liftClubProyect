@@ -6,6 +6,20 @@ const loadInitialState = () => {
     const user = JSON.parse(localStorage.getItem("user") || "null");
 
     if (token && user && user.role) {
+      const tokenData = JSON.parse(atob(token.split(".")[1]));
+      const expirationTime = tokenData.exp * 1000;
+
+      if (Date.now() >= expirationTime) {
+        localStorage.clear();
+        return {
+          isAuthenticated: false,
+          token: null,
+          user: null,
+          loading: false,
+          error: null,
+        };
+      }
+
       return {
         isAuthenticated: true,
         token,
