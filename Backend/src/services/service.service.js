@@ -1,4 +1,5 @@
 const Service = require("../models/Service");
+const Contract = require("../models/Contract");
 const fs = require("fs");
 const path = require("path");
 
@@ -70,6 +71,7 @@ const createService = async (serviceData, userId, files) => {
     throw error;
   }
 };
+
 const getServiceById = async (id) => {
   const service = await Service.findById(id).populate({
     path: "reviews",
@@ -93,7 +95,6 @@ const updateServiceById = async (id, serviceData, userId, files) => {
     }
 
     const service = await Service.findById(id);
-
     if (!service) {
       throw new Error("Servicio no encontrado");
     }
@@ -139,37 +140,56 @@ const updateServiceById = async (id, serviceData, userId, files) => {
 };
 
 const deleteServiceById = async (id, userId) => {
-  const service = await Service.findById(id);
+  try {
+    const service = await Service.findById(id);
 
-  if (!service) {
-    throw new Error("Servicio no encontrado");
-  }
+    if (!service) {
+      throw new Error("Servicio no encontrado");
+    }
 
-  if (!service.coachId) {
-    throw new Error(
-      "No se puede eliminar este servicio porque no tiene un coach asignado"
-    );
-  }
+    if (!service.coachId) {
+      throw new Error(
+        "No se puede eliminar este servicio porque no tiene un coach asignado"
+      );
+    }
 
-  if (service.coachId.toString() !== userId) {
-    throw new Error("No tienes permiso para eliminar este servicio");
-  }
+    if (service.coachId.toString() !== userId) {
+      throw new Error("No tienes permiso para eliminar este servicio");
+    }
 
-  if (service.images && service.images.length > 0) {
-    service.images.forEach((image) => {
-      try {
-        const filePath = path.join(__dirname, "..", image.url);
-        if (fs.existsSync(filePath)) {
-          fs.unlinkSync(filePath);
+    const contratos = await Contract.find({ serviceId: id });
+    const tieneAceptados = contratos.some((c) => c.status === "Aceptado");
+
+    if (tieneAceptados) {
+      throw new Error(
+        "No se puede eliminar este servicio porque tiene contratos aceptados"
+      );
+    }
+
+    // Eliminar contratos no aceptados
+    await Contract.deleteMany({ serviceId: id, status: { $ne: "Aceptado" } });
+
+    // Eliminar imágenes del sistema de archivos
+    if (service.images && service.images.length > 0) {
+      service.images.forEach((image) => {
+        try {
+          const filePath = path.join(__dirname, "..", image.url);
+          if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+          }
+        } catch (error) {
+          console.error("Error al eliminar la imagen:", error);
         }
-      } catch (error) {
-        console.error("Error al eliminar la imagen:", error);
-      }
-    });
-  }
+      });
+    }
 
-  await Service.findByIdAndDelete(id);
-  return { message: "Servicio eliminado correctamente" };
+    await Service.findByIdAndDelete(id);
+
+    return { message: "Servicio eliminado correctamente" };
+  } catch (error) {
+    console.error("Error en deleteServiceById:", error);
+    throw error;
+  }
 };
 
 const getServiceByCoachId = async (coachId) => {
@@ -188,7 +208,6 @@ const incrementViews = async (id) => {
 
 const getOccupiedSessions = async (serviceId, date) => {
   const service = await Service.findById(serviceId);
-
   if (!service) {
     throw new Error("Servicio no encontrado");
   }

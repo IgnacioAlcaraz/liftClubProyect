@@ -15,7 +15,8 @@ const ServiceCardCoach = ({ service, onEdit, onDelete }) => {
       title={service.name}
       description={service.description}
       price={service.price}
-      rating={service.averageRating || 5}
+      rating={service.averageRating || 0}
+      reviewsCount={service.reviews?.length || 0} // ✅ AÑADIR ESTO
       onClick={() => {}}
     >
       <div className="d-flex justify-content-between mt-2">
