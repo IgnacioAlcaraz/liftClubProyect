@@ -42,9 +42,10 @@ const createService = async (req, res) => {
     res.status(201).json(savedService);
   } catch (error) {
     console.error("Error al crear servicio:", error);
-    return res
-      .status(500)
-      .json({ message: "Error al crear el servicio", error: error.message });
+    if (error.message.includes("disponibilidad")) {
+      return res.status(400).json({ message: error.message });
+    }
+    return res.status(500).json({ message: "Error al crear el servicio" });
   }
 };
 

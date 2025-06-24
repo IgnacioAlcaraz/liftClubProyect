@@ -12,6 +12,7 @@ const ServiceListCoach = () => {
   const [services, setServices] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [editingService, setEditingService] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const decodedToken = JSON.parse(atob(token.split(".")[1]));
   const userId = decodedToken.userId;
@@ -106,9 +107,10 @@ const ServiceListCoach = () => {
         setServices((prev) => [...prev, response.data]);
       }
       setShowModal(false);
+      setErrorMessage(null);
     } catch (error) {
-      console.error("Error detallado:", error);
-      alert("Error al guardar el servicio.");
+      const errorMessage = error.response?.data?.error || "Error desconocido";
+      setErrorMessage(errorMessage);
     }
   };
 
@@ -145,6 +147,8 @@ const ServiceListCoach = () => {
         onClose={() => setShowModal(false)}
         onSubmit={handleSubmitService}
         initialData={editingService}
+        errorMessage={errorMessage}
+        setErrorMessage={setErrorMessage}
       />
     </BaseServiceList>
   );

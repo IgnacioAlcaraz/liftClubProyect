@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import "./AvailabilitySection.css";
+import { Button } from "react-bootstrap";
+import SecondaryButton from "../../../secondaryButton/SecondaryButton";
 
 const AvailabilitySection = ({ availabilities, onAvailabilityChange }) => {
   const [newAvailability, setNewAvailability] = useState({
@@ -27,31 +29,13 @@ const AvailabilitySection = ({ availabilities, onAvailabilityChange }) => {
   });
 
   const handleAddAvailability = () => {
-    if (
-      !newAvailability.date ||
-      !newAvailability.startTime ||
-      !newAvailability.endTime
-    ) {
-      alert("Por favor complete todos los campos de disponibilidad");
-      return;
-    }
-
-    const start = parseInt(newAvailability.startTime.split(":")[0]);
-    const end = parseInt(newAvailability.endTime.split(":")[0]);
-
-    if (end <= start) {
-      alert("La hora de fin debe ser mayor que la hora de inicio");
-      return;
-    }
-
-    if (usedDays.includes(newAvailability.date)) {
-      alert("Ya existe una disponibilidad para este día");
-      return;
-    }
-
     const updatedAvailabilities = [...availabilities, newAvailability];
     onAvailabilityChange(updatedAvailabilities);
-    setNewAvailability({ date: "", startTime: "", endTime: "" });
+    setNewAvailability({
+      date: "",
+      startTime: "",
+      endTime: "",
+    });
   };
 
   const handleRemoveAvailability = (index) => {
@@ -115,7 +99,7 @@ const AvailabilitySection = ({ availabilities, onAvailabilityChange }) => {
         <button
           type="button"
           onClick={handleAddAvailability}
-          className="btn-add-availability"
+          className="btn btn-success w-100"
         >
           Agregar
         </button>
@@ -128,13 +112,13 @@ const AvailabilitySection = ({ availabilities, onAvailabilityChange }) => {
             <span>
               {availability.startTime} - {availability.endTime}
             </span>
-            <button
+            <Button
               type="button"
               onClick={() => handleRemoveAvailability(index)}
-              className="btn-remove"
+              className="btn btn-danger"
             >
               Eliminar
-            </button>
+            </Button>
           </div>
         ))}
       </div>

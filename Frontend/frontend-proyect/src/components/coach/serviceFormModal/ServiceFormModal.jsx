@@ -4,7 +4,14 @@ import "./ServiceFormModal.css";
 import InputField from "../../input/InputField";
 import AvailabilitySection from "./availabilitySection/AvailabilitySection";
 
-const ServiceFormModal = ({ show, onClose, onSubmit, initialData = null }) => {
+const ServiceFormModal = ({
+  show,
+  onClose,
+  onSubmit,
+  initialData = null,
+  errorMessage,
+  setErrorMessage,
+}) => {
   const [formData, setFormData] = useState({
     name: "",
     category: "",
@@ -365,6 +372,8 @@ const ServiceFormModal = ({ show, onClose, onSubmit, initialData = null }) => {
               ))}
             </div>
           </div>
+
+          {errorMessage && <div className="error-message">{errorMessage}</div>}
 
           <div className="modal-actions">
             <button type="submit" className="btn-confirm">

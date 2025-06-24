@@ -20,20 +20,6 @@
   font-size: 14px;
 }
 
-.btn-add-availability {
-  padding: 8px 16px;
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.btn-add-availability:hover {
-  background-color: #45a049;
-}
-
 .availabilities-list {
   display: flex;
   flex-direction: column;
@@ -48,18 +34,4 @@
   background-color: #f9f9f9;
   border-radius: 4px;
   gap: 10px;
-}
-
-.btn-remove {
-  padding: 5px 10px;
-  background-color: #ff4444;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.btn-remove:hover {
-  background-color: #cc0000;
 }

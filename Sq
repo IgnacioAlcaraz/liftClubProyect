@@ -1,0 +1,9 @@
+  feature/coach-bell[m
+  feature/coach-services[m
+  feature/google_auth[m
+  feature/image_upload_pagination[m
+  feature/mail-sender[m
+  feature/restructure[m
+  feature/stats[m
+* [32mmain[m
+  merge-featureLogin-featurePagination[m
