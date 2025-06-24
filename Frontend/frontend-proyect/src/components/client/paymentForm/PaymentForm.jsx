@@ -34,11 +34,11 @@ const PaymentForm = ({ onSubmit }) => {
       newErrors.fullName = "Nombre inválido (solo letras y espacios)";
     }
 
-    // Validar formato MM/AA
+    // validar formato MM/AA
     if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(formData.expiryDate)) {
       newErrors.expiryDate = "Formato inválido (debe ser MM/AA)";
     } else {
-      // Validar que esté en el futuro
+      // validar que esté en el futuro
       const [monthStr, yearStr] = formData.expiryDate.split("/");
       const inputMonth = parseInt(monthStr, 10);
       const inputYear = parseInt("20" + yearStr, 10);

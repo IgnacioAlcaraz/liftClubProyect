@@ -1,6 +1,5 @@
 import React from "react";
-import StarRating from "../../starRating/starRating";
-
+import StarRating from "../../starRating/StarRating";
 const ServicioInfo = ({ servicio }) => {
   const coach = servicio.coachId || {};
 
@@ -12,7 +11,10 @@ const ServicioInfo = ({ servicio }) => {
       }`}</p>
 
       <div className="mb-3">
-        <StarRating rating={servicio.averageRating || 5} />
+        <StarRating
+          rating={servicio.averageRating || 0}
+          reviewsCount={servicio.reviews?.length || 0}
+        />
       </div>
     </div>
   );

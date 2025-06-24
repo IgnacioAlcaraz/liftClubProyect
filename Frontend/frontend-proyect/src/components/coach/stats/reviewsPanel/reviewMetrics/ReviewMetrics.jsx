@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./reviewMetrics.css";
-import ComentarioItem from "../../../../client/ServicioDetalle/ComentarioItem";
+import ComentarioItem from "../../../../client/servicioDetalle/ComentarioItem";
 import Pagination from "../../../../pagination/Pagination";
 
 const ReviewMetrics = ({
