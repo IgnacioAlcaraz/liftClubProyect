@@ -1,6 +1,7 @@
 const Contract = require("../models/Contract");
 const Service = require("../models/Service");
 const User = require("../models/User");
+const path = require("path");
 
 const getContracts = async (userId, role) => {
   let query;
@@ -142,7 +143,7 @@ const uploadContractFiles = async (id, files, userId, role) => {
 
   const fileObjects = files.map((file) => ({
     name: file.originalname,
-    path: file.path,
+    path: `/uploads/${file.filename}`,
     mimeType: file.mimetype,
     size: file.size,
     uploadDate: new Date(),
@@ -164,7 +165,8 @@ const downloadContractFile = async (id, fileName, userId, role) => {
     throw new Error("Archivo no encontrado");
   }
 
-  return file;
+  const absolutePath = path.join(__dirname, "..", file.path);
+  return { ...file, path: absolutePath };
 };
 
 const getScheduledSessionsByContractId = async (id, userId, role) => {

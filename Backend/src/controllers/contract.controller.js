@@ -1,5 +1,6 @@
 const contractService = require("../services/contract.service");
 const Contract = require("../models/Contract");
+const path = require("path");
 
 const getContracts = async (req, res) => {
   try {
@@ -161,6 +162,7 @@ const downloadContractFile = async (req, res) => {
       userId,
       role
     );
+
     return res.download(file.path, file.name);
   } catch (error) {
     if (
