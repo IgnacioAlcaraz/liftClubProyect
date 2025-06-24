@@ -2,12 +2,10 @@ import React from "react";
 import { Star } from "lucide-react";
 
 const StarRating = ({ rating, reviewsCount }) => {
-  // Si no hay reseñas, mostramos un texto alternativo
   if (!reviewsCount || reviewsCount === 0) {
     return <span className="text-muted">Sin calificaciones</span>;
   }
 
-  // Redondeamos el promedio a la estrella más cercana
   const roundedRating = Math.round(rating);
 
   return (

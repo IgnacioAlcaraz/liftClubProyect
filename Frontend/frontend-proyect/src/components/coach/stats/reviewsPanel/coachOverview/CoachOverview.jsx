@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import StarRating from "../../../../starRating/starRating";
 import "./coachOverview.css";
 
-const CoachOverview = ({ averageRating }) => {
+const CoachOverview = ({ averageRating, totalReviews }) => {
   const { user } = useSelector((state) => state.auth);
 
   const userData = user || JSON.parse(localStorage.getItem("user") || "{}");
@@ -15,7 +15,7 @@ const CoachOverview = ({ averageRating }) => {
           {userData.firstName} {userData.lastName}
         </h3>
         <div className="coach-rating">
-          <StarRating rating={averageRating || 0} />
+          <StarRating rating={averageRating || 0} reviewsCount={totalReviews} />
           <p>{Number(averageRating || 0).toFixed(1)}</p>
         </div>
       </div>

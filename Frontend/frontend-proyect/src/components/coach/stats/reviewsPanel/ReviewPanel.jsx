@@ -11,7 +11,10 @@ const ReviewPanel = ({
   return (
     <div className="review-panel">
       <h2>Reseñas recibidas</h2>
-      <CoachOverview averageRating={averageRating} />
+      <CoachOverview
+        averageRating={averageRating}
+        totalReviews={totalReviews}
+      />
       <ReviewMetrics
         averageRating={averageRating}
         totalReviews={totalReviews}

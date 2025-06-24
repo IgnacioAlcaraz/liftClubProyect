@@ -302,6 +302,16 @@ const ServiceFormModal = ({
               required
               min="1"
             />
+
+            <InputField
+              label="Zona"
+              type="text"
+              name="zone"
+              value={formData.zone}
+              onChange={handleInputChange}
+              placeholder="Zona del servicio"
+              required
+            />
           </div>
 
           <div className="form-group">
