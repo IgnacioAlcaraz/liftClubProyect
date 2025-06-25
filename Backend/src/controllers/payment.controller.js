@@ -32,7 +32,7 @@ const createPreference = async (req, res) => {
       ],
       back_urls: {
         success:
-          "https://912c-2800-21e1-4000-2b4-d991-b749-d096-8db6.ngrok-free.app/payment/success",
+          "https://6aca-2800-21e1-4000-2b4-39ec-1b05-c9-cda2.ngrok-free.app/payment/success",
       },
       auto_return: "approved",
       metadata: {
