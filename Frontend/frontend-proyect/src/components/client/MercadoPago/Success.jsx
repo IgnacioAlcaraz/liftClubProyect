@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { loginSuccess } from "../../../app/slices/authSlice";
 import axios from "axios";
 
 export default function Success() {
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
+  const dispatch = useDispatch();
+  const originalToken = localStorage.getItem("token");
+  const originalUser = JSON.parse(localStorage.getItem("user") || "null");
   const [status, setStatus] = useState("Procesando pago...");
 
   useEffect(() => {
@@ -34,15 +38,13 @@ export default function Success() {
         const metadata = response.data.metadata;
         const serviceId = metadata?.service_id;
         const price = metadata?.price;
-        const token = metadata?.token;
-        localStorage.setItem("token", token);
 
         if (!serviceId || !price) {
           setStatus("No se encontraron los datos necesarios en metadata.");
           return;
         }
 
-        // crear contrato 
+        // crear contrato
         await axios.post(
           "http://localhost:5000/api/contracts",
           {
@@ -55,12 +57,16 @@ export default function Success() {
           },
           {
             headers: {
-              Authorization: `Bearer ${token}`,
+              Authorization: `Bearer ${originalToken}`,
             },
           }
         );
 
         setStatus("Contrato creado correctamente");
+
+        if (originalToken && originalUser) {
+          dispatch(loginSuccess({ token: originalToken, user: originalUser }));
+        }
 
         setTimeout(() => navigate("/client-home"), 2000);
       } catch (err) {
@@ -70,7 +76,7 @@ export default function Success() {
     };
 
     obtenerPreferenciaYCrearContrato();
-  }, []);
+  }, [originalToken, originalUser, dispatch, navigate]);
 
   return (
     <div style={{ textAlign: "center", marginTop: "100px" }}>
